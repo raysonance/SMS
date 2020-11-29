@@ -8,6 +8,14 @@ from django.views.generic import DetailView, RedirectView, UpdateView
 User = get_user_model()
 
 
+def ewe(request):
+    return request.user.is_teacher
+
+
+def turing(request):
+    return request.user.is_teach
+
+
 class UserDetailView(LoginRequiredMixin, DetailView):
 
     model = User
@@ -44,6 +52,7 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
     permanent = False
 
     def get_redirect_url(self):
+
         return reverse("users:detail", kwargs={"username": self.request.user.username})
 
 

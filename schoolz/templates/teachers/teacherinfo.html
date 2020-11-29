@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Teacher Form {% endblock %}
+
+{% block content %}
+  <h1> Teacher Form </h1>
+  <form class="form-horizontal" method="post" action="{% url 'teachers:form' %}">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="control-group">
+      <div class="controls">
+        <button type="submit" class="btn btn-secondary">Submit</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}

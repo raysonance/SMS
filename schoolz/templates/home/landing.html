@@ -1,0 +1,524 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="School, Education, Nigeria, Children, Service">
+    <meta name="description" content="Behold My Awesome Project!">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="Favour Gilead">
+    <title> KING | Favour Schoolz</title>
+    <!--====== Favicon Icon ======-->
+    <link rel="shortcut icon" href="{% static 'landing/img/2.png' %}" type="image/png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'landing/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/LineIcons.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/owl.theme.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/nivo-lightbox.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/responsive.css' %}">
+
+  </head>
+
+  <body>
+
+    <!-- Header Section Start -->
+    <header id="home" class="hero-area">
+      <div class="overlay">
+        <span></span>
+        <span></span>
+      </div>
+      <nav class="navbar navbar-expand-md bg-inverse fixed-top scrolling-navbar">
+        <div class="container">
+          <a href="index.html" class="navbar-brand">
+            <img src="{% static 'landing/img/logo.png' %}" alt=""></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="lni-menu"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto w-100 justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link page-scroll" href="#home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link page-scroll" href="#services">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link page-scroll" href="#features">Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link page-scroll" href="#blog">Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link page-scroll" href="#contact">Contact</a>
+              </li>
+              <li class="nav-item">
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                <div class="dropdown"><button class="btn btn-singin dropdown-toggle" style="margin-left:1em; margin-bottom:1em;" data-toggle="dropdown" aria-expanded="false" type="button">{{ user.username }}</button>
+        <div class="dropdown-menu" role="menu">{% if section != 'home' %}<a class="dropdown-item" role="presentation" href="{% url 'home' %}">Home</a>{% endif %}<a class="dropdown-item" role="presentation" href="{% url 'account_logout' %}">Sign out</a> {% if user.is_teacher %}<a class="dropdown-item" role="presentation" href="{% url 'account_change_password' %}">Change Password?</a>{% else %} {% endif %}</div>
+    </div></li>{% else %}<li class="nav-item">
+    <li class="dropdown"><button class="btn btn-primary dropdown-toggle" style="margin-left:1em; margin-bottom:1em;" data-toggle="dropdown" aria-expanded="false" type="button">Sign Up</button>
+      <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="{% url 'account_login' %}"> Teacher Sign-up </a><a class="dropdown-item" role="presentation" href="{% url 'account_login' %}">Student Sign-up</a></div></li>
+      <li class="nav-item">
+      <li class="dropdown"><button class="btn btn-primary dropdown-toggle" style="margin-bottom:1em; margin-left:1em;" data-toggle="dropdown" aria-expanded="false" type="button">Sign In</button>
+        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="{% url 'account_login' %}">Teacher Log-in</a><a class="dropdown-item" role="presentation" href="{% url 'account_logout' %}">Student Log-in</a></div></li>
+      {% endif %}
+                <!-- <a class="btn btn-singin" href="#">Dashboard</a> -->
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="container">
+        <div class="row space-100">
+          <div class="col-lg-6 col-md-12 col-xs-12">
+            <div class="contents">
+              <h2 class="head-title">Elizabeth Schools</h2>
+              <p>Quality is never an accident. It is always the result of intelligent effort. "Ignorance is bliss until it hits you in the face."
+              The real education is the one that will set you up. You can't be a great teacher if you stop being a student.</p>
+              <div class="header-button">
+                <a href="https://rebrand.ly/slick-ud" rel="nofollow" target="_blank" class="btn btn-common w-auto">Register your children now.</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12 col-xs-12 p-0">
+            <div class="intro-img">
+              <img src="{% static 'landing/img/intro.png' %}" alt=""
+              style="width: 585px; height: 398px; margin-top: 113px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- Header Section End -->
+
+
+    <!-- Services Section Start -->
+    <section id="services" class="section">
+      <div class="container">
+
+        <div class="row">
+          <!-- Start Col -->
+          <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="services-item text-center">
+              <div class="icon">
+                <i class="lni-cog"></i>
+              </div>
+              <h4>Quality Education</h4>
+              <p>One of the most powerful tools for empowewring individuals and communities is making certain that any individual who wants to recieve a quality education can do so.</p>
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="services-item text-center">
+              <div class="icon">
+                <i class="lni-brush"></i>
+              </div>
+              <h4>Good Morals</h4>
+              <p>About morals, I only know that what is moral is what you feel good after and what is immoral is what you feel bad after.</p>
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="services-item text-center">
+              <div class="icon">
+                <i class="lni-heart"></i>
+              </div>
+              <h4>Cultural Values</h4>
+              <p>Preservation of one'sown culture does not require contempt or disrespect for other cultures.</p>
+            </div>
+          </div>
+          <!-- End Col -->
+
+        </div>
+      </div>
+    </section>
+    <!-- Services Section End -->
+
+
+
+    <!-- Business Plan Section Start -->
+    <section id="business-plan">
+      <div class="container">
+
+        <div class="row">
+          <!-- Start Col -->
+          <div class="col-lg-6 col-md-12 pl-0 pt-70 pr-5">
+            <div class="business-item-img">
+              <img src="{% static 'landing/img/business/business-img.png' %}" class="img-fluid" alt="">
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-6 col-md-12 pl-4">
+            <div class="business-item-info">
+              <h3>Elizabeth School, The Best Place For Your Child.</h3>
+              <p><b>Excellent</b> Learning Activities</p>
+              <p><b>Great</b> Sport Activities</p>
+              <p><b>Modern</b> Science Laboratories</p>
+              <p><b>Qualified</b> Staff</p>
+            </div>
+          </div>
+          <!-- End Col -->
+
+        </div>
+      </div>
+    </section>
+    <!-- Business Plan Section End -->
+
+
+
+    <!-- Cool Features Section Start -->
+    <section id="features" class="section">
+      <div class="container">
+        <!-- Start Row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="features-text section-header text-center">
+              <div>
+                <h2 class="section-title">We Provide the best Education</h2>
+                <div class="desc-text">
+                  <p>Education is for improving the lives of others and for living your <br> community and world better then you found it.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- End Row -->
+        <!-- Start Row -->
+        <div class="row featured-bg">
+         <!-- Start Col -->
+          <div class="col-lg-4 col-md-4 col-xs-12 p-0">
+             <!-- Start Fetatures -->
+            <div class="feature-item featured-border1">
+               <div class="feature-icon float-left">
+                 <i class="lni-sun"></i>
+               </div>
+               <div class="feature-info float-left my-3">
+                 <h4> Excellent Sport Activities </h4>
+                 <p>No crowds.<br>No coaches.<br> No distractions.<br> That's when champions are made. </p>
+               </div>
+            </div>
+            <!-- End Fetatures -->
+          </div>
+           <!-- End Col -->
+
+         <!-- Start Col -->
+          <div class="col-lg-4 col-md-4 col-xs-12 p-0">
+             <!-- Start Fetatures -->
+            <div class="feature-item featured-border2">
+               <div class="feature-icon float-left">
+                 <i class="lni-briefcase"></i>
+               </div>
+               <div class="feature-info float-left my-3">
+                 <h4>Great Learning Environment</h4>
+                 <p>Public education must be viewed from the<br>lens of providing each child with the learning<br>
+                    environment that best meets his or her needs.<br> If we can send a low income child <br>
+                   to a parochial school knowing his odds of <br> attending college would increase as a result<br>
+                 then that is our preferred goal.</p>
+               </div>
+            </div>
+            <!-- End Fetatures -->
+          </div>
+           <!-- End Col -->
+
+         <!-- Start Col -->
+          <div class="col-lg-4 col-md-4 col-xs-12 p-0">
+             <!-- Start Fetatures -->
+            <div class="feature-item featured-border1">
+               <div class="feature-icon float-left">
+                 <i class="lni-invention"></i>
+               </div>
+               <div class="feature-info float-left my-3">
+                 <h4> Qualified Staffs</h4>
+                 <p>Engagements has to be human because<br> people trust people more than brands.</p>
+               </div>
+            </div>
+            <!-- End Fetatures -->
+          </div>
+           <!-- End Col -->
+        </div>
+        <!-- End Row -->
+      </div>
+    </section>
+    <!-- Cool Features Section End -->
+
+
+
+    <!-- Blog Section -->
+    <section id="blog" class="section">
+      <!-- Container Starts -->
+      <div class="container">
+        <!-- Start Row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="blog-text section-header text-center">
+              <div>
+                <h2 class="section-title">Latest Blog Posts</h2>
+                <div class="desc-text">
+                  <p></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- End Row -->
+        <!-- Start Row -->
+        <div class="row">
+          <!-- Start Col -->
+          <div class="col-lg-4 col-md-6 col-xs-12 blog-item">
+            <!-- Blog Item Starts -->
+            <div class="blog-item-wrapper">
+              <div class="blog-item-img">
+                <a href="single-post.html">
+                  <img src="img/blog/01.jpg" class="img-fluid" alt="">
+                </a>
+              </div>
+              <div class="blog-item-text">
+                <h3><a href="single-post.html">Elizabeth school is going for an Excursion</a></h3>
+                <p>We are organizing an excursion for the primary six students. Each student is expected to contribute the sum of fifty thousand for the excursion.
+                Click the header for more info.</p>
+                <a href="" class="read-more">10 Min read</a>
+              </div>
+              <div class="author">
+                <span class="name"><i class="lni-user"></i><a href="#">Posted by Admin</a></span>
+                <span class="date float-right"><i class="lni-calendar"></i><a href="#">10 April, 2020</a></span>
+              </div>
+            </div>
+            <!-- Blog Item Wrapper Ends-->
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-4 col-md-6 col-xs-12 blog-item">
+            <!-- Blog Item Starts -->
+            <div class="blog-item-wrapper">
+              <div class="blog-item-img">
+                <a href="single-post.html">
+                  <img src="img/blog/02.jpg" class="img-fluid" alt="">
+                </a>
+              </div>
+              <div class="blog-item-text">
+                <h3><a href="single-post.html">Shark Fighting</a></h3>
+                <p> Students will fight sharks for wealth and glory.</p>
+                <a href="" class="read-more">5 Min read</a>
+              </div>
+              <div class="author">
+                <span class="name"><i class="lni-user"></i><a href="#">Posted by Admin</a></span>
+                <span class="date float-right"><i class="lni-calendar"></i><a href="#">10 April, 2020</a></span>
+              </div>
+            </div>
+            <!-- Blog Item Wrapper Ends-->
+          </div>
+          </div>
+          <!-- End Col -->
+
+        </div>
+        <!-- End Row -->
+      </div>
+      </div>
+    </section>
+    <!-- blog Section End -->
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="section">
+      <!-- Container Starts -->
+      <div class="container">
+        <!-- Start Row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="contact-text section-header text-center">
+              <div>
+                <h2 class="section-title">CONTACT US</h2>
+                <div class="desc-text">
+                  <p>You can contact us if you have any questions whatsoever.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- End Row -->
+        <!-- Start Row -->
+        <div class="row">
+          <!-- Start Col -->
+          <div class="col-lg-6 col-md-12">
+          <form id="contactForm">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Name" required data-error="Please enter your name">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" placeholder="Subject" id="msg_subject" class="form-control" name="msg_subject" required data-error="Please enter your subject">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="email" name="email" placeholder="Email" required data-error="Please enter your Email">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-group">
+                  <textarea class="form-control" id="message"  name="message" placeholder="Write Message" rows="4" data-error="Write your message" required></textarea>
+                  <div class="help-block with-errors"></div>
+                </div>
+                <div class="submit-button">
+                  <button class="btn btn-common" id="submit" type="submit">Submit</button>
+                  <div id="msgSubmit" class="h3 hidden"></div>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-1">
+
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-4 col-md-12">
+            <div class="contact-img">
+              <img src="{% static 'landing/img/contact/01.png' %}" class="img-fluid" alt="">
+            </div>
+          </div>
+          <!-- End Col -->
+          <!-- Start Col -->
+          <div class="col-lg-1">
+          </div>
+          <!-- End Col -->
+
+        </div>
+        <!-- End Row -->
+      </div>
+    </section>
+    <!-- Contact Us Section End -->
+
+    <!-- Footer Section Start -->
+    <footer>
+      <!-- Footer Area Start -->
+      <section id="footer-Content">
+        <div class="container">
+          <!-- Start Row -->
+          <div class="row">
+
+          <!-- Start Col -->
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
+
+              <div class="footer-logo">
+               <img src="{% static 'landing/img/footer-logo.png' %}" alt="">
+              </div>
+            </div>
+             <!-- End Col -->
+              <!-- Start Col -->
+            <div class="col-lg-2 col-md-6 col-sm-6 col-xs-6 col-mb-12">
+              <div class="widget">
+                <h3 class="block-title">QUICK LINKS</h3>
+                <ul class="menu">
+                  <li><a href="#">  - Staff Login</a></li>
+                  <li><a href="#">- Student Login</a></li>
+                  <li><a href="#">- Blog</a></li>
+                  <li><a href="#">- Check our Careers</a></li>
+                </ul>
+              </div>
+            </div>
+             <!-- End Col -->
+              <!-- Start Col -->
+            <div class="col-lg-2 col-md-6 col-sm-6 col-xs-6 col-mb-12">
+              <div class="widget">
+                <h3 class="block-title">LEGAL</h3>
+                <ul class="menu">
+                  <li><a href="#">  - Legal information</a></li>
+                  <li><a href="#">- Privacy policy </a></li>
+                  <li><a href="#">- Report Abuse </a></li>
+                  <li><a href="#">- Terms of service</a></li>
+                </ul>
+              </div>
+            </div>
+             <!-- End Col -->
+
+              <!-- Start Col -->
+            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6 col-mb-12">
+              <div class="widget">
+                <h3 class="block-title">GET IN TOUCH</h3>
+                <ul class="menu">
+                  <li><a href="#"><i class="lni-money-location"></i>    Secondary School: 69A, Fantasy Road, Favour street, New-Okoba, Lagos. Primary School: 4, Fantasy street, Off Agbe Street, Abule-Egba</a></li>
+                  <li><a href="#"><i class="lni-facebook-messenger"></i>    Elizabethschool@gmail.com</a></li>
+                  <li><a href="#"><i class="lni-seo-consulting"></i>    08167141502</a></li>
+                </ul>
+              </div>
+            </div>
+            <!-- End Col -->
+          </div>
+          <!-- End Row -->
+          </div>
+        <!-- Copyright Start  -->
+
+        <div class="copyright">
+          <div class="container">
+            <!-- Star Row -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="site-info text-center">
+                  <p>Copyrights 2020. All rights reserved by <a href="http://uideck.com" rel="nofollow">Favour Schoolz</a></p>
+                </div>
+
+              </div>
+              <!-- End Col -->
+            </div>
+            <!-- End Row -->
+          </div>
+        </div>
+      <!-- Copyright End -->
+      </section>
+      <!-- Footer area End -->
+
+    </footer>
+    <!-- Footer Section End -->
+
+
+    <!-- Go To Top Link -->
+    <a href="#" class="back-to-top">
+      <i class="lni-chevron-up"></i>
+    </a>
+
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="loader" id="loader-1"></div>
+    </div>
+    <!-- End Preloader -->
+
+    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+    <script src="{% static 'landing/js/jquery-min.js' %}"></script>
+    <script src="{% static 'landing/js/popper.min.js' %}"></script>
+    <script src="{% static 'landing/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'landing/js/owl.carousel.js' %}"></script>
+    <script src="{% static 'landing/js/jquery.nav.js' %}"></script>
+    <script src="{% static 'landing/js/scrolling-nav.js' %}"></script>
+    <script src="{% static 'landing/js/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'landing/js/nivo-lightbox.js' %}"></script>
+    <script src="{% static 'landing/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'landing/js/form-validator.min.js' %}"></script>
+    <script src="{% static 'landing/js/contact-form-script.js' %}"></script>
+    <script src="{% static 'landing/js/main.js' %}"></script>
+
+  </body>
+</html>
