@@ -1,37 +1,47 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
+from django.db import transaction
 
-from schoolz.users.models import User
+from schoolz.users.models import Teacher, Teachers
 
-from .models import Teacher
+from .models import Class
+
+User = get_user_model()
 
 
 class TeacherSignUpForm(UserCreationForm):
+    full_name = forms.CharField(max_length=150)
+    photo = forms.ImageField(
+        required=True, widget=forms.ClearableFileInput(attrs={"class": "form-control"})
+    )
+    date_of_birth = forms.DateField(
+        required=True, widget=forms.TextInput(attrs={"type": "date"})
+    )
+    class_name = forms.ModelChoiceField(queryset=Class.objects.all(), required=True)
+    mobile = forms.CharField(max_length=11, required=True)
+    email = forms.CharField(max_length=255, required=True)
+    joining_date = forms.DateField(
+        required=True, widget=forms.TextInput(attrs={"type": "date"})
+    )
+
     class Meta(UserCreationForm.Meta):
-        model = User
+        model = Teachers
         fields = UserCreationForm.Meta.fields + ("email",)
 
-    def save(self, commit=True):
-        user = super().save()
-        user.is_teach = True
-        if commit:
-            user.save()
+    @transaction.atomic
+    def save(self):
+        user = super().save(commit=False)
+        user.save()
+        teacher = Teacher.objects.create(
+            user=user,
+            full_name=self.cleaned_data.get("full_name"),
+            photo=self.cleaned_data.get("photo"),
+            date_of_birth=self.cleaned_data.get("date_of_birth"),
+            class_name=self.cleaned_data.get("class_name"),
+            mobile=self.cleaned_data.get("mobile"),
+            email=self.cleaned_data.get("email"),
+            joining_date=self.cleaned_data.get("joining_date"),
+        )
+        teacher.save()
         return user
-
-
-class TeacherForm(forms.ModelForm):
-    class Meta:
-        model = Teacher
-        fields = [
-            "name",
-            "photo",
-            "date_of_birth",
-            "class_name",
-            "mobile",
-            "email",
-            "joining_date",
-        ]
-        widgets = {
-            "date_of_birth": forms.TextInput({"type": "date"}),
-            "joining_date": forms.TextInput({"type": "date"}),
-        }

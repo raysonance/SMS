@@ -4,16 +4,30 @@ from django.contrib.auth import get_user_model
 
 from schoolz.users.forms import UserChangeForm, UserCreationForm
 
+from .models import Admin, Student, Teacher, Teachers
+
 User = get_user_model()
+
+admin.site.register(Teacher)
 
 
 @admin.register(User)
+@admin.register(Teachers)
+@admin.register(Student)
+@admin.register(Admin)
 class UserAdmin(auth_admin.UserAdmin):
-
     form = UserChangeForm
     add_form = UserCreationForm
     fieldsets = (("User", {"fields": ("name",)}),) + tuple(
         auth_admin.UserAdmin.fieldsets
     )
-    list_display = ["username", "name", "is_staff", "is_superuser"]
+    list_display = [
+        "username",
+        "name",
+        "is_staff",
+        "is_superuser",
+        "is_teacher",
+        "is_admins",
+        "is_student",
+    ]
     search_fields = ["name"]

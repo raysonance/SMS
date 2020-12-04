@@ -1,19 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, RedirectView, UpdateView
+from django.views.generic import CreateView, DetailView, RedirectView, UpdateView
+
+from .forms import AdminSignUpForm
+from .models import Admin
 
 User = get_user_model()
-
-
-def ewe(request):
-    return request.user.is_teacher
-
-
-def turing(request):
-    return request.user.is_teach
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
@@ -52,8 +48,21 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
     permanent = False
 
     def get_redirect_url(self):
-
-        return reverse("users:detail", kwargs={"username": self.request.user.username})
+        return reverse("teachers:dash")
 
 
 user_redirect_view = UserRedirectView.as_view()
+
+
+class AdminSignUpView(CreateView):
+    model = Admin
+    form_class = AdminSignUpForm
+    template_name = "users/ASU.html"
+
+    def get_context_data(self, **kwargs):
+        kwargs["user_type"] = "admin"
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        super().form_valid(form)
+        return redirect("account_logout")

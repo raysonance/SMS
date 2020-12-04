@@ -2,21 +2,19 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 
-from schoolz.users.decorators import teacher_required
-from schoolz.users.models import User
+from schoolz.users.decorators import admin_required
+from schoolz.users.models import Teacher, Teachers
 
-from .forms import TeacherForm, TeacherSignUpForm
-from .models import Teacher
+from .forms import TeacherSignUpForm
 
 # Create your views here.
 
-# @method_decorator([user_passes_test(test_func=User.is_staff)], name='dispatch')
 
-
+@method_decorator([login_required, admin_required], name="dispatch")
 class TeacherSignupView(LoginRequiredMixin, CreateView):
-    model = User
+    model = Teachers
     form_class = TeacherSignUpForm
     template_name = "teachers/signup.html"
 
@@ -26,16 +24,9 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        return redirect("account_logout")
+        return redirect("home")
 
 
-@method_decorator([login_required, teacher_required], name="dispatch")
-class TeacherFillForm(CreateView):
+class TeacherDashBoard(ListView):
     model = Teacher
-    template_name = "teachers/teacherinfo.html"
-    form_class = TeacherForm
-
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        super().form_valid(form)
-        return redirect("account_logout")
+    template_name = "teachers/teacher.html"

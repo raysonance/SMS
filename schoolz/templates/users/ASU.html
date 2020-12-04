@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Admin {% endblock %}
+
+{% block content %}
+  <h1> ADMIN </h1>
+  <form class="form-horizontal" method="post" action="{% url 'users:admin' %}">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="control-group">
+      <div class="controls">
+        <button type="submit" class="btn btn-secondary">Sign Up</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}
