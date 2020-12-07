@@ -3,8 +3,10 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
-from schoolz.users.models import Student, StudentModel
+from schoolz.users.models import Student
 from teachers.models import Class
+
+from .models import StudentModel
 
 User = get_user_model()
 

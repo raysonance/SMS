@@ -4,12 +4,9 @@ from django.contrib.auth import get_user_model
 
 from schoolz.users.forms import UserChangeForm, UserCreationForm
 
-from .models import Admin, Student, StudentModel, Teacher, TeacherModel
+from .models import Admin, Student, Teacher
 
 User = get_user_model()
-
-admin.site.register(TeacherModel)
-admin.site.register(StudentModel)
 
 
 @admin.register(User)

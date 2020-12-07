@@ -6,9 +6,10 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from schoolz.users.decorators import admin_required, teacher_required
-from schoolz.users.models import Teacher, TeacherModel
+from schoolz.users.models import Teacher
 
 from .forms import TeacherSignUpForm
+from .models import TeacherModel
 
 # Create your views here.
 

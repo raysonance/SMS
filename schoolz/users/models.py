@@ -4,8 +4,6 @@ from django.db.models import CharField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from teachers.models import Class
-
 
 class User(AbstractUser):
     """Default user for Schoolz."""
@@ -109,32 +107,8 @@ class Admin(User):
         return super().save(*args, **kwargs)
 
 
-class TeacherModel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    name = models.CharField("Full Name", max_length=150, default="wannabe")
-    photo = models.ImageField(upload_to="teacherfile/")
-    date_of_birth = models.DateField(blank=True, null=True)
-    class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
-    mobile = models.CharField(max_length=11, blank=True, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
-    joining_date = models.DateField(blank=True, null=True)
-
-    class Meta:
-        ordering = ["joining_date", "name"]
-
-    def __str__(self):
-        return "{} ({})".format(self.name, self.class_name)
-
-    def get_absolute_url(self):
-        return reverse("teachers:dash", args=None)
-
-
 class Teacher(User):
     objects = TeacherManager()
-
-    @property
-    def more(self):
-        return self.teachermodel
 
     class Meta:
         proxy = True
@@ -144,28 +118,6 @@ class Teacher(User):
             self.type = User.Types.TEACHER
             self.is_teacher = True
         return super().save(*args, **kwargs)
-
-
-class StudentModel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    name = models.CharField("Full Name", max_length=100)
-    photo = models.ImageField(upload_to="studentsfile/")
-    class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
-    fathers_name = models.CharField("Father's Name", max_length=100)
-    mothers_name = models.CharField("Mother's Name", max_length=100)
-    date_of_birth = models.DateField("Birth Date", blank=True, null=True)
-    email = models.EmailField("Email Address")
-    address = models.TextField()
-    emergency_mobile_number = models.CharField("Mobile Number", max_length=11)
-
-    class Meta:
-        ordering = ["name"]
-
-    def __str__(self):
-        return "{} {}".format(self.name, self.class_name)
-
-    def get_absolute_url(self):
-        return reverse("teachers:dash", args=None)
 
 
 class Student(User):

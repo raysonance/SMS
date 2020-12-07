@@ -12,9 +12,10 @@ from django.views.generic import (
 )
 
 from schoolz.users.decorators import multiple_required, teacher_required
-from schoolz.users.models import Student, StudentModel
+from schoolz.users.models import Student
 
 from .forms import StudentSignUpForm
+from .models import StudentModel
 
 
 @method_decorator([teacher_required], name="dispatch")

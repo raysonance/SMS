@@ -3,9 +3,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
-from schoolz.users.models import Teacher, TeacherModel
+from schoolz.users.models import Teacher
 
-from .models import Class
+from .models import Class, TeacherModel
 
 User = get_user_model()
 
