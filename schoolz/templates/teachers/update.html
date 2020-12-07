@@ -4,13 +4,13 @@
 {% block title %} Teacher {% endblock %}
 
 {% block content %}
-  <h1> Teacher </h1>
-  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="{% url 'teachers:signup' %}">
+  <h1> Update Teacher </h1>
+  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="{% url 'teachers:update' request.user.teachermodel.pk %}">
     {% csrf_token %}
     {{ form|crispy }}
     <div class="control-group">
       <div class="controls">
-        <button type="submit" class="btn btn-primary my-5">Sign Up</button>
+        <button type="submit" class="btn btn-primary my-5">Update</button>
       </div>
     </div>
   </form>

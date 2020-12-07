@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <img style="height:200px; width:200px; border-radius:50%; margin:auto" src="{{ student.studentmodel.photo.url }}" alt="Photo">
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="personal_information">
+        <div class="row">
+          <h2 class="mx-auto">Student Information</h2>
+        </div>
+        <hr>
+        <div class="row">
+          <div style="font-size:24px; margin-left: 30px">
+            <pre>Name                    : {{ student.studentmodel.name }}</pre>
+            <pre>Date of Birth           : {{ student.studentmodel.date_of_birth }}</pre>
+            <pre>Class                   : {{ student.studentmodel.class_name }}</pre>
+            <pre>Father's Name           : {{ student.studentmodel.fathers_name }}</pre>
+            <pre>Mother's Name           : {{ student.studentmodel.mothers_name }}</pre>
+            <pre>Emergency Mobile No     : {{ student.studentmodel.emergency_mobile_number }}</pre>
+            <pre>Email                   : {{ student.studentmodel.email }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

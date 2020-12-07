@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
-from schoolz.users.models import Teacher, Teachers
+from schoolz.users.models import Teacher, TeacherModel
 
 from .models import Class
 
@@ -11,7 +11,9 @@ User = get_user_model()
 
 
 class TeacherSignUpForm(UserCreationForm):
-    full_name = forms.CharField(max_length=150)
+    name = forms.CharField(
+        max_length=150, widget=forms.TextInput(attrs={"class": "form-control"})
+    )
     photo = forms.ImageField(
         required=True, widget=forms.ClearableFileInput(attrs={"class": "form-control"})
     )
@@ -19,23 +21,31 @@ class TeacherSignUpForm(UserCreationForm):
         required=True, widget=forms.TextInput(attrs={"type": "date"})
     )
     class_name = forms.ModelChoiceField(queryset=Class.objects.all(), required=True)
-    mobile = forms.CharField(max_length=11, required=True)
-    email = forms.CharField(max_length=255, required=True)
+    mobile = forms.CharField(
+        max_length=11,
+        required=True,
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+    )
+    email = forms.CharField(
+        max_length=255,
+        required=True,
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+    )
     joining_date = forms.DateField(
         required=True, widget=forms.TextInput(attrs={"type": "date"})
     )
 
     class Meta(UserCreationForm.Meta):
-        model = Teachers
+        model = Teacher
         fields = UserCreationForm.Meta.fields + ("email",)
 
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)
         user.save()
-        teacher = Teacher.objects.create(
+        teacher = TeacherModel.objects.create(
             user=user,
-            full_name=self.cleaned_data.get("full_name"),
+            name=self.cleaned_data.get("name"),
             photo=self.cleaned_data.get("photo"),
             date_of_birth=self.cleaned_data.get("date_of_birth"),
             class_name=self.cleaned_data.get("class_name"),

@@ -7,18 +7,13 @@
     <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
-
-    <ul class="nav navbar-nav d-md-down-none">
-        <li class="nav-item px-3">
-            <a class="nav-link" href="#">Settings</a>
-        </li>
-    </ul>
+  <ul class="nav navbar-nav ml-auto"> <li class="nav-item"><h4> Hi {{ request.user.teachermodel.name }}</h4></li> </ul>
     <ul class="nav navbar-nav ml-auto">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button"
                aria-haspopup="true" aria-expanded="false">
-                {% if request.user.teacher %}
-                <img src="{{ request.user.teacher.photo.url }}" class="img-avatar" alt="admin">
+                {% if request.user.teachermodel %}
+                <img src="{{ request.user.teachermodel.photo.url }}" class="img-avatar" alt="admin">
                 {% else %}
                 <img src="{% static 'src/img/man.png' %}" class="img-avatar" alt="Anonymous">
                 {% endif %}
@@ -27,15 +22,11 @@
                 <div class="dropdown-header text-center">
                     <strong>Account</strong>
                 </div>
-                <a class="dropdown-item" href="#"><i class="fa fa-bell-o"></i> Updates<span
-                        class="badge badge-info">42</span></a>
-                <div class="dropdown-header text-center">
-                    <strong>Settings</strong>
-                </div>
-                <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a>
-                <a class="dropdown-item" href="#"><i class="fa fa-wrench"></i> Settings</a>
-                <a class="dropdown-item" href="#"><i class="fa fa-usd"></i> Payments<span class="badge badge-secondary">42</span></a>
-                <a class="dropdown-item" href="{% url 'account_logout' %}"><i class="fa fa-lock"></i> Logout</a>
+              <a class="dropdown-item" href="{% url 'teachers:profile' request.user.pk %}"><i class="fa fa-user"></i> Profile</a>
+              <a class="dropdown-item" href="{% url 'account_email' %}"><i class="fa fa-wrench"></i>Modify Email</a>
+              <a class="dropdown-item" href="{% url 'teachers:update' request.user.teachermodel.pk %}"><i class="fa fa-wrench"></i>Update Profile</a>
+              <a class="dropdown-item" href="{% url 'account_change_password' %}"><i class="fa fa-wrench"></i>Change Password?</a>
+              <a class="dropdown-item" href="{% url 'account_logout' %}"><i class="fa fa-lock"></i>Logout</a>
             </div>
         </li>
     </ul>

@@ -109,9 +109,9 @@ class Admin(User):
         return super().save(*args, **kwargs)
 
 
-class Teacher(models.Model):
+class TeacherModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    full_name = models.CharField(max_length=150)
+    name = models.CharField("Full Name", max_length=150, default="wannabe")
     photo = models.ImageField(upload_to="teacherfile/")
     date_of_birth = models.DateField(blank=True, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
@@ -120,21 +120,21 @@ class Teacher(models.Model):
     joining_date = models.DateField(blank=True, null=True)
 
     class Meta:
-        ordering = ["joining_date", "full_name"]
+        ordering = ["joining_date", "name"]
 
     def __str__(self):
-        return "{} ({})".format(self.full_name, self.class_name)
+        return "{} ({})".format(self.name, self.class_name)
 
     def get_absolute_url(self):
-        return reverse("dash", args=None)
+        return reverse("teachers:dash", args=None)
 
 
-class Teachers(User):
+class Teacher(User):
     objects = TeacherManager()
 
     @property
     def more(self):
-        return self.teacher
+        return self.teachermodel
 
     class Meta:
         proxy = True
@@ -146,15 +146,33 @@ class Teachers(User):
         return super().save(*args, **kwargs)
 
 
+class StudentModel(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    name = models.CharField("Full Name", max_length=100)
+    photo = models.ImageField(upload_to="studentsfile/")
+    class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
+    fathers_name = models.CharField("Father's Name", max_length=100)
+    mothers_name = models.CharField("Mother's Name", max_length=100)
+    date_of_birth = models.DateField("Birth Date", blank=True, null=True)
+    email = models.EmailField("Email Address")
+    address = models.TextField()
+    emergency_mobile_number = models.CharField("Mobile Number", max_length=11)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return "{} {}".format(self.name, self.class_name)
+
+    def get_absolute_url(self):
+        return reverse("teachers:dash", args=None)
+
+
 class Student(User):
     objects = StudentManager()
 
     class Meta:
         proxy = True
-
-    # @property
-    # def more(self):
-    # return self.studentmore
 
     def save(self, *args, **kwargs):
         if not self.pk:

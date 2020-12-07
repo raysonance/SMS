@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <img style="height:200px; width:200px; border-radius:50%; margin:auto" src="{{ teacher.teachermodel.photo.url }}" alt="Photo">
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="personal_information">
+        <div class="row">
+          <h2 class="mx-auto">Teacher Information</h2>
+        </div>
+        <hr>
+        <div class="row">
+          <div style="font-size:24px; margin-left: 30px">
+            <pre>Name                    : {{ teacher.teachermodel.name }}</pre>
+            <pre>Date of Birth           : {{ teacher.teachermodel.date_of_birth }}</pre>
+            <pre>Class                   : {{ teacher.teachermodel.class_name }}</pre>
+            <pre>Mobile No               : {{ teacher.teachermodel.mobile }}</pre>
+            <pre>Email                   : {{ teacher.teachermodel.email }}</pre>
+            <pre>Joining Date            : {{ teacher.teachermodel.joining_date }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Student {% endblock %}
+
+{% block content %}
+  <h1> Update Student </h1>
+  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="control-group">
+      <div class="controls">
+        <button type="submit" class="btn btn-primary my-5">Update</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}
