@@ -63,15 +63,9 @@
               <li class="nav-item">
               <a class="btn btn-singin" style="margin-left:1em; margin-bottom:1em;" href="{% url 'teachers:dash' %}" type="button">{{ user.username }} Dashboard</a>
               </li>
-                {% else %}
+                {% elif request.user.is_admin %}
                 <li class="nav-item">
-                <div class="dropdown"><button class="btn btn-singin dropdown-toggle" style="margin-left:1em; margin-bottom:1em;" data-toggle="dropdown" aria-expanded="false" type="button">{{ user.username }} Dashboard</button>
-        <div class="dropdown-menu" role="menu">
-          {% if section != 'home' %}
-          <a class="dropdown-item" role="presentation" href="{% url 'home' %}">Home</a>
-          {% endif %}
-          <a class="dropdown-item" role="presentation" href="{% url 'account_logout' %}">Sign out</a>
-          </div>
+                  <a class="btn btn-singin" style="margin-left:1em; margin-bottom:1em;" href="{% url 'users:dash' %}" type="button">{{ user.username }} Dashboard</a>
                   {% endif %}
     </div>
                 </li>

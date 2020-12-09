@@ -11,14 +11,14 @@ from django.views.generic import (
     UpdateView,
 )
 
-from schoolz.users.decorators import multiple_required, teacher_required
+from schoolz.users.decorators import teacher_admin, teacher_admin_student
 from schoolz.users.models import Student
 
 from .forms import StudentSignUpForm
 from .models import StudentModel
 
 
-@method_decorator([teacher_required], name="dispatch")
+@method_decorator([teacher_admin], name="dispatch")
 class StudentSignupView(LoginRequiredMixin, CreateView):
     model = Student
     login_url = "account_login"
@@ -30,8 +30,12 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
+        form.instance.created_by = self.request.user
         super().form_valid(form)
-        return redirect("teachers:dash")
+        if self.request.user.is_teacher:
+            return redirect("teachers:dash")
+        if self.request.user.is_admin:
+            return redirect("users:dash")
 
 
 class StudentProfileView(LoginRequiredMixin, DetailView):
@@ -41,7 +45,7 @@ class StudentProfileView(LoginRequiredMixin, DetailView):
     template_name = "student/studentprofile.html"
 
 
-@method_decorator([multiple_required], name="dispatch")
+@method_decorator([teacher_admin_student], name="dispatch")
 class StudentUpdateView(LoginRequiredMixin, UpdateView):
     model = StudentModel
     login_url = "account_login"
@@ -62,7 +66,7 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("teachers:dash")
 
 
-@method_decorator([multiple_required], name="dispatch")
+@method_decorator([teacher_admin_student], name="dispatch")
 class StudentListView(LoginRequiredMixin, ListView):
     model = Student
     login_url = "account_login"
@@ -70,6 +74,7 @@ class StudentListView(LoginRequiredMixin, ListView):
     context_object_name = "student"
 
 
+@method_decorator([teacher_admin], name="dispatch")
 class StudentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Student
     template_name = "student/student_delete.html"
@@ -79,7 +84,12 @@ class StudentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.studentmodel.class_name == self.request.user.teachermodel.class_name
+        if self.request.user.is_teacher:
+            return (
+                obj.studentmodel.class_name == self.request.user.teachermodel.class_name
+            )
+        elif self.request.user.is_admin:
+            return True
 
 
 @method_decorator([login_required], name="dispatch")

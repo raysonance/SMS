@@ -3,10 +3,10 @@ from django.contrib.auth.decorators import user_passes_test
 
 
 def teacher_required(
-    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="account_login"
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="home"
 ):
     actual_decorator = user_passes_test(
-        lambda u: u.is_active and (u.is_teacher),
+        lambda u: u.is_active and u.is_teacher,
         login_url=login_url,
         redirect_field_name=redirect_field_name,
     )
@@ -15,12 +15,38 @@ def teacher_required(
     return actual_decorator
 
 
-def multiple_required(
-    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="account_login"
+def teacher_admin(
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="home"
+):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_active and (u.is_teacher or u.is_superuser or u.is_admin),
+        login_url=login_url,
+        redirect_field_name=redirect_field_name,
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
+def teacher_admin_student(
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="home"
 ):
     actual_decorator = user_passes_test(
         lambda u: u.is_active
-        and (u.is_teacher or u.is_superuser or u.is_student or u.is_admins),
+        and (u.is_teacher or u.is_superuser or u.is_admin or u.is_student),
+        login_url=login_url,
+        redirect_field_name=redirect_field_name,
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
+def teacher_student(
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="home"
+):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_active and (u.is_teacher or u.is_student or u.is_superuser),
         login_url=login_url,
         redirect_field_name=redirect_field_name,
     )
@@ -30,10 +56,10 @@ def multiple_required(
 
 
 def admin_required(
-    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="account_login"
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="home"
 ):
     actual_decorator = user_passes_test(
-        lambda u: u.is_active and (u.is_admins or u.is_superuser),
+        lambda u: u.is_active and (u.is_admin or u.is_superuser),
         login_url=login_url,
         redirect_field_name=redirect_field_name,
     )

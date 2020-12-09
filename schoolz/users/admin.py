@@ -25,7 +25,7 @@ class UserAdmin(auth_admin.UserAdmin):
         "is_staff",
         "is_superuser",
         "is_teacher",
-        "is_admins",
+        "is_admin",
         "is_student",
     ]
     search_fields = ["name"]

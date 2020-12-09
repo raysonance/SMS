@@ -53,7 +53,7 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
             return reverse("teachers:dash")
         elif self.request.user.is_student:
             return reverse("students:dash")
-        elif self.request.user.is_admins:
+        elif self.request.user.is_admin:
             return reverse("users:dash")
         else:
             return reverse("home")
@@ -63,11 +63,11 @@ user_redirect_view = UserRedirectView.as_view()
 
 
 def user_is_admin(user):
-    if user.is_admins:
+    if user.is_admin:
         return True
 
 
-@user_passes_test(user_is_admin, login_url="account_login")
+@user_passes_test(user_is_admin, login_url="home")
 def admin_dashboard(request):
     total_student = Student.objects.count()
     student = Student.objects.all()

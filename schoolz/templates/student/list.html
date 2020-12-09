@@ -39,10 +39,9 @@
                                   </tr>
                               </thead>
                               <tbody>
-                                  {% for students in student %}
-                                  {% if request.user.is_teacher %}
+                              {% if request.user.is_teacher %}
+                                {% for students in student %}
                                   {% if students.studentmodel.class_name == request.user.teachermodel.class_name %}
-                                  {% endif %}
                                     <tr role="row" class="odd">
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ students.studentmodel.name }}</td>
@@ -63,7 +62,30 @@
                                         </td>
                                     </tr>
                                   {% endif %}
-                                  {% endfor %}
+                                {% endfor %}
+                              {% elif request.user.is_admin %}
+                                {% for students in student %}
+                                    <tr role="row" class="odd">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ students.studentmodel.name }}</td>
+                                        <td>{{ students.studentmodel.email }}</td>
+                                        <td>{{ students.studentmodel.class_name }}</td>
+                                        <td>{{ students.studentmodel.emergency_mobile_number }}</td>
+                                        <td>{{ students.studentmodel.date_of_birth }}</td>
+                                        <td>
+                                            <a class="btn btn-success" href="{% url 'students:profile' students.pk %}">
+                                                <i class="fa fa-search-plus"></i>
+                                            </a>
+                                            <a class="btn btn-info" href="{% url 'students:update' students.studentmodel.pk %}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger" href="{% url 'students:delete' students.pk %}">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                              {% endif %}
                               </tbody>
                           </table>
                       </div>

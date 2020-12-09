@@ -10,7 +10,7 @@ class User(AbstractUser):
 
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
-    is_admins = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
 
     class Types(models.TextChoices):
         ADMIN = "Admin", "ADMIN"
@@ -103,7 +103,7 @@ class Admin(User):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.type = User.Types.ADMIN
-            self.is_admins = True
+            self.is_admin = True
         return super().save(*args, **kwargs)
 
 

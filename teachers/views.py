@@ -33,7 +33,8 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        return redirect("teachers:dash")
+        if self.request.user.is_admin:
+            return redirect("users:dash")
 
 
 @method_decorator([admin_required], name="dispatch")
@@ -70,6 +71,7 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("teachers:dash")
 
 
+@method_decorator([admin_required], name="dispatch")
 class TeacherDeleteView(LoginRequiredMixin, DeleteView):
     model = Teacher
     template_name = "teachers/teacher_delete.html"
@@ -83,7 +85,7 @@ def user_is_teacher(user):
         return True
 
 
-@user_passes_test(user_is_teacher, login_url="account_login")
+@user_passes_test(user_is_teacher, login_url="home")
 def teacher_dashboard(request):
     total_student = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name.pk
