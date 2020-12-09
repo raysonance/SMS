@@ -32,16 +32,25 @@
 
 
        <!-- Holiday Section START -->
-       <li class="nav-item nav-dropdown">
-        <a class="nav-link nav-dropdown-toggle" href="#">
-            <i class="nav-icon icon-puzzle"></i>Holiday</a>
-        <ul class="nav-dropdown-items">
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="nav-icon icon-puzzle"></i>Student List</a>
-            </li>
-        </ul>
-      </li>
+
+            <li class="nav-item nav-dropdown">
+             <a class="nav-link nav-dropdown-toggle" href="#">
+                 <i class="nav-icon icon-puzzle"></i>Teacher</a>
+             <ul class="nav-dropdown-items">
+                 <li class="nav-item">
+                     <a class="nav-link" href="{% url 'teachers:signup' %}">
+                         <i class="fa fa-plus-circle"></i>Teacher Registration</a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link" href="{% url 'teachers:list' %}">
+                         <i class="fa fa-list"></i>Teacher List</a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link" href="#">
+                         <i class="fa fa-search-plus"></i>Teacher Search</a>
+                 </li>
+             </ul>
+           </li>
       <!-- Holiday Section END -->
 
         <!-- Event Section START -->

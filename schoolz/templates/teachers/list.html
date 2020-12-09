@@ -7,7 +7,7 @@
           <div class="card-header">
               <i class="fa fa-edit"></i> Student Tables
           </div>
-          {% if student %}
+          {% if teacher %}
           <div class="card-body">
               <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                   <div class="row">
@@ -31,38 +31,30 @@
                                   <tr role="row">
                                       <th>Id</th>
                                       <th>Name</th>
-                                      <th>Email</th>
                                       <th>Class</th>
                                       <th>Mobile number</th>
-                                      <th>Date of Birth</th>
                                       <th>Actions</th>
                                   </tr>
                               </thead>
                               <tbody>
-                                  {% for students in student %}
-                                  {% if request.user.is_teacher %}
-                                  {% if students.studentmodel.class_name == request.user.teachermodel.class_name %}
-                                  {% endif %}
+                                  {% for teachers in teacher %}
                                     <tr role="row" class="odd">
                                         <td>{{ forloop.counter }}</td>
-                                        <td>{{ students.studentmodel.name }}</td>
-                                        <td>{{ students.studentmodel.email }}</td>
-                                        <td>{{ students.studentmodel.class_name }}</td>
-                                        <td>{{ students.studentmodel.emergency_mobile_number }}</td>
-                                        <td>{{ students.studentmodel.date_of_birth }}</td>
+                                        <td>{{ teachers.teachermodel.name }}</td>
+                                        <td>{{ teachers.teachermodel.class_name }}</td>
+                                        <td>{{ teachers.teachermodel.emergency_mobile_number }}</td>
                                         <td>
-                                            <a class="btn btn-success" href="{% url 'students:profile' students.pk %}">
+                                            <a class="btn btn-success" href="{% url 'teachers:profile' teachers.pk %}">
                                                 <i class="fa fa-search-plus"></i>
                                             </a>
-                                            <a class="btn btn-info" href="{% url 'students:update' students.studentmodel.pk %}">
+                                            <a class="btn btn-info" href="{% url 'teachers:update' teachers.teachermodel.pk %}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger" href="{% url 'students:delete' students.pk %}">
+                                            <a class="btn btn-danger" href="{% url 'teachers:delete' teachers.pk %}">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
                                         </td>
                                     </tr>
-                                  {% endif %}
                                   {% endfor %}
                               </tbody>
                           </table>

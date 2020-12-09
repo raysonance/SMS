@@ -82,7 +82,7 @@ class StudentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return obj.studentmodel.class_name == self.request.user.teachermodel.class_name
 
 
-@method_decorator([login_required, teacher_required], name="dispatch")
+@method_decorator([login_required], name="dispatch")
 class StudentDashBoard(ListView):
     model = Student
     template_name = "teachers/student.html"

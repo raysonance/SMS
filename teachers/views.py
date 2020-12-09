@@ -1,17 +1,23 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 
+# Create your views here.
 from schoolz.users.decorators import admin_required, teacher_required
 from schoolz.users.models import Teacher
+from students.models import StudentModel
 
 from .forms import TeacherSignUpForm
 from .models import TeacherModel
-
-# Create your views here.
 
 
 @method_decorator([admin_required], name="dispatch")
@@ -28,6 +34,14 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         super().form_valid(form)
         return redirect("teachers:dash")
+
+
+@method_decorator([admin_required], name="dispatch")
+class TeacherListView(LoginRequiredMixin, ListView):
+    model = Teacher
+    login_url = "account_login"
+    template_name = "teachers/list.html"
+    context_object_name = "teacher"
 
 
 class TeacherProfileView(LoginRequiredMixin, DetailView):
@@ -56,7 +70,25 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("teachers:dash")
 
 
-@method_decorator([login_required, teacher_required], name="dispatch")
-class TeacherDashBoard(ListView):
+class TeacherDeleteView(LoginRequiredMixin, DeleteView):
     model = Teacher
-    template_name = "teachers/teacher.html"
+    template_name = "teachers/teacher_delete.html"
+    success_url = reverse_lazy("teachers:list")
+    login_url = "account_login"
+    context_object_name = "teachers"
+
+
+def user_is_teacher(user):
+    if user.is_teacher:
+        return True
+
+
+@user_passes_test(user_is_teacher, login_url="account_login")
+def teacher_dashboard(request):
+    total_student = StudentModel.objects.filter(
+        class_name=request.user.teachermodel.class_name.pk
+    ).count()
+    context = {
+        "student": total_student,
+    }
+    return render(request, "teachers/teacher.html", context)
