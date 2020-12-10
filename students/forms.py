@@ -12,6 +12,10 @@ User = get_user_model()
 
 
 class StudentSignUpForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super(StudentSignUpForm, self).__init__(*args, **kwargs)
+
     name = forms.CharField(
         max_length=150, widget=forms.TextInput(attrs={"class": "form-control"})
     )
@@ -63,6 +67,7 @@ class StudentSignUpForm(UserCreationForm):
             email=self.cleaned_data.get("email"),
             address=self.cleaned_data.get("address"),
             emergency_mobile_number=self.cleaned_data.get("emergency_mobile_number"),
+            created_by=self.user,
         )
         student.save()
         return user

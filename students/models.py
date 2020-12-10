@@ -19,6 +19,9 @@ class StudentModel(models.Model):
     email = models.EmailField("Email Address")
     address = models.TextField()
     emergency_mobile_number = models.CharField("Mobile Number", max_length=11)
+    created_by = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="+", blank=True, null=True
+    )
 
     class Meta:
         ordering = ["name"]

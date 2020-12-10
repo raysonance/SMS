@@ -16,14 +16,15 @@
         <hr>
         <div class="row">
           <div style="font-size:24px; margin-left: 30px">
-            <pre>Name                    : {{ student.studentmodel.name }}</pre>
-            <pre>Date of Birth           : {{ student.studentmodel.date_of_birth }}</pre>
-            <pre>Class                   : {{ student.studentmodel.class_name }}</pre>
-            <pre>Father's Name           : {{ student.studentmodel.fathers_name }}</pre>
-            <pre>Mother's Name           : {{ student.studentmodel.mothers_name }}</pre>
-            <pre>Emergency Mobile No     : {{ student.studentmodel.emergency_mobile_number }}</pre>
-            <pre>Address                 : {{ student.studentmodel.address }}</pre>
-            <pre>Email                   : {{ student.studentmodel.email }}</pre>
+            <pre>Name                          : {{ student.studentmodel.name }}</pre>
+            <pre>Date of Birth                 : {{ student.studentmodel.date_of_birth }}</pre>
+            <pre>Class                         : {{ student.studentmodel.class_name }}</pre>
+            <pre>Father's Name                 : {{ student.studentmodel.fathers_name }}</pre>
+            <pre>Mother's Name                 : {{ student.studentmodel.mothers_name }}</pre>
+            <pre>Emergency Mobile No           : {{ student.studentmodel.emergency_mobile_number }}</pre>
+            <pre>Address                       : {{ student.studentmodel.address }}</pre>
+            <pre>Email                         : {{ student.studentmodel.email }}</pre>
+            <pre>Student Model Created By      : {% if student.studentmodel.created_by.is_admin %} {{ student.studentmodel.created_by }} {% else %} {{ student.studentmodel.created_by.teachermodel.name }} {% endif %}</pre>
           </div>
         </div>
       </div>

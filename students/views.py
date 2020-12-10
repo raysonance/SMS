@@ -25,6 +25,11 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
     form_class = StudentSignUpForm
     template_name = "student/signup.html"
 
+    def get_form_kwargs(self):
+        kwargs = super(StudentSignupView, self).get_form_kwargs()
+        kwargs.update({"user": self.request.user})
+        return kwargs
+
     def get_context_data(self, **kwargs):
         kwargs["user_type"] = "students"
         return super().get_context_data(**kwargs)
@@ -63,7 +68,10 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
     ]
 
     def get_success_url(self):
-        return reverse_lazy("teachers:dash")
+        if self.request.user.is_teacher:
+            return reverse_lazy("teachers:dash")
+        if self.request.user.is_admin:
+            return reverse_lazy("users:dash")
 
 
 @method_decorator([teacher_admin_student], name="dispatch")
