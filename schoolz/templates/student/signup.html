@@ -5,7 +5,7 @@
 
 {% block content %}
   <h1> Student </h1>
-  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="{% url 'students:signup' %}">
+  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
     {% csrf_token %}
     {{ form|crispy }}
     <div class="control-group">

@@ -5,7 +5,7 @@
 
 {% block content %}
   <h1> Update Teacher </h1>
-  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="{% url 'teachers:update' request.user.teachermodel.pk %}">
+  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
     {% csrf_token %}
     {{ form|crispy }}
     <div class="control-group">

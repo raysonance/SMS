@@ -61,7 +61,6 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
         "name",
         "photo",
         "date_of_birth",
-        "class_name",
         "mobile",
         "email",
         "joining_date",
@@ -69,6 +68,19 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("teachers:dash")
+
+
+@method_decorator([admin_required], name="dispatch")
+class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
+    model = TeacherModel
+    login_url = "account_login"
+    template_name = "teachers/update.html"
+    fields = [
+        "class_name",
+    ]
+
+    def get_success_url(self):
+        return reverse_lazy("teachers:list")
 
 
 @method_decorator([admin_required], name="dispatch")
