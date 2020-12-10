@@ -47,12 +47,14 @@
                                             <a class="btn btn-success" href="{% url 'teachers:profile' teachers.pk %}">
                                                 <i class="fa fa-search-plus"></i>
                                             </a>
+                                          {% if request.user.is_admin %}
                                             <a class="btn btn-info" href="{% url 'teachers:admin_update' teachers.teachermodel.pk %}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                             <a class="btn btn-danger" href="{% url 'teachers:delete' teachers.pk %}">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
+                                          {% endif %}
                                         </td>
                                     </tr>
                                   {% endfor %}

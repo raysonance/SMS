@@ -7,13 +7,15 @@
     <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
-  <ul class="nav navbar-nav ml-auto"> <li class="nav-item"><h4> Hi {% if request.user.is_teacher %} {{ request.user.teachermodel.name }} {% else %} {{ user.username }} {% endif %}</h4></li> </ul>
+  <ul class="nav navbar-nav ml-auto"> <li class="nav-item ml-auto"><h4> Hi {% if request.user.is_teacher %} {{ request.user.teachermodel.name }} {% else %} {{ user.username }} {% endif %}</h4></li> </ul>
     <ul class="nav navbar-nav ml-auto">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button"
                aria-haspopup="true" aria-expanded="false">
                 {% if request.user.teachermodel %}
-                <img src="{{ request.user.teachermodel.photo.url }}" class="img-avatar" alt="admin">
+                <img src="{{ request.user.teachermodel.photo.url }}" class="img-avatar" alt="teacher">
+                {% elif request.user.studentmodel %}
+                <img src="{{ request.user.studentmodel.photo.url }}" class="img-avatar" alt="student">
                 {% else %}
                 <img src="{% static 'src/img/man.png' %}" class="img-avatar" alt="Anonymous">
                 {% endif %}
@@ -35,6 +37,17 @@
                     <strong>Account</strong>
                 </div>
               <a class="dropdown-item" href="{% url 'account_email' %}"><i class="fa fa-wrench"></i>Modify Email</a>
+              <a class="dropdown-item" href="{% url 'account_change_password' %}"><i class="fa fa-wrench"></i>Change Password?</a>
+              <a class="dropdown-item" href="{% url 'account_logout' %}"><i class="fa fa-lock"></i>Logout</a>
+          </div>
+          {% elif request.user.is_student %}
+          <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-header text-center">
+                    <strong>Account</strong>
+                </div>
+              <a class="dropdown-item" href="{% url 'students:profile' request.user.pk %}"><i class="fa fa-user"></i> Profile</a>
+              <a class="dropdown-item" href="{% url 'account_email' %}"><i class="fa fa-wrench"></i>Modify Email</a>
+              <a class="dropdown-item" href="{% url 'students:update' request.user.studentmodel.pk %}"><i class="fa fa-wrench"></i>Update Profile</a>
               <a class="dropdown-item" href="{% url 'account_change_password' %}"><i class="fa fa-wrench"></i>Change Password?</a>
               <a class="dropdown-item" href="{% url 'account_logout' %}"><i class="fa fa-lock"></i>Logout</a>
             </div>

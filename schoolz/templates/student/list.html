@@ -63,6 +63,24 @@
                                     </tr>
                                   {% endif %}
                                 {% endfor %}
+                              {% elif request.user.is_student %}
+                                {% for students in student %}
+                                  {% if students.studentmodel.class_name == request.user.studentmodel.class_name %}
+                                    <tr role="row" class="odd">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ students.studentmodel.name }}</td>
+                                        <td>{{ students.studentmodel.email }}</td>
+                                        <td>{{ students.studentmodel.class_name }}</td>
+                                        <td>{{ students.studentmodel.emergency_mobile_number }}</td>
+                                        <td>{{ students.studentmodel.date_of_birth }}</td>
+                                        <td>
+                                            <a class="btn btn-success" href="{% url 'students:profile' students.pk %}">
+                                                <i class="fa fa-search-plus"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                  {% endif %}
+                                {% endfor %}
                               {% elif request.user.is_admin %}
                                 {% for students in student %}
                                     <tr role="row" class="odd">
@@ -85,6 +103,8 @@
                                         </td>
                                     </tr>
                                 {% endfor %}
+                              {% else %}
+                                <h3> Hello What sre you looking for ?</h3>
                               {% endif %}
                               </tbody>
                           </table>

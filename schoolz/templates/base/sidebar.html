@@ -2,9 +2,19 @@
 <div class="sidebar">
     <nav class="sidebar-nav">
         <ul class="nav">
+          {% if request.user.is_admin %}
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'home' %}"><i class="icon-speedometer"></i> Dashboard</a>
+                <a class="nav-link" href="{% url 'users:dash' %}"><i class="icon-speedometer"></i> Dashboard</a>
             </li>
+          {% elif request.user.is_teacher %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'teachers:dash' %}"><i class="icon-speedometer"></i> Dashboard</a>
+            </li>
+          {% elif request.user.is_student %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'students:dash' %}"><i class="icon-speedometer"></i> Dashboard</a>
+            </li>
+          {% endif %}
             <!-- Administration Section Start -->
 
            <!-- Class Section END -->
@@ -14,41 +24,49 @@
              <a class="nav-link nav-dropdown-toggle" href="#">
                  <i class="nav-icon icon-puzzle"></i>Student</a>
              <ul class="nav-dropdown-items">
+               {% if request.user.is_admin or request.user.is_teacher %}
                  <li class="nav-item">
                      <a class="nav-link" href="{% url 'students:signup' %}">
                          <i class="fa fa-plus-circle"></i>Student Registration</a>
                  </li>
+               {% endif %}
                  <li class="nav-item">
                      <a class="nav-link" href="{% url 'students:list' %}">
                          <i class="fa fa-list"></i>Student List</a>
                  </li>
+               {% if request.user.is_admin or request.user.is_teacher %}
                  <li class="nav-item">
                      <a class="nav-link" href="#">
                          <i class="fa fa-search-plus"></i>Student Search</a>
                  </li>
+               {% endif %}
              </ul>
            </li>
            <!-- Student Section END -->
 
 
          <!-- Teacher Section START -->
-          {% if request.user.is_admin %}
+          {% if request.user.is_admin  or request.user.is_student %}
             <li class="nav-item nav-dropdown">
              <a class="nav-link nav-dropdown-toggle" href="#">
                  <i class="nav-icon icon-puzzle"></i>Teacher</a>
              <ul class="nav-dropdown-items">
+               {% if request.user.is_admin %}
                  <li class="nav-item">
                      <a class="nav-link" href="{% url 'teachers:signup' %}">
                          <i class="fa fa-plus-circle"></i>Teacher Registration</a>
                  </li>
+               {% endif %}
                  <li class="nav-item">
                      <a class="nav-link" href="{% url 'teachers:list' %}">
                          <i class="fa fa-list"></i>Teacher List</a>
                  </li>
+               {% if request.user.is_admin %}
                  <li class="nav-item">
                      <a class="nav-link" href="#">
                          <i class="fa fa-search-plus"></i>Teacher Search</a>
                  </li>
+               {% endif %}
              </ul>
            </li>
           {% endif %}
@@ -57,11 +75,11 @@
         <!-- Event Section START -->
         <li class="nav-item nav-dropdown">
          <a class="nav-link nav-dropdown-toggle" href="#">
-             <i class="nav-icon icon-puzzle"></i>Event</a>
+             <i class="nav-icon icon-puzzle"></i>Result</a>
          <ul class="nav-dropdown-items">
              <li class="nav-item">
                  <a class="nav-link" href="#">
-                     <i class="nav-icon icon-puzzle"></i>Student List</a>
+                     <i class="nav-icon icon-puzzle"></i>Student Result</a>
              </li>
          </ul>
        </li>

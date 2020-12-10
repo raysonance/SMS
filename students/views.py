@@ -1,6 +1,6 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import (
@@ -12,7 +12,7 @@ from django.views.generic import (
 )
 
 from schoolz.users.decorators import teacher_admin, teacher_admin_student
-from schoolz.users.models import Student
+from schoolz.users.models import Student, Teacher
 
 from .forms import StudentSignUpForm
 from .models import StudentModel
@@ -100,7 +100,18 @@ class StudentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
 
 
-@method_decorator([login_required], name="dispatch")
-class StudentDashBoard(ListView):
-    model = Student
-    template_name = "teachers/student.html"
+def user_is_student(user):
+    return user.is_student
+
+
+@user_passes_test(user_is_student, login_url="home")
+def student_dashboard(request):
+    total_student = StudentModel.objects.filter(
+        class_name=request.user.studentmodel.class_name.pk
+    ).count()
+    teacher = Teacher.objects.all()
+    context = {
+        "teacher": teacher,
+        "student": total_student,
+    }
+    return render(request, "student/student_dashboard.html", context)

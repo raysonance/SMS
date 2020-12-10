@@ -12,7 +12,7 @@ from django.views.generic import (
 )
 
 # Create your views here.
-from schoolz.users.decorators import admin_required, teacher_required
+from schoolz.users.decorators import admin_required, admin_student, teacher_required
 from schoolz.users.models import Teacher
 from students.models import StudentModel
 
@@ -37,7 +37,7 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
             return redirect("users:dash")
 
 
-@method_decorator([admin_required], name="dispatch")
+@method_decorator([admin_student], name="dispatch")
 class TeacherListView(LoginRequiredMixin, ListView):
     model = Teacher
     login_url = "account_login"
