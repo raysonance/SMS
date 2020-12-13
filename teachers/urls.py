@@ -7,6 +7,10 @@ from .views import (
     TeacherProfileView,
     TeacherSignupView,
     TeacherUpdateView,
+    add_result,
+    show_result,
+    show_student_result,
+    staff_add_result_save,
     teacher_dashboard,
 )
 
@@ -20,4 +24,8 @@ urlpatterns = [
     path("<int:pk>/profile/", TeacherProfileView.as_view(), name="profile"),
     path("<int:pk>/delete/", TeacherDeleteView.as_view(), name="delete"),
     path("dashboard/", teacher_dashboard, name="dash"),
+    path("add_result/", add_result, name="add_result"),
+    path("save_result/", staff_add_result_save, name="save_result"),
+    path("show_result/", show_result, name="show_result"),
+    path("result/", show_student_result, name="show_student_result"),
 ]

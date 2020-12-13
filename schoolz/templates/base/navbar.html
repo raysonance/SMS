@@ -7,7 +7,6 @@
     <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
-  <ul class="nav navbar-nav ml-auto"> <li class="nav-item ml-auto"><h4> Hi {% if request.user.is_teacher %} {{ request.user.teachermodel.name }} {% else %} {{ user.username }} {% endif %}</h4></li> </ul>
     <ul class="nav navbar-nav ml-auto">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button"

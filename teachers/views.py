@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
@@ -14,7 +15,7 @@ from django.views.generic import (
 # Create your views here.
 from schoolz.users.decorators import admin_required, admin_student, teacher_required
 from schoolz.users.models import Teacher
-from students.models import StudentModel
+from students.models import StudentModel, Subject, SubjectResult
 
 from .forms import TeacherSignUpForm
 from .models import TeacherModel
@@ -106,3 +107,123 @@ def teacher_dashboard(request):
         "student": total_student,
     }
     return render(request, "teachers/teacher.html", context)
+
+
+@user_passes_test(user_is_teacher, login_url="home")
+def add_result(request):
+    students = StudentModel.objects.filter(
+        class_name=request.user.teachermodel.class_name
+    )
+    subjects = Subject.objects.filter(class_name=request.user.teachermodel.class_name)
+    context = {"students": students, "subjects": subjects}
+    return render(request, "teachers/add_result.html", context)
+
+
+def staff_add_result_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method")
+        return redirect("staff_add_result")
+    else:
+        student_id = request.POST.get("students")
+        subject_id = request.POST.get("subject")
+        first_test = request.POST.get("first_test")
+        second_test = request.POST.get("second_test")
+        third_test = request.POST.get("third_test")
+        fourth_test = request.POST.get("fourth_test")
+        exam_score = request.POST.get("exam_score")
+        total_score = request.POST.get("total_score")
+        grade = request.POST.get("grade")
+        remark = request.POST.get("remark")
+
+        student_obj = StudentModel.objects.get(pk=student_id)
+        subject_obj = Subject.objects.get(id=subject_id)
+
+        try:
+            # Check if Students Result Already Exists or not
+            check_exist = SubjectResult.objects.filter(
+                subject_id=subject_obj, student_id=student_obj
+            ).exists()
+            if check_exist:
+                result = SubjectResult.objects.get(
+                    subject_id=subject_obj, student_id=student_obj
+                )
+                result.first_test = first_test
+                result.second_test = second_test
+                result.third_test = third_test
+                result.fourth_test = fourth_test
+                result.exam_score = exam_score
+                result.total_score = total_score
+                result.grade = grade
+                result.remark = remark
+                result.save()
+                messages.success(request, "Result Updated Successfully!")
+                return redirect("teachers:add_result")
+            else:
+                result = SubjectResult(
+                    student=student_obj,
+                    subject=subject_obj,
+                    first_test=first_test,
+                    second_test=second_test,
+                    third_test=third_test,
+                    fourth_test=fourth_test,
+                    exam_score=exam_score,
+                    total_score=total_score,
+                    grade=grade,
+                    remark=remark,
+                )
+                result.save()
+                messages.success(request, "Result Added Successfully!")
+                return redirect("teachers:add_result")
+        except (
+            ArithmeticError,
+            ValueError,
+            KeyError,
+            EnvironmentError,
+            TypeError,
+            IndexError,
+            AssertionError,
+            AttributeError,
+            ConnectionAbortedError,
+            ConnectionError,
+            BrokenPipeError,
+            ChildProcessError,
+            ConnectionRefusedError,
+            ConnectionResetError,
+            FileNotFoundError,
+            InterruptedError,
+            NotImplementedError,
+            SystemError,
+            SyntaxError,
+            TimeoutError,
+            UnboundLocalError,
+            UnicodeError,
+        ):
+            messages.error(request, "Failed to Add Result!")
+            return redirect("teachers:add_result")
+
+
+def show_result(request):
+    students = StudentModel.objects.filter(
+        class_name=request.user.teachermodel.class_name
+    )
+
+    context = {
+        "students": students,
+    }
+
+    return render(request, "teachers/show_result.html", context)
+
+
+def show_student_result(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method")
+        return redirect("teachers:show_result")
+    else:
+        student_id = request.POST.get("students")
+
+        student = StudentModel.objects.get(pk=student_id)
+
+        student_result = SubjectResult.objects.filter(student=student)
+        context = {"student_result": student_result}
+
+        return render(request, "teachers/student_result.html", context)

@@ -1,67 +1,42 @@
 // form visible
-$('#academic_info_btn').on('click', function(){
-  $('.academic_info').hide();
-  $('.personal_info').show();
-});
+$("#fill_result").on('click', function(){
+       // Displaying Rest of the form
+       var div_data="<div class='form-group'>";
+       div_data+="<label>First Test : </label><input type='text' name='first_test' class='form-control' placeholder='First Test' />";
+       div_data+="</div>";
 
-// Presonal Information
-$('#personal_info_btn').on('click', function(){
-  $('.personal_info').hide();
-  $('.address_info').show();
-});
+       div_data+="<div class='form-group'>";
+       div_data+="<label>Second Test : </label><input type='text' name='second_test' class='form-control' placeholder='Second Test' />";
+       div_data+="</div>";
 
-$('#personal_info_prev_btn').on('click', function(){
-  $('.personal_info').hide();
-  $('.academic_info').show();
-});
+       div_data+="<div class='form-group'>";
+       div_data+="<label>Third Test : </label><input type='text' name='third_test' class='form-control' placeholder='Third Test' />";
+       div_data+="</div>";
 
-// Address Information
-$('#address_info_btn').on('click', function(){
-  $('.address_info').hide();
-  $('.guardian_info').show();
-});
+       div_data+="<div class='form-group'>";
+       div_data+="<label>Fourth Test : </label><input type='text' name='fourth_test' class='form-control' placeholder='Fourth Test' />";
+       div_data+="</div>";
 
-$('#address_info_prev_btn').on('click', function(){
-  $('.address_info').hide();
-  $('.personal_info').show();
-});
 
-// Guardian Information
-$('#guardian_info_btn').on('click', function(){
-  $('.guardian_info').hide();
-  $('.emergency_contact_info').show();
-});
+       div_data+="<div class='form-group'>";
+       div_data+="<label>Exam Score : </label><input type='text' name='exam_score' class='form-control' placeholder='Exam Score' />";
+       div_data+="</div>";
 
-$('#guardian_info_prev_btn').on('click', function(){
-  $('.guardian_info').hide();
-  $('.address_info').show();
-});
+       div_data+="<div class='form-group'>";
+       div_data+="<label>Total Score : </label><input type='text' name='total_score' class='form-control' placeholder='Total Score' />";
+       div_data+="</div>";
 
-// Emergency Contact Information
-$('#emergency_contact_info_btn').on('click', function(){
-  $('.emergency_contact_info').hide();
-  $('.previous_academic_info').show();
-});
+       div_data+="<div class='form-group'>";
+       div_data+="<label>Grade : </label><input type='text' name='grade' class='form-control' placeholder='Grade' />";
+       div_data+="</div>";
 
-$('#emergency_contact_info_prev_btn').on('click', function(){
-  $('.emergency_contact_info').hide();
-  $('.guardian_info').show();
-});
+       div_data+="<div class='form-group'>";
+       div_data+="<label>Remark : </label><input type='text' name='remark' class='form-control' placeholder='Remark' />";
+       div_data+="</div>";
 
-// Previous Academic Information
-$('#previous_academic_info_btn').on('click', function(){
-  $('.previous_academic_info').hide();
-  $('.previous_academic_certificate').show();
-  $('#submit').show();
-});
+       div_data+="<div class='form-group'>";
+       div_data+="<button id='save_result' class='btn btn-success' type='submit'>Save Result</button>";
+       div_data+="</div>";
+       $("#student_data").html(div_data);
 
-$('#previous_academic_info_prev_btn').on('click', function(){
-  $('.previous_academic_info').hide();
-  $('.emergency_contact_info').show();
-});
-
-// Previous Academic Certificate Information
-$('#previous_academic_certificate_prev_btn').on('click', function(){
-  $('.previous_academic_certificate').hide();
-  $('.previous_academic_info').show();
-});
+})

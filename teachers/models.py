@@ -14,6 +14,17 @@ class Class(models.Model):
         return self.class_name
 
 
+class Session(models.Model):
+    id = models.AutoField(primary_key=True)
+    session_name = models.CharField(max_length=20)
+
+    class Meta:
+        ordering = ["pk"]
+
+    def __str__(self):
+        return self.session_name
+
+
 class TeacherModel(models.Model):
     user = models.OneToOneField(
         "users.User", on_delete=models.CASCADE, primary_key=True

@@ -1,0 +1,69 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- general form elements -->
+        <form method="POST" action="{% url 'teachers:show_student_result' %}">
+          {% csrf_token %}
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Show Result</h3>
+            </div>
+            <!-- /.card-header -->
+
+            {% comment %} Display Messages {% endcomment %}
+            {% if messages %}
+              <div class="form-group">
+                <div class="col-12">
+                                    {% for message in messages %}
+                                    {% if message.tags == "error" %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% elif message.tags == "success" %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                </div>
+                                {% endif %}
+
+
+                        <div class="card-body">
+                          <div class="form-group">
+                            <label> Students </label>
+                                <select class="form-control" name="students" id="students">
+                                    {% for student in students %}
+                                        <option value="{{ student.pk }}">{{ student.name }}</option>
+                                    {% endfor %}
+                                </select>
+                          </div>
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                          <div class='form-group'>
+                            <button class='btn btn-success' type='submit'>Check Result</button>
+                          </div>
+                        </div>
+
+                    </div>
+                    </form>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+</section>
+{% endblock %}

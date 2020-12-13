@@ -78,8 +78,12 @@
              <i class="nav-icon icon-puzzle"></i>Result</a>
          <ul class="nav-dropdown-items">
              <li class="nav-item">
-                 <a class="nav-link" href="#">
-                     <i class="nav-icon icon-puzzle"></i>Student Result</a>
+                 <a class="nav-link" href="{% url 'teachers:add_result' %}">
+                     <i class="nav-icon icon-puzzle"></i>Add Result</a>
+             </li>
+           <li class="nav-item">
+                 <a class="nav-link" href="{% url 'teachers:show_result' %}">
+                     <i class="nav-icon icon-puzzle"></i>Show Result</a>
              </li>
          </ul>
        </li>

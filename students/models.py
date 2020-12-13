@@ -22,6 +22,8 @@ class StudentModel(models.Model):
     created_by = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="+", blank=True, null=True
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
@@ -31,3 +33,33 @@ class StudentModel(models.Model):
 
     def get_absolute_url(self):
         return reverse("teachers:dash", args=None)
+
+
+class Subject(models.Model):
+    id = models.AutoField(primary_key=True)
+    subject_name = models.CharField(max_length=255)
+    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.subject_name
+
+
+class SubjectResult(models.Model):
+    id = models.AutoField(primary_key=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    student = models.ForeignKey(StudentModel, on_delete=models.CASCADE)
+    first_test = models.IntegerField()
+    second_test = models.IntegerField()
+    third_test = models.IntegerField()
+    fourth_test = models.IntegerField()
+    exam_score = models.IntegerField()
+    total_score = models.IntegerField()
+    grade = models.CharField(max_length=10)
+    remark = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "{} {}".format(self.subject, self.student)
