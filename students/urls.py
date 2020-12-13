@@ -7,6 +7,7 @@ from .views import (
     StudentSignupView,
     StudentUpdateView,
     student_dashboard,
+    student_result,
 )
 
 app_name = "students"
@@ -18,4 +19,5 @@ urlpatterns = [
     path("<int:pk>/edit/", StudentUpdateView.as_view(), name="update"),
     path("<int:pk>/delete/", StudentDeleteView.as_view(), name="delete"),
     path("dashboard/", student_dashboard, name="dash"),
+    path("result/", student_result, name="result"),
 ]

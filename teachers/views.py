@@ -122,7 +122,7 @@ def add_result(request):
 def staff_add_result_save(request):
     if request.method != "POST":
         messages.error(request, "Invalid Method")
-        return redirect("staff_add_result")
+        return redirect("teachers:add_result")
     else:
         student_id = request.POST.get("students")
         subject_id = request.POST.get("subject")

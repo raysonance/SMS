@@ -15,7 +15,7 @@ from schoolz.users.decorators import teacher_admin, teacher_admin_student
 from schoolz.users.models import Student, Teacher
 
 from .forms import StudentSignUpForm
-from .models import StudentModel
+from .models import StudentModel, SubjectResult
 
 
 @method_decorator([teacher_admin], name="dispatch")
@@ -115,3 +115,12 @@ def student_dashboard(request):
         "student": total_student,
     }
     return render(request, "student/student_dashboard.html", context)
+
+
+def student_result(request):
+    student_id = request.user.pk
+    student = StudentModel.objects.get(pk=student_id)
+    student_results = SubjectResult.objects.filter(student=student)
+    context = {"student_result": student_results}
+
+    return render(request, "student/student_result.html", context)

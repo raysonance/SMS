@@ -73,9 +73,11 @@
       <!-- Holiday Section END -->
 
         <!-- Event Section START -->
+          {% if request.user.is_teacher or request.user.is_student %}
         <li class="nav-item nav-dropdown">
          <a class="nav-link nav-dropdown-toggle" href="#">
              <i class="nav-icon icon-puzzle"></i>Result</a>
+          {% if request.user.is_teacher %}
          <ul class="nav-dropdown-items">
              <li class="nav-item">
                  <a class="nav-link" href="{% url 'teachers:add_result' %}">
@@ -83,10 +85,22 @@
              </li>
            <li class="nav-item">
                  <a class="nav-link" href="{% url 'teachers:show_result' %}">
-                     <i class="nav-icon icon-puzzle"></i>Show Result</a>
+                     <i class="nav-icon icon-puzzle"></i>Show Result
+                 </a>
              </li>
          </ul>
+          {% endif %}
+          {% if request.user.is_student %}
+         <ul class="nav-dropdown-items">
+           <li class="nav-item">
+                 <a class="nav-link" href="{% url 'students:result' %}">
+                     <i class="nav-icon icon-puzzle"></i>Show Result
+                 </a>
+             </li>
+         </ul>
+          {% endif %}
        </li>
+          {% endif %}
        <!-- Event Section END -->
 
         <!-- User-Manual Section START -->
