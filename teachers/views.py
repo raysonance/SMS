@@ -135,8 +135,12 @@ def staff_add_result_save(request):
         grade = request.POST.get("grade")
         remark = request.POST.get("remark")
 
-        student_obj = StudentModel.objects.get(pk=student_id)
-        subject_obj = Subject.objects.get(id=subject_id)
+        if student_id and subject_id:
+            student_obj = StudentModel.objects.get(pk=student_id)
+            subject_obj = Subject.objects.get(id=subject_id)
+        else:
+            messages.error(request, "Failed to Add Result!")
+            return redirect("teachers:add_result")
 
         try:
             # Check if Students Result Already Exists or not
