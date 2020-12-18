@@ -18,7 +18,7 @@ from schoolz.users.models import Teacher
 from students.models import StudentModel, Subject, SubjectResult
 
 from .forms import TeacherSignUpForm
-from .models import TeacherModel
+from .models import Session, TeacherModel
 
 
 @method_decorator([admin_required], name="dispatch")
@@ -114,8 +114,9 @@ def add_result(request):
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name
     )
+    session = Session.objects.all()
     subjects = Subject.objects.filter(class_name=request.user.teachermodel.class_name)
-    context = {"students": students, "subjects": subjects}
+    context = {"students": students, "subjects": subjects, "sessions": session}
     return render(request, "teachers/add_result.html", context)
 
 
@@ -126,6 +127,7 @@ def staff_add_result_save(request):
     else:
         student_id = request.POST.get("students")
         subject_id = request.POST.get("subject")
+        session_id = request.POST.get("session")
         first_test = request.POST.get("first_test")
         second_test = request.POST.get("second_test")
         third_test = request.POST.get("third_test")
@@ -135,9 +137,10 @@ def staff_add_result_save(request):
         grade = request.POST.get("grade")
         remark = request.POST.get("remark")
 
-        if student_id and subject_id:
+        if student_id and subject_id and session_id:
             student_obj = StudentModel.objects.get(pk=student_id)
             subject_obj = Subject.objects.get(id=subject_id)
+            session_obj = Session.objects.get(id=session_id)
         else:
             messages.error(request, "Failed to Add Result!")
             return redirect("teachers:add_result")
@@ -145,12 +148,13 @@ def staff_add_result_save(request):
         try:
             # Check if Students Result Already Exists or not
             check_exist = SubjectResult.objects.filter(
-                subject_id=subject_obj, student_id=student_obj
+                subject=subject_obj, student=student_obj, session=session_obj
             ).exists()
             if check_exist:
                 result = SubjectResult.objects.get(
-                    subject_id=subject_obj, student_id=student_obj
+                    subject=subject_obj, student=student_obj, session=session_obj
                 )
+                result.session = session_obj
                 result.first_test = first_test
                 result.second_test = second_test
                 result.third_test = third_test
@@ -166,6 +170,8 @@ def staff_add_result_save(request):
                 result = SubjectResult(
                     student=student_obj,
                     subject=subject_obj,
+                    session=session_obj,
+                    class_name=request.user.teachermodel.class_name,
                     first_test=first_test,
                     second_test=second_test,
                     third_test=third_test,
@@ -211,8 +217,11 @@ def show_result(request):
         class_name=request.user.teachermodel.class_name
     )
 
+    session = Session.objects.all()
+
     context = {
         "students": students,
+        "sessions": session,
     }
 
     return render(request, "teachers/show_result.html", context)
@@ -224,10 +233,17 @@ def show_student_result(request):
         return redirect("teachers:show_result")
     else:
         student_id = request.POST.get("students")
+        session_id = request.POST.get("session")
 
         student = StudentModel.objects.get(pk=student_id)
+        session = Session.objects.get(id=session_id)
 
-        student_result = SubjectResult.objects.filter(student=student)
+        student_result = SubjectResult.objects.filter(student=student, session=session)
+
         context = {"student_result": student_result}
 
-        return render(request, "teachers/student_result.html", context)
+        if student_result:
+            return render(request, "teachers/student_result.html", context)
+        else:
+            messages.error(request, "No result found for this session")
+            return redirect("teachers:show_result")

@@ -1,4 +1,4 @@
- <head>
+<head>
   <title> Show Result </title>
 </head>
 {% extends 'base/base.html' %}
@@ -10,7 +10,7 @@
     <div class="row">
       <div class="col-md-12">
         <!-- general form elements -->
-        <form method="POST" action="{% url 'teachers:show_student_result' %}">
+        <form method="POST" action="{% url 'students:show_student_result' %}">
           {% csrf_token %}
           <div class="card card-primary">
             <div class="card-header">
@@ -43,13 +43,13 @@
               </div>
             {% endif %}
 
-
             <div class="card-body">
+
               <div class="form-group">
-                <label> Students </label>
-                    <select class="form-control" name="students" id="students">
-                        {% for student in students %}
-                            <option value="{{ student.pk }}">{{ student.name }}</option>
+                <label> Class </label>
+                    <select class="form-control" name="class_name" id="class_name">
+                        {% for class in classes %}
+                            <option value="{{ class.pk }}">{{ class.class_name }}</option>
                         {% endfor %}
                     </select>
               </div>
@@ -62,8 +62,8 @@
                         {% endfor %}
                     </select>
               </div>
+
             </div>
-              <!-- /.card-body -->
 
             <div class="card-footer">
               <div class='form-group'>
@@ -72,8 +72,9 @@
             </div>
 
           </div>
-          <!-- /.card -->
+                  <!-- /.card -->
         </form>
+
       </div>
     </div>
   </div>

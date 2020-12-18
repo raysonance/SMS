@@ -1,3 +1,6 @@
+<head>
+  <title> Add Result </title>
+</head>
 {% extends 'base/base.html' %}
 {% load static %}
 
@@ -58,8 +61,17 @@
                   {% endfor %}
                 </select>
               </div>
-            </div>
                         <!-- /.card-body -->
+
+              <div class="form-group">
+                <label>Session </label>
+                <select class="form-control" name="session" id="session">
+                  {% for session in sessions %}
+                    <option value="{{ session.id }}">{{ session.session_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
 
             <div class="card-footer">
               <button type="button" class="btn btn-primary" id="fill_result">Fill Result</button>

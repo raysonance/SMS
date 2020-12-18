@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect, render
@@ -13,6 +14,7 @@ from django.views.generic import (
 
 from schoolz.users.decorators import teacher_admin, teacher_admin_student
 from schoolz.users.models import Student, Teacher
+from teachers.models import Class, Session
 
 from .forms import StudentSignUpForm
 from .models import StudentModel, SubjectResult
@@ -117,10 +119,46 @@ def student_dashboard(request):
     return render(request, "student/student_dashboard.html", context)
 
 
-def student_result(request):
-    student_id = request.user.pk
-    student = StudentModel.objects.get(pk=student_id)
-    student_results = SubjectResult.objects.filter(student=student)
-    context = {"student_result": student_results}
+def show_result(request):
 
-    return render(request, "student/student_result.html", context)
+    class_name = Class.objects.all()
+
+    session = Session.objects.all()
+
+    context = {
+        "classes": class_name,
+        "sessions": session,
+    }
+
+    return render(request, "student/show_result.html", context)
+
+
+def show_student_result(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method")
+        return redirect("students:show_result")
+    else:
+        class_pk = request.POST.get("class_name")
+        session_id = request.POST.get("session")
+
+        class_name = Class.objects.get(pk=class_pk)
+        session = Session.objects.get(id=session_id)
+
+        student_result = SubjectResult.objects.filter(
+            student=request.user.pk, session=session, class_name=class_name
+        )
+
+        context = {"student_result": student_result}
+
+        if student_result:
+            return render(request, "student/student_result.html", context)
+        else:
+            # checks only for class and student and not session
+            if SubjectResult.objects.filter(
+                student=request.user.pk, class_name=class_name
+            ):
+                messages.error(request, "No result found for this session")
+                return redirect("students:show_result")
+            else:
+                messages.error(request, "No result found for this category")
+                return redirect("students:show_result")

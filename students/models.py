@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-from teachers.models import Class
+from teachers.models import Class, Session
 
 # Create your models here.
 
@@ -50,6 +50,8 @@ class SubjectResult(models.Model):
     id = models.AutoField(primary_key=True)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     student = models.ForeignKey(StudentModel, on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, default=1)
+    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default=1)
     first_test = models.IntegerField()
     second_test = models.IntegerField()
     third_test = models.IntegerField()

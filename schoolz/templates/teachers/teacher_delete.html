@@ -1,11 +1,14 @@
+<head>
+  <title> Add Result </title>
+</head>
 {% extends 'base/base.html' %}
 {% load static %}
 
-    {% block content %}
+{% block content %}
 <h1 class="display-5"> Delete </h1>
 <form method="post" action="">
     {% csrf_token %}
     <p> Are you sure you want to delete {{ teachers.teachermodel.name }}</p>
     <button class="btn btn-danger ml-2" type="submit">Confirm</button>
 </form>
-    {% endblock %}
+{% endblock %}
