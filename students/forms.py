@@ -71,6 +71,7 @@ class StudentSignUpForm(UserCreationForm):
             address=self.cleaned_data.get("address"),
             emergency_mobile_number=self.cleaned_data.get("emergency_mobile_number"),
             created_by=self.user,
+            updated_by=self.user,
         )
         student.save()
         return user

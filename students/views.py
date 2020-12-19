@@ -37,7 +37,6 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
         super().form_valid(form)
         if self.request.user.is_teacher:
             return redirect("teachers:dash")
@@ -70,9 +69,13 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
         "emergency_mobile_number",
     ]
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.updated_by = self.request.user
+        form.save()
+        return super().form_valid(form)
+
     def get_success_url(self):
-        if self.request.user.is_teacher:
-            return reverse_lazy("teachers:dash")
         if self.request.user.is_admin:
             return reverse_lazy("users:dash")
 
@@ -95,13 +98,15 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.created_by = self.request.user
+        self.object.updated_by = self.request.user
         form.save()
         return super().form_valid(form)
 
     def get_success_url(self):
         if self.request.user.is_student:
             return reverse_lazy("students:dash")
+        else:
+            return reverse_lazy("teachers:dash")
 
 
 @method_decorator([teacher_admin_student], name="dispatch")

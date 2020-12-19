@@ -29,6 +29,7 @@
               <p>Address                       : <span class="mx-4">{{ student.studentmodel.address }}</span></p>
               <p>Email                         : <span class="mx-4">{{ student.studentmodel.email }}</span></p>
               <p>Student Model Created By      : <span class="mx-4">{% if student.studentmodel.created_by.is_admin %} {{ student.studentmodel.created_by }} {% elif student.studentmodel.created_by.is_teacher %} {{ student.studentmodel.created_by.teachermodel.name }} {% else %}  {{ student.studentmodel.created_by.studentmodel.name }} {% endif %}</span></p>
+              <p>Updated By                    : <span class="mx-4">{% if student.studentmodel.updated_by.is_admin %} {{ student.studentmodel.updated_by }} {% elif student.studentmodel.updated_by.is_teacher %} {{ student.studentmodel.updated_by.teachermodel.name }} {% else %}  {{ student.studentmodel.updated_by.studentmodel.name }} {% endif %}</span></p>
             </div>
           </div>
         </div>
