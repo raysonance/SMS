@@ -46,7 +46,7 @@
                 </div>
               <a class="dropdown-item" href="{% url 'students:profile' request.user.pk %}"><i class="fa fa-user"></i> Profile</a>
               <a class="dropdown-item" href="{% url 'account_email' %}"><i class="fa fa-wrench"></i>Modify Email</a>
-              <a class="dropdown-item" href="{% url 'students:update' request.user.studentmodel.pk %}"><i class="fa fa-wrench"></i>Update Profile</a>
+              <a class="dropdown-item" href="{% url 'students:updates' request.user.studentmodel.pk %}"><i class="fa fa-wrench"></i>Update Profile</a>
               <a class="dropdown-item" href="{% url 'account_change_password' %}"><i class="fa fa-wrench"></i>Change Password?</a>
               <a class="dropdown-item" href="{% url 'account_logout' %}"><i class="fa fa-lock"></i>Logout</a>
             </div>

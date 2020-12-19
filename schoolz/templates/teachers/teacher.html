@@ -41,11 +41,11 @@
                             <i class="icon-settings"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="{% url 'students:list' %}">Student List</a>
+                            <a class="dropdown-item" href="{% url 'students:student_teacher_list' %}">Student List</a>
                             <a class="dropdown-item" href="{% url 'students:signup' %}">Student SignUp</a>
                         </div>
                     </div>
-                    <div class="text-value"><a href="{% url 'students:list' %}" class="btn btn-primary">{{ student }}</a></div>
+                    <div class="text-value"><a href="{% url 'students:student_teacher_list' %}" class="btn btn-primary">{{ student }}</a></div>
                     <div>Total Student</div>
                 </div>
 

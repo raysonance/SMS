@@ -5,13 +5,24 @@ from django.urls import reverse
 
 
 class Class(models.Model):
-    class_name = models.CharField(max_length=20)
+    class_name = models.CharField(max_length=50)
 
     class Meta:
         ordering = ["pk"]
 
     def __str__(self):
         return self.class_name
+
+
+class SubClass(models.Model):
+    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default=4)
+    sub_class = models.CharField(max_length=50)
+
+    class Meta:
+        ordering = ["pk"]
+
+    def __str__(self):
+        return f"{self.sub_class} of {self.class_name}"
 
 
 class Session(models.Model):
@@ -33,6 +44,7 @@ class TeacherModel(models.Model):
     photo = models.ImageField(upload_to="teacherfile/")
     date_of_birth = models.DateField(blank=True, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
+    sub_class = models.ForeignKey(SubClass, on_delete=models.CASCADE, default=1)
     mobile = models.CharField(max_length=11, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     joining_date = models.DateField(blank=True, null=True)

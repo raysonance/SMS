@@ -4,9 +4,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
 from schoolz.users.models import Student
-from teachers.models import Class
 
 from .models import StudentModel
+
+# from teachers.models import Class, SubClass
+
 
 User = get_user_model()
 
@@ -22,7 +24,7 @@ class StudentSignUpForm(UserCreationForm):
     photo = forms.ImageField(
         required=True, widget=forms.ClearableFileInput(attrs={"class": "form-control"})
     )
-    class_name = forms.ModelChoiceField(queryset=Class.objects.all(), required=True)
+    # class_name = forms.ModelChoiceField(queryset=Class.objects.all(), required=True)
     fathers_name = forms.CharField(
         max_length=150, widget=forms.TextInput(attrs={"class": "form-control"})
     )
@@ -60,7 +62,8 @@ class StudentSignUpForm(UserCreationForm):
             user=user,
             name=self.cleaned_data.get("name"),
             photo=self.cleaned_data.get("photo"),
-            class_name=self.cleaned_data.get("class_name"),
+            class_name=self.user.teachermodel.class_name,
+            sub_class=self.user.teachermodel.sub_class,
             fathers_name=self.cleaned_data.get("fathers_name"),
             mothers_name=self.cleaned_data.get("mothers_name"),
             date_of_birth=self.cleaned_data.get("date_of_birth"),

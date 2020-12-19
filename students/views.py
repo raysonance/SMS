@@ -13,8 +13,8 @@ from django.views.generic import (
 )
 
 from schoolz.users.decorators import teacher_admin, teacher_admin_student
-from schoolz.users.models import Student, Teacher
-from teachers.models import Class, Session
+from schoolz.users.models import Student
+from teachers.models import Class, Session, TeacherModel
 
 from .forms import StudentSignUpForm
 from .models import StudentModel, SubjectResult
@@ -61,6 +61,7 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
         "name",
         "photo",
         "class_name",
+        "sub_class",
         "fathers_name",
         "mothers_name",
         "date_of_birth",
@@ -77,11 +78,60 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
 
 
 @method_decorator([teacher_admin_student], name="dispatch")
+class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
+    model = StudentModel
+    login_url = "account_login"
+    template_name = "student/update.html"
+    fields = [
+        "name",
+        "photo",
+        "fathers_name",
+        "mothers_name",
+        "date_of_birth",
+        "email",
+        "address",
+        "emergency_mobile_number",
+    ]
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.created_by = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        if self.request.user.is_student:
+            return reverse_lazy("students:dash")
+
+
+@method_decorator([teacher_admin_student], name="dispatch")
 class StudentListView(LoginRequiredMixin, ListView):
     model = Student
     login_url = "account_login"
     template_name = "student/list.html"
     context_object_name = "student"
+
+
+def student_teacher_list(request):
+    students = StudentModel.objects.filter(
+        class_name=request.user.teachermodel.class_name,
+        sub_class=request.user.teachermodel.sub_class,
+    )
+
+    context = {"students": students}
+
+    return render(request, "student/student_list.html", context)
+
+
+def student_list(request):
+    students = StudentModel.objects.filter(
+        class_name=request.user.studentmodel.class_name,
+        sub_class=request.user.studentmodel.sub_class,
+    )
+
+    context = {"students": students}
+
+    return render(request, "student/students_list.html", context)
 
 
 @method_decorator([teacher_admin], name="dispatch")
@@ -96,7 +146,7 @@ class StudentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         obj = self.get_object()
         if self.request.user.is_teacher:
             return (
-                obj.studentmodel.class_name == self.request.user.teachermodel.class_name
+                obj.studentmodel.sub_class == self.request.user.teachermodel.sub_class
             )
         elif self.request.user.is_admin:
             return True
@@ -109,9 +159,13 @@ def user_is_student(user):
 @user_passes_test(user_is_student, login_url="home")
 def student_dashboard(request):
     total_student = StudentModel.objects.filter(
-        class_name=request.user.studentmodel.class_name.pk
+        class_name=request.user.studentmodel.class_name.pk,
+        sub_class=request.user.studentmodel.sub_class.pk,
     ).count()
-    teacher = Teacher.objects.all()
+    teacher = TeacherModel.objects.filter(
+        class_name=request.user.studentmodel.class_name,
+        sub_class=request.user.studentmodel.sub_class,
+    )
     context = {
         "teacher": teacher,
         "student": total_student,

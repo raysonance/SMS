@@ -41,10 +41,10 @@
                             <i class="icon-settings"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="{% url 'students:list' %}">Students in Class List</a>
+                            <a class="dropdown-item" href="{% url 'students:student_list' %}">Students in Class List</a>
                         </div>
                     </div>
-                    <div class="text-value"><a href="{% url 'students:list' %}" class="btn btn-primary">{{ student }}</a></div>
+                    <div class="text-value"><a href="{% url 'students:student_list' %}" class="btn btn-primary">{{ student }}</a></div>
                     <div>Total Student in Class</div>
                 </div>
 
@@ -79,12 +79,11 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
                           {% for teach in teacher %}
-                          {% if teach.teachermodel.class_name == request.user.studentmodel.class_name %}
-                            <a class="dropdown-item" href="{% url 'teachers:profile' teach.teachermodel.pk %}">Teacher Profile</a>
+                            <a class="dropdown-item" href="{% url 'teachers:profile' teach.pk %}">Teacher Profile</a>
                         </div>
                     </div>
-                    <div class="text-value"><a href="{% url 'teachers:profile' teach.teachermodel.pk %}" class="btn btn-primary">1</a></div>
-                    {% endif %}
+                    <div class="text-value"><a href="{% url 'teachers:profile' teach.pk %}" class="btn btn-primary">1</a></div>
+
                   {% endfor %}
                   <div>Class Teacher</div>
                 </div>

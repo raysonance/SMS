@@ -1,5 +1,5 @@
 <head>
-  <title> Teacher List </title>
+  <title> Student List </title>
 </head>
 {% extends 'base/base.html' %}
 {% load static %}
@@ -8,9 +8,9 @@
   <div class="animated fadeIn">
       <div class="card">
           <div class="card-header">
-              <i class="fa fa-edit"></i> Teacher Tables
+              <i class="fa fa-edit"></i> Student Tables
           </div>
-          {% if teacher %}
+          {% if students %}
           <div class="card-body">
               <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                   <div class="row">
@@ -34,39 +34,39 @@
                                   <tr role="row">
                                       <th>Id</th>
                                       <th>Name</th>
+                                      <th>Email</th>
                                       <th>Class</th>
-                                      <th>Sub-class</th>
                                       <th>Mobile number</th>
+                                      <th>Date of Birth</th>
                                       <th>Actions</th>
                                   </tr>
                               </thead>
                               <tbody>
-                                  {% for teachers in teacher %}
+                              {% if request.user.is_teacher %}
+                                {% for students in students %}
                                     <tr role="row" class="odd">
                                         <td>{{ forloop.counter }}</td>
-                                        <td>{{ teachers.teachermodel.name }}</td>
-                                        <td>{{ teachers.teachermodel.class_name }}</td>
-                                      {% if request.user.is_admin %}
-                                        <td>{{ teachers.teachermodel.sub_class }}</td>
-                                      {% else %}
-                                        <td>{{ teachers.teachermodel.sub_class.sub_class }}</td>
-                                      {% endif %}
-                                        <td>{{ teachers.teachermodel.mobile }}</td>
+                                        <td>{{ students.name }}</td>
+                                        <td>{{ students.email }}</td>
+                                        <td>{{ students.class_name }}</td>
+                                        <td>{{ students.emergency_mobile_number }}</td>
+                                        <td>{{ students.date_of_birth }}</td>
                                         <td>
-                                            <a class="btn btn-success" href="{% url 'teachers:profile' teachers.pk %}">
+                                            <a class="btn btn-success" href="{% url 'students:profile' students.pk %}">
                                                 <i class="fa fa-search-plus"></i>
                                             </a>
-                                          {% if request.user.is_admin %}
-                                            <a class="btn btn-info" href="{% url 'teachers:admin_update' teachers.teachermodel.pk %}">
+                                            <a class="btn btn-info" href="{% url 'students:updates' students.pk %}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger" href="{% url 'teachers:delete' teachers.pk %}">
+                                            <a class="btn btn-danger" href="{% url 'students:delete' students.pk %}">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
-                                          {% endif %}
                                         </td>
                                     </tr>
-                                  {% endfor %}
+                                {% endfor %}
+                              {% else %}
+                                <h3> Hello What sre you looking for ?</h3>
+                              {% endif %}
                               </tbody>
                           </table>
                       </div>

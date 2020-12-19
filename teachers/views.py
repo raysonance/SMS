@@ -78,6 +78,7 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "teachers/update.html"
     fields = [
         "class_name",
+        "sub_class",
     ]
 
     def get_success_url(self):
@@ -101,7 +102,8 @@ def user_is_teacher(user):
 @user_passes_test(user_is_teacher, login_url="home")
 def teacher_dashboard(request):
     total_student = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name.pk
+        class_name=request.user.teachermodel.class_name.pk,
+        sub_class=request.user.teachermodel.sub_class.pk,
     ).count()
     context = {
         "student": total_student,
@@ -112,7 +114,8 @@ def teacher_dashboard(request):
 @user_passes_test(user_is_teacher, login_url="home")
 def add_result(request):
     students = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name
+        class_name=request.user.teachermodel.class_name,
+        sub_class=request.user.teachermodel.sub_class,
     )
     session = Session.objects.all()
     subjects = Subject.objects.filter(class_name=request.user.teachermodel.class_name)
@@ -214,7 +217,8 @@ def staff_add_result_save(request):
 
 def show_result(request):
     students = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name
+        class_name=request.user.teachermodel.class_name,
+        sub_class=request.user.teachermodel.sub_class,
     )
 
     session = Session.objects.all()

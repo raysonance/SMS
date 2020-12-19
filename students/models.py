@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-from teachers.models import Class, Session
+from teachers.models import Class, Session, SubClass
 
 # Create your models here.
 
@@ -13,6 +13,7 @@ class StudentModel(models.Model):
     name = models.CharField("Full Name", max_length=100)
     photo = models.ImageField(upload_to="studentsfile/")
     class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
+    sub_class = models.ForeignKey(SubClass, on_delete=models.CASCADE, default=1)
     fathers_name = models.CharField("Father's Name", max_length=100)
     mothers_name = models.CharField("Mother's Name", max_length=100)
     date_of_birth = models.DateField("Birth Date", blank=True, null=True)
