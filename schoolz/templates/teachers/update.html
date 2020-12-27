@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 {% block title %} Teacher Update {% endblock %}
 
 {% block content %}
   <h1> Update Teacher </h1>
-  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
+  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="TeacherRegistrationForm" data-subclass-url={% url 'teachers:load_subclass' %}>
     {% csrf_token %}
     {{ form|crispy }}
     <div class="control-group">
@@ -13,5 +13,23 @@
         <button type="submit" class="btn btn-primary my-5">Update</button>
       </div>
     </div>
+    <script src="{% static 'dist/vendors/js/jquery.min.js' %}"></script>
+    <script>
+        $("#id_class_name").change(function () {
+          var url = $("#TeacherRegistrationForm").attr("data-subclass-url");
+          var classId = $(this).val();
+
+          $.ajax({
+            url: url,
+            data: {
+              'class': classId
+            },
+            success: function (data) {
+              $("#id_sub_class").html(data);
+            }
+          });
+
+        });
+    </script>
   </form>
 {% endblock %}

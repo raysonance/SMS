@@ -18,7 +18,15 @@ from schoolz.users.models import Teacher
 from students.models import StudentModel, Subject, SubjectResult
 
 from .forms import TeacherSignUpForm
-from .models import Session, TeacherModel
+from .models import Session, SubClass, TeacherModel
+
+
+def load_sub_class(request):
+    class_id = request.GET.get("class")
+    sub_class = SubClass.objects.filter(class_name=class_id).order_by("sub_class")
+
+    context = {"sub_class": sub_class}
+    return render(request, "others/subclass_dropdown_list_options.html", context)
 
 
 @method_decorator([admin_required], name="dispatch")

@@ -8,6 +8,7 @@ from .views import (
     TeacherSignupView,
     TeacherUpdateView,
     add_result,
+    load_sub_class,
     show_result,
     show_student_result,
     staff_add_result_save,
@@ -28,4 +29,5 @@ urlpatterns = [
     path("save_result/", staff_add_result_save, name="save_result"),
     path("show_result/", show_result, name="show_result"),
     path("result/", show_student_result, name="show_student_result"),
+    path("load_subclass", load_sub_class, name="load_subclass"),
 ]
