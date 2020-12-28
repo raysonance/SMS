@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 {% block title %} Student SignUp {% endblock %}
 
 {% block content %}
   <h1> Student </h1>
-  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
+  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="StudentRegistrationForm" data-subclass-url={% url 'students:load_subclass' %} >
     {% csrf_token %}
     {{ form|crispy }}
     <div class="control-group">
@@ -13,5 +13,23 @@
         <button type="submit" class="btn btn-primary my-5">Sign Up</button>
       </div>
     </div>
+    <script src="{% static 'dist/vendors/js/jquery.min.js' %}"></script>
+    <script>
+        $("#id_class_name").change(function () {
+          var url = $("#StudentRegistrationForm").attr("data-subclass-url");
+          var classId = $(this).val();
+
+          $.ajax({
+            url: url,
+            data: {
+              'class': classId
+            },
+            success: function (data) {
+              $("#id_sub_class").html(data);
+            }
+          });
+
+        });
+    </script>
   </form>
 {% endblock %}

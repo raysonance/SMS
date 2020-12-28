@@ -14,10 +14,18 @@ from django.views.generic import (
 
 from schoolz.users.decorators import teacher_admin, teacher_admin_student
 from schoolz.users.models import Student
-from teachers.models import Class, Session, TeacherModel
+from teachers.models import Class, Session, SubClass, TeacherModel
 
-from .forms import StudentSignUpForm
+from .forms import StudentAdminSignUpForm, StudentSignUpForm
 from .models import StudentModel, SubjectResult
+
+
+def load_sub_class(request):
+    class_id = request.GET.get("class")
+    sub_class = SubClass.objects.filter(class_name=class_id).order_by("sub_class")
+
+    context = {"sub_class": sub_class}
+    return render(request, "others/subclass_dropdown_list_options.html", context)
 
 
 @method_decorator([teacher_admin], name="dispatch")
@@ -29,6 +37,30 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(StudentSignupView, self).get_form_kwargs()
+        kwargs.update({"user": self.request.user})
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        kwargs["user_type"] = "students"
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        super().form_valid(form)
+        if self.request.user.is_teacher:
+            return redirect("teachers:dash")
+        if self.request.user.is_admin:
+            return redirect("users:dash")
+
+
+@method_decorator([teacher_admin], name="dispatch")
+class StudentAdminSignupView(LoginRequiredMixin, CreateView):
+    model = Student
+    login_url = "account_login"
+    form_class = StudentAdminSignUpForm
+    template_name = "student/signup.html"
+
+    def get_form_kwargs(self):
+        kwargs = super(StudentAdminSignupView, self).get_form_kwargs()
         kwargs.update({"user": self.request.user})
         return kwargs
 
