@@ -22,7 +22,6 @@ class StudentSignUpForm(UserCreationForm):
     photo = forms.ImageField(
         required=True, widget=forms.ClearableFileInput(attrs={"class": "form-control"})
     )
-    # class_name = forms.ModelChoiceField(queryset=Class.objects.all(), required=True)
     fathers_name = forms.CharField(
         max_length=150, widget=forms.TextInput(attrs={"class": "form-control"})
     )

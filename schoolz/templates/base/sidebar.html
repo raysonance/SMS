@@ -102,9 +102,13 @@
              <i class="nav-icon icon-puzzle"></i>Result</a>
           {% if request.user.is_teacher %}
          <ul class="nav-dropdown-items">
-             <li class="nav-item">
+           <li class="nav-item">
                  <a class="nav-link" href="{% url 'teachers:add_result' %}">
                      <i class="nav-icon icon-puzzle"></i>Add Result</a>
+           </li>
+           <li class="nav-item">
+                 <a class="nav-link" href="{% url 'teachers:promote' %}">
+                     <i class="nav-icon icon-puzzle"></i>Promote</a>
              </li>
            <li class="nav-item">
                  <a class="nav-link" href="{% url 'teachers:show_result' %}">

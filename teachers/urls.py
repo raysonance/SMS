@@ -9,6 +9,8 @@ from .views import (
     TeacherUpdateView,
     add_result,
     load_sub_class,
+    promote_student,
+    promote_student_process,
     show_result,
     show_student_result,
     staff_add_result_save,
@@ -30,4 +32,6 @@ urlpatterns = [
     path("show_result/", show_result, name="show_result"),
     path("result/", show_student_result, name="show_student_result"),
     path("load_subclass", load_sub_class, name="load_subclass"),
+    path("promote/", promote_student, name="promote"),
+    path("process", promote_student_process, name="promote_student"),
 ]

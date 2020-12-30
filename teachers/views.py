@@ -18,7 +18,7 @@ from schoolz.users.models import Teacher
 from students.models import StudentModel, Subject, SubjectResult
 
 from .forms import TeacherSignUpForm
-from .models import Session, SubClass, TeacherModel
+from .models import Class, Session, SubClass, TeacherModel
 
 
 def load_sub_class(request):
@@ -259,3 +259,96 @@ def show_student_result(request):
         else:
             messages.error(request, "No result found for this session")
             return redirect("teachers:show_result")
+
+
+def promote_student(request):
+    students = StudentModel.objects.filter(
+        class_name=request.user.teachermodel.class_name,
+        sub_class=request.user.teachermodel.sub_class,
+    )
+
+    class_name = Class.objects.get(
+        class_name=request.user.teachermodel.class_name.class_name
+    )
+
+    new_class = class_name.pk + 1
+
+    try:
+        check_exists = Class.objects.filter(pk=new_class).exists()
+
+        if check_exists:
+            new_class_name = Class.objects.get(pk=new_class)
+        else:
+            messages.error(request, "Can not promote in this class.")
+            return redirect("teachers:dash")
+
+    except (
+        ArithmeticError,
+        ValueError,
+        KeyError,
+        EnvironmentError,
+        TypeError,
+        IndexError,
+        AssertionError,
+        AttributeError,
+        ConnectionAbortedError,
+        ConnectionError,
+        BrokenPipeError,
+        ChildProcessError,
+        ConnectionRefusedError,
+        ConnectionResetError,
+        FileNotFoundError,
+        InterruptedError,
+        NotImplementedError,
+        SystemError,
+        SyntaxError,
+        TimeoutError,
+        UnboundLocalError,
+        UnicodeError,
+    ):
+        messages.error(request, "Can not promote in this class.")
+        return redirect("teachers:dash")
+
+    sub_class = SubClass.objects.filter(class_name=new_class_name)
+
+    context = {
+        "students": students,
+        "new_class": new_class_name,
+        "sub_class": sub_class,
+    }
+
+    return render(request, "teachers/promote.html", context)
+
+
+def promote_student_process(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method")
+        return redirect("teachers:dash")
+    else:
+        student_id = request.POST.get("students")
+        class_id = request.POST.get("classes")
+        sub_class_id = request.POST.get("sub_class")
+
+        student = StudentModel.objects.get(pk=student_id)
+        class_name = Class.objects.get(pk=class_id)
+        previous_class_id = int(class_id) - 1
+        previous_class = Class.objects.get(pk=previous_class_id)
+        sub_class = SubClass.objects.get(pk=sub_class_id)
+        session = Session.objects.get(pk=3)
+
+        student_result = SubjectResult.objects.filter(
+            student=student, class_name=previous_class, session=session
+        )
+
+        if student_result:
+            student.class_name = class_name
+            student.sub_class = sub_class
+            student.save()
+            messages.success(request, "Student promoted Successfully")
+            return redirect("teachers:promote")
+        else:
+            messages.error(
+                request,
+                "Complete result not found for this student. Contact admin to promote this student",
+            )
+            return redirect("teachers:promote")
