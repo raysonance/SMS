@@ -2,19 +2,24 @@ from django.urls import path
 
 from .views import (
     AdminTeacherUpdateView,
+    DeleteMessage,
     TeacherDeleteView,
     TeacherListView,
     TeacherProfileView,
     TeacherSignupView,
     TeacherUpdateView,
+    UpdateMessage,
     add_result,
     load_sub_class,
     promote_student,
     promote_student_process,
+    send_general_message,
+    send_messages,
     show_result,
     show_student_result,
     staff_add_result_save,
     teacher_dashboard,
+    view_messages,
 )
 
 app_name = "teachers"
@@ -34,4 +39,9 @@ urlpatterns = [
     path("load_subclass", load_sub_class, name="load_subclass"),
     path("promote/", promote_student, name="promote"),
     path("process", promote_student_process, name="promote_student"),
+    path("send_message/", send_messages, name="message"),
+    path("send_general_message/", send_general_message, name="general_message"),
+    path("view_messages/", view_messages, name="view_message"),
+    path("<int:pk>/message_edit/", UpdateMessage.as_view(), name="message_update"),
+    path("<int:pk>/message_delete/", DeleteMessage.as_view(), name="message_delete"),
 ]

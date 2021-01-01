@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+<head>
+    <title>Message</title>
+</head>
+{% block content %}
+{% if message %}
+{% for article in message %}
+<div class="card">
+    <div class="card-header">
+        <span class="font-weight-bold">{{ article.title }}</span> &middot;
+        <span class="text-muted"> sent by {{ article.teacher.name }} to {{ article.student.name }} | {{ article.created_at }}</span>
+    </div>
+    <div class="card-body">
+        {{ article.message }}
+      {% comment %}
+        <!-- <div style="margin-top: 15px;">
+        <p style="color: rgb(0, 255, 0);"> {{ article.votes }}  {% if article.votes == 1 %} vote {% else %} votes {% endif %}</p><a href="{% url 'vote' article.pk %}"> Vote </a> | <a href="{% url 'article_edit' article.pk %}">Edit</a> | <a href="{% url 'article_delete' article.pk %}">Delete</a>
+            <span class="d-flex justify-content-lg-end"><a href="{% url 'comments' article.pk %}">comment</a></span>
+            </div> --> {% endcomment %}
+    </div>
+    {% if request.user.is_teacher %}
+    <div class="card-footer">
+      <span class="d-flex justify-content-lg-end"><span class="mx-3"><a href="{% url 'teachers:message_update' article.pk %}" >Edit</a> </span> | <span class="mx-2"><a href="{% url 'teachers:message_delete' article.pk %}">Delete</a></span></span>
+    </div>
+    {% endif %}
+  {% comment %}
+    <!-- <div class="card-footer">
+        {% for comment in article.comments.all %}
+        <p>
+            <span class="font-weight-bold"> {{ comment.author }} &middot;</span>
+            {{ comment }} <a href="{% url 'reply' comment.pk %}"> Reply </a>
+        </p>
+        {% for reply in comment.reply.all %}
+        <p style="margin-left: 40px;">
+            <span class="font-weight-bold"> {{ reply.author }} &middot;</span>
+            {{ reply }}
+        </p>
+        {% endfor %}
+        {% endfor %}
+
+    </div> -->
+  {% endcomment %}
+    <br/>
+</div>
+{% endfor %}
+{% else %}
+<p> There are no messages. </p>
+{% endif %}
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-from teachers.models import Class, Session, SubClass
+from teachers.models import Class, Session, SubClass, TeacherModel
 
 # Create your models here.
 
@@ -37,6 +37,21 @@ class StudentModel(models.Model):
 
     def get_absolute_url(self):
         return reverse("teachers:dash", args=None)
+
+
+class StudentMessages(models.Model):
+    teacher = models.ForeignKey(TeacherModel, on_delete=models.CASCADE, default=1)
+    student = models.ForeignKey(StudentModel, on_delete=models.CASCADE, default=1)
+    title = models.CharField(max_length=50, null=True, blank=True)
+    message = models.TextField()
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title
 
 
 class Subject(models.Model):

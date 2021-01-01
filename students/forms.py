@@ -6,9 +6,19 @@ from django.db import transaction
 from schoolz.users.models import Student
 from teachers.models import Class, SubClass
 
-from .models import StudentModel
+from .models import StudentMessages, StudentModel
 
 User = get_user_model()
+
+
+class StudentMessageForm(forms.ModelForm):
+    class Meta:
+        model = StudentMessages
+        exclude = {"teacher", "student", "updated_at", "created_at"}
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "messages": forms.TextInput(attrs={"class": "form-control"}),
+        }
 
 
 class StudentSignUpForm(UserCreationForm):

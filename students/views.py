@@ -17,7 +17,7 @@ from schoolz.users.models import Student
 from teachers.models import Class, Session, SubClass, TeacherModel
 
 from .forms import StudentAdminSignUpForm, StudentSignUpForm
-from .models import StudentModel, SubjectResult
+from .models import StudentMessages, StudentModel, SubjectResult
 
 
 def load_sub_class(request):
@@ -253,3 +253,13 @@ def show_student_result(request):
             else:
                 messages.error(request, "No result found for this category")
                 return redirect("students:show_result")
+
+
+def view_messages(request):
+    message = StudentMessages.objects.filter(
+        student=request.user.studentmodel
+    ).order_by("-created_at")
+
+    context = {"message": message}
+
+    return render(request, "student/view_message.html", context)

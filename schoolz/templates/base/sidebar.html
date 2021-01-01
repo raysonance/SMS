@@ -129,6 +129,37 @@
        </li>
           {% endif %}
        <!-- Event Section END -->
+           {% if request.user.is_teacher or request.user.is_student or request.user.is_admin %}
+        <li class="nav-item nav-dropdown">
+         <a class="nav-link nav-dropdown-toggle" href="#">
+             <i class="nav-icon icon-puzzle"></i>Message</a>
+          {% if request.user.is_teacher %}
+         <ul class="nav-dropdown-items">
+           <li class="nav-item">
+                 <a class="nav-link" href="{% url 'teachers:message' %}">
+                     <i class="nav-icon icon-puzzle"></i>Send Private Message</a>
+           </li>
+           <li class="nav-item">
+                 <a class="nav-link" href="{% url 'teachers:view_message' %}">
+                     <i class="nav-icon icon-puzzle"></i>View Sent Messages</a>
+           </li>
+           <li class="nav-item">
+                 <a class="nav-link text-nowrap" href="{% url 'teachers:general_message' %}">
+                     <i class="nav-icon icon-puzzle"></i>Send General Message</a>
+           </li>
+         </ul>
+          {% endif %}
+          {% if request.user.is_student %}
+         <ul class="nav-dropdown-items">
+           <li class="nav-item">
+                 <a class="nav-link" href="{% url 'students:message' %}">
+                     <i class="nav-icon icon-puzzle"></i>Messages
+                 </a>
+             </li>
+         </ul>
+          {% endif %}
+       </li>
+          {% endif %}
 
         <!-- User-Manual Section START -->
         <li class="nav-item nav-dropdown">

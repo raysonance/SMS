@@ -1,0 +1,78 @@
+ <head>
+  <title> Send Message </title>
+</head>
+{% extends 'base/base.html' %}
+ {% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- general form elements -->
+        <form method="POST" action="">
+          {% csrf_token %}
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Send Message</h3>
+            </div>
+            <!-- /.card-header -->
+
+            {% comment %} Display Messages {% endcomment %}
+            {% if messages %}
+              <div class="form-group">
+                <div class="col-12">
+                  {% for message in messages %}
+                  {% if message.tags == "error" %}
+                      <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                      </div>
+                  {% elif message.tags == "success" %}
+                      <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                      </div>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+
+
+            <div class="card-body">
+              <div class="form-group">
+                <label> Students </label>
+                    <select class="form-control" name="students" id="students">
+                        {% for student in students %}
+                            <option value="{{ student.pk }}">{{ student.name }}</option>
+                        {% endfor %}
+                    </select>
+              </div>
+
+                  {% csrf_token %}
+                  {{ form|crispy }}
+
+            </div>
+              <!-- /.card-body -->
+
+            <div class="card-footer">
+              <div class='form-group'>
+                <button class='btn btn-success' type='submit'>Send Message</button>
+              </div>
+            </div>
+
+          </div>
+          <!-- /.card -->
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid -->
+</section>
+{% endblock %}

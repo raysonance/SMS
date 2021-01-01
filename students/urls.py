@@ -14,6 +14,7 @@ from .views import (
     student_dashboard,
     student_list,
     student_teacher_list,
+    view_messages,
 )
 
 app_name = "students"
@@ -32,4 +33,5 @@ urlpatterns = [
     path("show_result/", show_result, name="show_result"),
     path("show_student_result", show_student_result, name="show_student_result"),
     path("load_subclass/", load_sub_class, name="load_subclass"),
+    path("view_message/", view_messages, name="message"),
 ]

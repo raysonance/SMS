@@ -15,7 +15,8 @@ from django.views.generic import (
 # Create your views here.
 from schoolz.users.decorators import admin_required, admin_student, teacher_required
 from schoolz.users.models import Teacher
-from students.models import StudentModel, Subject, SubjectResult
+from students.forms import StudentMessageForm
+from students.models import StudentMessages, StudentModel, Subject, SubjectResult
 
 from .forms import TeacherSignUpForm
 from .models import Class, Session, SubClass, TeacherModel
@@ -352,3 +353,87 @@ def promote_student_process(request):
                 "Complete result not found for this student. Contact admin to promote this student",
             )
             return redirect("teachers:promote")
+
+
+def send_messages(request):
+    form = StudentMessageForm()
+    students = StudentModel.objects.filter(
+        class_name=request.user.teachermodel.class_name,
+        sub_class=request.user.teachermodel.sub_class,
+    )
+    if request.method == "POST":
+        form = StudentMessageForm(request.POST)
+        student_id = request.POST.get("students")
+        student = StudentModel.objects.get(pk=student_id)
+        if form.is_valid():
+            student_message = form.save(commit=False)
+            student_message.teacher = request.user.teachermodel
+            student_message.student = student
+            student_message.save()
+            messages.success(request, "Message sent successfully")
+            return redirect("teachers:message")
+
+    context = {
+        "students": students,
+        "form": form,
+    }
+
+    return render(request, "teachers/send_message.html", context)
+
+
+def send_general_message(request):
+    form = StudentMessageForm()
+    students = StudentModel.objects.filter(
+        class_name=request.user.teachermodel.class_name,
+        sub_class=request.user.teachermodel.sub_class,
+    )
+    if request.method == "POST":
+        for pupil in students:
+            student = StudentModel.objects.get(pk=pupil.pk)
+            form = StudentMessageForm(request.POST)
+            if form.is_valid():
+                student_message = form.save(commit=False)
+                student_message.teacher = request.user.teachermodel
+                student_message.student = student
+                student_message.save()
+            else:
+                messages.error(request, "Message failed to send.")
+                return redirect("teachers:general_message")
+        if pupil == students.last():
+            messages.success(request, "Message sent to all students successfully")
+            return redirect("teachers:general_message")
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, "teachers/send_general_message.html", context)
+
+
+def view_messages(request):
+    message = StudentMessages.objects.filter(
+        teacher=request.user.teachermodel
+    ).order_by("-created_at")
+
+    context = {"message": message}
+
+    return render(request, "student/view_message.html", context)
+
+
+class UpdateMessage(UpdateView):
+    model = StudentMessages
+    template_name = "teachers/update_message.html"
+    fields = [
+        "title",
+        "message",
+    ]
+
+    def get_success_url(self):
+        return reverse_lazy("teachers:view_message")
+
+
+class DeleteMessage(DeleteView):
+    model = StudentMessages
+    template_name = "teachers/delete_message.html"
+    context_object_name = "message"
+    success_url = reverse_lazy("teachers:view_message")
