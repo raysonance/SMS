@@ -19,6 +19,7 @@ from .views import (
     show_student_result,
     staff_add_result_save,
     teacher_dashboard,
+    view_general_messages,
     view_messages,
 )
 
@@ -42,6 +43,11 @@ urlpatterns = [
     path("send_message/", send_messages, name="message"),
     path("send_general_message/", send_general_message, name="general_message"),
     path("view_messages/", view_messages, name="view_message"),
+    path(
+        "teacher_general_messages/",
+        view_general_messages,
+        name="teacher_general_message",
+    ),
     path("<int:pk>/message_edit/", UpdateMessage.as_view(), name="message_update"),
     path("<int:pk>/message_delete/", DeleteMessage.as_view(), name="message_delete"),
 ]

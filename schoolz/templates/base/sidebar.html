@@ -21,9 +21,9 @@
 
             <!-- Student Section START -->
             <li class="nav-item nav-dropdown">
-             <a class="nav-link nav-dropdown-toggle" href="#">
+              <a class="nav-link nav-dropdown-toggle" href="#">
                  <i class="nav-icon icon-puzzle"></i>Student</a>
-             <ul class="nav-dropdown-items">
+              <ul class="nav-dropdown-items">
                {% if request.user.is_teacher %}
                  <li class="nav-item">
                      <a class="nav-link" href="{% url 'students:signup' %}">
@@ -97,76 +97,82 @@
 
         <!-- Event Section START -->
           {% if request.user.is_teacher or request.user.is_student %}
-        <li class="nav-item nav-dropdown">
-         <a class="nav-link nav-dropdown-toggle" href="#">
-             <i class="nav-icon icon-puzzle"></i>Result</a>
-          {% if request.user.is_teacher %}
-         <ul class="nav-dropdown-items">
-           <li class="nav-item">
+          <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+              <i class="nav-icon icon-puzzle"></i>Result</a>
+            {% if request.user.is_teacher %}
+            <ul class="nav-dropdown-items">
+              <li class="nav-item">
                  <a class="nav-link" href="{% url 'teachers:add_result' %}">
                      <i class="nav-icon icon-puzzle"></i>Add Result</a>
-           </li>
-           <li class="nav-item">
+              </li>
+              <li class="nav-item">
                  <a class="nav-link" href="{% url 'teachers:promote' %}">
                      <i class="nav-icon icon-puzzle"></i>Promote</a>
-             </li>
-           <li class="nav-item">
+              </li>
+              <li class="nav-item">
                  <a class="nav-link" href="{% url 'teachers:show_result' %}">
                      <i class="nav-icon icon-puzzle"></i>Show Result
                  </a>
-             </li>
-         </ul>
-          {% endif %}
-          {% if request.user.is_student %}
-         <ul class="nav-dropdown-items">
-           <li class="nav-item">
-                 <a class="nav-link" href="{% url 'students:show_result' %}">
-                     <i class="nav-icon icon-puzzle"></i>Show Result
-                 </a>
-             </li>
-         </ul>
-          {% endif %}
-       </li>
+              </li>
+            </ul>
+            {% endif %}
+            {% if request.user.is_student %}
+            <ul class="nav-dropdown-items">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'students:show_result' %}">
+                  <i class="nav-icon icon-puzzle"></i>Show Result
+                </a>
+              </li>
+            </ul>
+            {% endif %}
+          </li>
           {% endif %}
        <!-- Event Section END -->
-           {% if request.user.is_teacher or request.user.is_student or request.user.is_admin %}
-        <li class="nav-item nav-dropdown">
-         <a class="nav-link nav-dropdown-toggle" href="#">
+          <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
              <i class="nav-icon icon-puzzle"></i>Message</a>
-          {% if request.user.is_teacher %}
-         <ul class="nav-dropdown-items">
-           <li class="nav-item">
+            {% if request.user.is_teacher %}
+            <ul class="nav-dropdown-items">
+              <li class="nav-item">
                  <a class="nav-link" href="{% url 'teachers:message' %}">
                      <i class="nav-icon icon-puzzle"></i>Send Private Message</a>
-           </li>
-           <li class="nav-item">
-                 <a class="nav-link" href="{% url 'teachers:view_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>View Sent Messages</a>
-           </li>
-           <li class="nav-item">
+              </li>
+              <li class="nav-item">
                  <a class="nav-link text-nowrap" href="{% url 'teachers:general_message' %}">
                      <i class="nav-icon icon-puzzle"></i>Send General Message</a>
-           </li>
-         </ul>
-          {% endif %}
-          {% if request.user.is_student %}
-         <ul class="nav-dropdown-items">
-           <li class="nav-item">
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="{% url 'teachers:view_message' %}">
+                     <i class="nav-icon icon-puzzle"></i>View Private Messages</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="{% url 'teachers:teacher_general_message' %}">
+                     <i class="nav-icon icon-puzzle"></i>View General Messages</a>
+              </li>
+            </ul>
+            {% endif %}
+            {% if request.user.is_student %}
+            <ul class="nav-dropdown-items">
+              <li class="nav-item">
                  <a class="nav-link" href="{% url 'students:message' %}">
-                     <i class="nav-icon icon-puzzle"></i>Messages
+                     <i class="nav-icon icon-puzzle"></i>Private Messages
                  </a>
-             </li>
-         </ul>
-          {% endif %}
-       </li>
-          {% endif %}
-
-        <!-- User-Manual Section START -->
-        <li class="nav-item nav-dropdown">
-         <a class="nav-link" href="#">
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="{% url 'students:general_message' %}">
+                     <i class="nav-icon icon-puzzle"></i>General Messages
+                 </a>
+              </li>
+            </ul>
+            {% endif %}
+          </li>
+          <!-- User-Manual Section START -->
+          <li class="nav-item nav-dropdown">
+            <a class="nav-link" href="#">
              <i class="nav-icon icon-puzzle"></i>User-Manual</a>
-       </li>
-       <!-- User-Manual Section END -->
+          </li>
+          <!-- User-Manual Section END -->
         </ul>
     </nav>
     <button class="sidebar-minimizer brand-minimizer" type="button"></button>

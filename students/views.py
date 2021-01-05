@@ -17,7 +17,7 @@ from schoolz.users.models import Student
 from teachers.models import Class, Session, SubClass, TeacherModel
 
 from .forms import StudentAdminSignUpForm, StudentSignUpForm
-from .models import StudentMessages, StudentModel, SubjectResult
+from .models import StudentMessages, StudentModel, Subject, SubjectResult
 
 
 def load_sub_class(request):
@@ -202,10 +202,27 @@ def student_dashboard(request):
     teacher = TeacherModel.objects.filter(
         class_name=request.user.studentmodel.class_name,
         sub_class=request.user.studentmodel.sub_class,
+    ).count()
+    teachers = TeacherModel.objects.filter(
+        class_name=request.user.studentmodel.class_name,
+        sub_class=request.user.studentmodel.sub_class,
     )
+    courses = Subject.objects.filter(
+        class_name=request.user.studentmodel.class_name,
+    ).count()
+    five_message = []
+    message = StudentMessages.objects.filter(student=request.user.studentmodel)
+    for cycle, value in enumerate(message):
+        if cycle <= 2:
+            five_message.append(value)
+        else:
+            break
     context = {
         "teacher": teacher,
         "student": total_student,
+        "teachers": teachers,
+        "courses": courses,
+        "message": five_message,
     }
     return render(request, "student/student_dashboard.html", context)
 
@@ -257,7 +274,17 @@ def show_student_result(request):
 
 def view_messages(request):
     message = StudentMessages.objects.filter(
-        student=request.user.studentmodel
+        student=request.user.studentmodel, private=True
+    ).order_by("-created_at")
+
+    context = {"message": message}
+
+    return render(request, "student/view_message.html", context)
+
+
+def view_general_messages(request):
+    message = StudentMessages.objects.filter(
+        student=request.user.studentmodel, private=False
     ).order_by("-created_at")
 
     context = {"message": message}

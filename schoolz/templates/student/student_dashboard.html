@@ -32,83 +32,70 @@
 <marquee behavior="" direction="">Welcome To Student Management System</marquee>
 <div class="animated fadeIn">
     <div class="row">
-        <div class="col-sm-6 col-lg-6">
-            <div class="card text-white bg-primary">
-
-                <div class="card-body pb-0">
-                    <div class="btn-group float-right">
-                        <button class="btn btn-transparent dropdown-toggle p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="icon-settings"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="{% url 'students:student_list' %}">Students in Class List</a>
-                        </div>
-                    </div>
-                    <div class="text-value"><a href="{% url 'students:student_list' %}" class="btn btn-primary">{{ student }}</a></div>
-                    <div>Total Student in Class</div>
-                </div>
-
-                <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-                        </div>
-                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                            <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                        </div>
-                    </div>
-                    <canvas class="chart chartjs-render-monitor" id="card-chart1" height="70" width="319" style="display: block; width: 319px; height: 70px;"></canvas>
-                    <div id="card-chart1-tooltip" class="chartjs-tooltip top" style="opacity: 0; left: 278.558px; top: 123.889px;">
-                        <div class="tooltip-header">
-                            <div class="tooltip-header-item">June</div>
-                        </div>
-                        <div class="tooltip-body">
-                            <div class="tooltip-body-item"><span class="tooltip-body-item-color" style="background-color: rgb(0, 165, 224);"></span><span class="tooltip-body-item-label">My First dataset</span><span class="tooltip-body-item-value">55</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="col-lg-3 col-12">
+        <!-- small box -->
+        <div class="small-box bg-info">
+          <div class="inner">
+            <h3>{{ student }}</h3>
+            <p>Total Student in Class</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-stats-bars"></i>
+          </div>
+          <a href="{% url 'students:student_list' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
-        <div class="col-sm-6 col-lg-6">
-            <div class="card text-white bg-primary">
-
-                <div class="card-body pb-0">
-                    <div class="btn-group float-right">
-                        <button class="btn btn-transparent dropdown-toggle p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="icon-settings"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                          {% for teach in teacher %}
-                            <a class="dropdown-item" href="{% url 'teachers:profile' teach.pk %}">Teacher Profile</a>
-                        </div>
-                    </div>
-                    <div class="text-value"><a href="{% url 'teachers:profile' teach.pk %}" class="btn btn-primary">1</a></div>
-
-                  {% endfor %}
-                  <div>Class Teacher</div>
-                </div>
-
-                <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-                        </div>
-                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                            <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                        </div>
-                    </div>
-                    <canvas class="chart chartjs-render-monitor" id="card-chart2" height="70" width="319" style="display: block; width: 319px; height: 70px;"></canvas>
-                    <div id="card-chart2-tooltip" class="chartjs-tooltip top" style="opacity: 0; left: 278.558px; top: 123.889px;">
-                        <div class="tooltip-header">
-                            <div class="tooltip-header-item">June</div>
-                        </div>
-                        <div class="tooltip-body">
-                            <div class="tooltip-body-item"><span class="tooltip-body-item-color" style="background-color: rgb(0, 165, 224);"></span><span class="tooltip-body-item-label">My First dataset</span><span class="tooltip-body-item-value">55</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </div>
+      {% for teachers in teachers %}
+      <div class="col-lg-3 col-12">
+        <!-- small box -->
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3> Mr {{ teachers.name }}</h3>
+            <p>{{ teachers.mobile }}</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-stats-bars"></i>
+          </div>
+          <a href="{% url 'teachers:profile' teachers.pk %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
+      </div>
+      {% endfor %}
     </div>
+  <div class="row">
+    <div class="col-lg-6 col-12">
+        <!-- small box -->
+        <div class="small-box bg-danger">
+          <div class="inner">
+            <h3>{{ courses }}</h3>
+            <p>Total Courses</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-stats-bars"></i>
+          </div>
+          <p class="small-box-footer"> <i class="fa fa-puzzle-piece"></i></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p> <span style="color: purple;"><b> Latest Messages </b></span></p>
+
+{% if message %}
+{% for article in message %}
+<div class="card">
+    <div class="card-header {% if article.private == True %} bg-success {% else %} bg-info {% endif %}">
+        <span class="font-weight-bold">{{ article.title }}</span> &middot;
+        <span class="text-muted"> sent by {{ article.teacher.name }} to {{ article.student.name }} | {{ article.created_at }}</span>
+    </div>
+    <div class="card-body">
+        {{ article.message }}
+    </div>
+    <br/>
+</div>
+{% endfor %}
+{% else %}
+<p> There are no messages. </p>
+{% endif %}
 
 {% endblock %}

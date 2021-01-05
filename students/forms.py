@@ -14,7 +14,7 @@ User = get_user_model()
 class StudentMessageForm(forms.ModelForm):
     class Meta:
         model = StudentMessages
-        exclude = {"teacher", "student", "updated_at", "created_at"}
+        exclude = {"teacher", "student", "updated_at", "created_at", "private"}
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "messages": forms.TextInput(attrs={"class": "form-control"}),

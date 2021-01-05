@@ -1,5 +1,8 @@
+import datetime
+
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 from teachers.models import Class, Session, SubClass, TeacherModel
 
@@ -44,6 +47,7 @@ class StudentMessages(models.Model):
     student = models.ForeignKey(StudentModel, on_delete=models.CASCADE, default=1)
     title = models.CharField(max_length=50, null=True, blank=True)
     message = models.TextField()
+    private = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -51,7 +55,10 @@ class StudentMessages(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return self.title
+        return f"{self.title}"
+
+    def was_published_recently(self):
+        return self.updated_at >= timezone.now() - datetime.timedelta(days=30)
 
 
 class Subject(models.Model):

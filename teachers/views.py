@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import (
     CreateView,
@@ -369,6 +370,7 @@ def send_messages(request):
             student_message = form.save(commit=False)
             student_message.teacher = request.user.teachermodel
             student_message.student = student
+            student_message.private = True
             student_message.save()
             messages.success(request, "Message sent successfully")
             return redirect("teachers:message")
@@ -412,7 +414,17 @@ def send_general_message(request):
 
 def view_messages(request):
     message = StudentMessages.objects.filter(
-        teacher=request.user.teachermodel
+        teacher=request.user.teachermodel, private=True
+    ).order_by("-created_at")
+
+    context = {"message": message}
+
+    return render(request, "student/view_message.html", context)
+
+
+def view_general_messages(request):
+    message = StudentMessages.objects.filter(
+        teacher=request.user.teachermodel, private=False
     ).order_by("-created_at")
 
     context = {"message": message}
@@ -428,7 +440,14 @@ class UpdateMessage(UpdateView):
         "message",
     ]
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.updated_at = timezone.now()
+        form.save()
+        return super().form_valid(form)
+
     def get_success_url(self):
+        messages.success(self.request, "Message updated successfully")
         return reverse_lazy("teachers:view_message")
 
 
