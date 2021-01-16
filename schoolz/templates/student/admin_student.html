@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <title> Student List </title>
 </head>
@@ -10,7 +12,7 @@
           <div class="card-header">
               <i class="fa fa-edit"></i> Student Tables
           </div>
-          {% if students %}
+          {% if student %}
           <div class="card-body">
               <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                   <div class="row">
@@ -28,7 +30,8 @@
                                   </tr>
                               </thead>
                               <tbody>
-                                {% for students in students %}
+                              {% if request.user.is_admin %}
+                                {% for students in student %}
                                     <tr role="row" class="odd">
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ students.name }}</td>
@@ -40,9 +43,18 @@
                                             <a class="btn btn-success" href="{% url 'students:profile' students.pk %}">
                                                 <i class="fa fa-search-plus"></i>
                                             </a>
+                                            <a class="btn btn-info" href="{% url 'students:update' students.pk %}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger" href="{% url 'students:delete' students.pk %}">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}
+                              {% else %}
+                                <h3> Hello What sre you looking for ?</h3>
+                              {% endif %}
                               </tbody>
                           </table>
                       </div>

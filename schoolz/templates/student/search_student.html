@@ -1,0 +1,78 @@
+ <head>
+  <title> Check Class List </title>
+</head>
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- general form elements -->
+        <form id="searchForm" action="{% url 'students:search_students' %}" method="get">
+          {% csrf_token %}
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Search Student</h3>
+            </div>
+            <!-- /.card-header -->
+
+            {% comment %} Display Messages {% endcomment %}
+            {% if messages %}
+              <div class="form-group">
+                <div class="col-12">
+                  {% for message in messages %}
+                  {% if message.tags == "error" %}
+                      <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                      </div>
+                  {% elif message.tags == "success" %}
+                      <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                      </div>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+
+
+            <div class="card-body">
+              <div class="form-group">
+                <label> Student </label>
+                <input class="form-control" type="search" placeholder="Name of Student..." aria-label="Search" name='q' required>
+              </div>
+              <div class="form-group">
+                <label> Class <span class="text-muted" style="font-size:10px"> (Not necessary but can reduce the time for a large database if taking too long)</span> </label>
+                    <select class="form-control" name="class_name" id="class_name">
+                      <option value="">---------</option>
+                        {% for class_name in class_name %}
+                            <option value="{{ class_name.pk }}">{{ class_name.class_name }}</option>
+                        {% endfor %}
+                    </select>
+              </div>
+            </div>
+              <!-- /.card-body -->
+
+            <div class="card-footer">
+              <div class='form-group'>
+                <button class='btn btn-success' type='submit'>Submit</button>
+              </div>
+            </div>
+
+          </div>
+          <!-- /.card -->
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid -->
+</section>
+{% endblock %}

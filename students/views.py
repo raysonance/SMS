@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -290,3 +291,33 @@ def view_general_messages(request):
     context = {"message": message}
 
     return render(request, "student/view_message.html", context)
+
+
+def search_student(request):
+    class_name = Class.objects.all()
+    context = {
+        "class_name": class_name,
+    }
+    return render(request, "student/search_student.html", context)
+
+
+def search_students(request):
+    query = request.GET.get("q")
+    if request.GET.get("class_name"):
+        classes = request.GET.get("class_name")
+        class_name = Class.objects.get(pk=classes)
+        student = StudentModel.objects.filter(
+            Q(name__icontains=query), class_name=class_name
+        )
+        context = {"student": student}
+        if request.user.is_admin:
+            return render(request, "student/admin_student.html", context)
+        else:
+            return render(request, "student/students_list.html", {"students": student})
+    else:
+        student = StudentModel.objects.filter(Q(name__icontains=query))
+        context = {"student": student}
+        if request.user.is_admin:
+            return render(request, "student/admin_student.html", context)
+        else:
+            return render(request, "student/students_list.html", {"students": student})

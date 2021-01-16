@@ -40,7 +40,7 @@
 
                {% if request.user.is_admin %}
                  <li class="nav-item">
-                     <a class="nav-link" href="{% url 'students:list' %}">
+                     <a class="nav-link" href="{% url 'teachers:show_list' %}">
                          <i class="fa fa-list"></i>Student List</a>
                  </li>
                {% endif %}
@@ -59,7 +59,7 @@
 
                {% if request.user.is_admin or request.user.is_teacher %}
                  <li class="nav-item">
-                     <a class="nav-link" href="#">
+                     <a class="nav-link" href="{% url 'students:search_student' %}">
                          <i class="fa fa-search-plus"></i>Student Search</a>
                  </li>
                {% endif %}
@@ -135,7 +135,7 @@
             {% if request.user.is_teacher %}
             <ul class="nav-dropdown-items">
               <li class="nav-item">
-                 <a class="nav-link" href="{% url 'teachers:message' %}">
+                 <a class="nav-link text-nowrap" href="{% url 'teachers:message' %}">
                      <i class="nav-icon icon-puzzle"></i>Send Private Message</a>
               </li>
               <li class="nav-item">
@@ -143,11 +143,11 @@
                      <i class="nav-icon icon-puzzle"></i>Send General Message</a>
               </li>
               <li class="nav-item">
-                 <a class="nav-link" href="{% url 'teachers:view_message' %}">
+                 <a class="nav-link text-nowrap" href="{% url 'teachers:view_message' %}">
                      <i class="nav-icon icon-puzzle"></i>View Private Messages</a>
               </li>
               <li class="nav-item">
-                 <a class="nav-link" href="{% url 'teachers:teacher_general_message' %}">
+                 <a class="nav-link text-nowrap" href="{% url 'teachers:teacher_general_message' %}">
                      <i class="nav-icon icon-puzzle"></i>View General Messages</a>
               </li>
             </ul>

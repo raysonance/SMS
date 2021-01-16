@@ -15,6 +15,8 @@ from .views import (
     promote_student_process,
     send_general_message,
     send_messages,
+    show_admin_student,
+    show_list,
     show_result,
     show_student_result,
     staff_add_result_save,
@@ -50,4 +52,6 @@ urlpatterns = [
     ),
     path("<int:pk>/message_edit/", UpdateMessage.as_view(), name="message_update"),
     path("<int:pk>/message_delete/", DeleteMessage.as_view(), name="message_delete"),
+    path("show_list/", show_list, name="show_list"),
+    path("show_student_admin/", show_admin_student, name="show_admin_student"),
 ]

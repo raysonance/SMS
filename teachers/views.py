@@ -456,3 +456,30 @@ class DeleteMessage(DeleteView):
     template_name = "teachers/delete_message.html"
     context_object_name = "message"
     success_url = reverse_lazy("teachers:view_message")
+
+
+def show_list(request):
+    class_name = Class.objects.all()
+    sub_class = SubClass.objects.all()
+    context = {"class_name": class_name, "sub_class": sub_class}
+    return render(request, "teachers/admin_student.html", context)
+
+
+def show_admin_student(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method")
+        return redirect("teachers:show_list")
+    else:
+        class_id = request.POST.get("class_name")
+        sub_class_id = request.POST.get("sub_class")
+
+        class_name = Class.objects.get(pk=class_id)
+        sub_class = SubClass.objects.get(pk=sub_class_id)
+
+        student = StudentModel.objects.filter(
+            class_name=class_name, sub_class=sub_class
+        )
+
+        context = {"student": student}
+
+        return render(request, "student/admin_student.html", context)
