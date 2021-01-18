@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -13,14 +13,22 @@ from django.views.generic import (
     UpdateView,
 )
 
-from schoolz.users.decorators import teacher_admin, teacher_admin_student
+from schoolz.users.decorators import (
+    admin_required,
+    teacher_admin_func,
+    teacher_admin_student,
+    teacher_required,
+    user_is_student,
+)
 from schoolz.users.models import Student
 from teachers.models import Class, Session, SubClass, TeacherModel
+from teachers.views import user_is_teacher
 
 from .forms import StudentAdminSignUpForm, StudentSignUpForm
 from .models import StudentMessages, StudentModel, Subject, SubjectResult
 
 
+# for loading sub_class according to equivalent Class using jquery
 def load_sub_class(request):
     class_id = request.GET.get("class")
     sub_class = SubClass.objects.filter(class_name=class_id).order_by("sub_class")
@@ -29,7 +37,8 @@ def load_sub_class(request):
     return render(request, "others/subclass_dropdown_list_options.html", context)
 
 
-@method_decorator([teacher_admin], name="dispatch")
+# signup of students for teachers
+@method_decorator([teacher_required], name="dispatch")
 class StudentSignupView(LoginRequiredMixin, CreateView):
     model = Student
     login_url = "account_login"
@@ -47,13 +56,11 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        if self.request.user.is_teacher:
-            return redirect("teachers:dash")
-        if self.request.user.is_admin:
-            return redirect("users:dash")
+        return redirect("teachers:dash")
 
 
-@method_decorator([teacher_admin], name="dispatch")
+# signup of students for admin
+@method_decorator([admin_required], name="dispatch")
 class StudentAdminSignupView(LoginRequiredMixin, CreateView):
     model = Student
     login_url = "account_login"
@@ -71,12 +78,11 @@ class StudentAdminSignupView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        if self.request.user.is_teacher:
-            return redirect("teachers:dash")
-        if self.request.user.is_admin:
-            return redirect("users:dash")
+        return redirect("users:dash")
 
 
+# display profile of students
+@method_decorator([teacher_admin_student], name="dispatch")
 class StudentProfileView(LoginRequiredMixin, DetailView):
     model = Student
     login_url = "account_login"
@@ -84,7 +90,8 @@ class StudentProfileView(LoginRequiredMixin, DetailView):
     template_name = "student/studentprofile.html"
 
 
-@method_decorator([teacher_admin_student], name="dispatch")
+# update view of student for admin
+@method_decorator([admin_required], name="dispatch")
 class StudentUpdateView(LoginRequiredMixin, UpdateView):
     model = StudentModel
     login_url = "account_login"
@@ -109,10 +116,10 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        if self.request.user.is_admin:
-            return reverse_lazy("users:dash")
+        return reverse_lazy("users:dash")
 
 
+# update view of student for teacher and student
 @method_decorator([teacher_admin_student], name="dispatch")
 class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = StudentModel
@@ -142,6 +149,7 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
             return reverse_lazy("teachers:dash")
 
 
+# list view for students
 @method_decorator([teacher_admin_student], name="dispatch")
 class StudentListView(LoginRequiredMixin, ListView):
     model = Student
@@ -150,6 +158,8 @@ class StudentListView(LoginRequiredMixin, ListView):
     context_object_name = "student"
 
 
+# student list for teachers
+@user_passes_test(user_is_teacher, login_url="home")
 def student_teacher_list(request):
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name,
@@ -161,6 +171,8 @@ def student_teacher_list(request):
     return render(request, "student/student_list.html", context)
 
 
+# student list for students
+@user_passes_test(user_is_student, login_url="home")
 def student_list(request):
     students = StudentModel.objects.filter(
         class_name=request.user.studentmodel.class_name,
@@ -172,28 +184,17 @@ def student_list(request):
     return render(request, "student/students_list.html", context)
 
 
-@method_decorator([teacher_admin], name="dispatch")
-class StudentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+# delete student
+@method_decorator([admin_required], name="dispatch")
+class StudentDeleteView(LoginRequiredMixin, DeleteView):
     model = Student
     template_name = "student/student_delete.html"
     success_url = reverse_lazy("students:list")
     login_url = "account_login"
     context_object_name = "students"
 
-    def test_func(self):
-        obj = self.get_object()
-        if self.request.user.is_teacher:
-            return (
-                obj.studentmodel.sub_class == self.request.user.teachermodel.sub_class
-            )
-        elif self.request.user.is_admin:
-            return True
 
-
-def user_is_student(user):
-    return user.is_student
-
-
+# student dashboard
 @user_passes_test(user_is_student, login_url="home")
 def student_dashboard(request):
     total_student = StudentModel.objects.filter(
@@ -211,11 +212,11 @@ def student_dashboard(request):
     courses = Subject.objects.filter(
         class_name=request.user.studentmodel.class_name,
     ).count()
-    five_message = []
+    three_message = []
     message = StudentMessages.objects.filter(student=request.user.studentmodel)
     for cycle, value in enumerate(message):
         if cycle <= 2:
-            five_message.append(value)
+            three_message.append(value)
         else:
             break
     context = {
@@ -223,25 +224,25 @@ def student_dashboard(request):
         "student": total_student,
         "teachers": teachers,
         "courses": courses,
-        "message": five_message,
+        "message": three_message,
     }
     return render(request, "student/student_dashboard.html", context)
 
 
+# result checking for students
+@user_passes_test(user_is_student, login_url="home")
 def show_result(request):
-
     class_name = Class.objects.all()
-
     session = Session.objects.all()
-
     context = {
         "classes": class_name,
         "sessions": session,
     }
-
     return render(request, "student/show_result.html", context)
 
 
+# result processing for students
+@user_passes_test(user_is_student, login_url="home")
 def show_student_result(request):
     if request.method != "POST":
         messages.error(request, "Invalid Method")
@@ -256,10 +257,9 @@ def show_student_result(request):
         student_result = SubjectResult.objects.filter(
             student=request.user.pk, session=session, class_name=class_name
         )
-
-        context = {"student_result": student_result}
-
         if student_result:
+            first = student_result[0].session.session_name
+            context = {"student_result": student_result, "first": first}
             return render(request, "student/student_result.html", context)
         else:
             # checks only for class and student and not session
@@ -273,26 +273,32 @@ def show_student_result(request):
                 return redirect("students:show_result")
 
 
+# view messages for students
+@user_passes_test(user_is_student, login_url="home")
 def view_messages(request):
     message = StudentMessages.objects.filter(
         student=request.user.studentmodel, private=True
-    ).order_by("-created_at")
+    )
 
     context = {"message": message}
 
     return render(request, "student/view_message.html", context)
 
 
+# message checking for students
+@user_passes_test(user_is_student, login_url="home")
 def view_general_messages(request):
     message = StudentMessages.objects.filter(
         student=request.user.studentmodel, private=False
-    ).order_by("-created_at")
+    )
 
     context = {"message": message}
 
     return render(request, "student/view_message.html", context)
 
 
+# search student for teacher and admin
+@user_passes_test(teacher_admin_func, login_url="home")
 def search_student(request):
     class_name = Class.objects.all()
     context = {
@@ -301,6 +307,7 @@ def search_student(request):
     return render(request, "student/search_student.html", context)
 
 
+# process searching for students
 def search_students(request):
     query = request.GET.get("q")
     if request.GET.get("class_name"):

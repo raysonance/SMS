@@ -6,11 +6,31 @@
 
 {% block content %}
   <div class="animated fadeIn">
-      <div class="card">
+    {% if student_result %}
+    <header>
+      <div>
+        <h4 class="d-xl-flex justify-content-xl-center">ELIZABETH HIGH SCHOOL</h4>
+        <span class="d-xl-flex justify-content-xl-center" style="font-size: 16px;color: rgb(222,17,17);"><strong>No 1 Sanni Balogun Ijebu-Ode Street, Lagos</strong></span>
+        <span>
+          <img class="d-xl-flex justify-content-xl-center" src="{% static 'landing\img\blog\img1.jpg' %}" width="100em" height="100em">
+          <img class="d-xl-flex float-right" style="margin: 0px;margin-top: -86px; margin-bottom: 2em;" src="{{ request.user.studentmodel.photo.url }}" width="100em" height="100em">
+        </span>
+      </div>
+    </header>
+    <span class="d-xl-flex justify-content-xl-center" style="clear: both; background-color: #2522c9;color: rgb(241,245,249);">Examination Results</span>
+    <div>
+      <span class="float-right d-xl-flex" style="margin-left: 0px;"><strong>Class:&nbsp; {{ request.user.studentmodel.class_name.class_name }} {{ request.user.studentmodel.sub_class.sub_class }}</strong></span>
+      <span class="d-xl-flex justify-content-xl-start"><strong>Name: {{ request.user.studentmodel.name }} &nbsp;</strong></span>
+    </div>
+    <div style="clear: both;">
+      <span><strong>Term: {{ first }}</strong></span>
+      <span class="float-right"><strong>Percentage: 22.8%</strong></span>
+    </div>
+      <div class="card" style="clear: both;">
           <div class="card-header">
-              <i class="fa fa-edit"></i> Student Result
+              <i class="fa fa-edit"></i> DADEYO HIGH SCHOOL
           </div>
-          {% if student_result %}
+
           <div class="card-body">
               <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                   <div class="row">

@@ -59,13 +59,6 @@
                 <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
               </li>
 
-            {% if user.is_teach %}
-            <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'teachers:signup' %}">Sign up as teacher</a>
-              </li>
-            {% endif %}
-
             {% else %}
             <!--
               <li class="nav-item">

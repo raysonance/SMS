@@ -14,7 +14,14 @@ from django.views.generic import (
 )
 
 # Create your views here.
-from schoolz.users.decorators import admin_required, admin_student, teacher_required
+from schoolz.users.decorators import (
+    admin_required,
+    admin_student,
+    teacher_admin,
+    teacher_required,
+    user_is_admin,
+    user_is_teacher,
+)
 from schoolz.users.models import Teacher
 from students.forms import StudentMessageForm
 from students.models import StudentMessages, StudentModel, Subject, SubjectResult
@@ -31,6 +38,7 @@ def load_sub_class(request):
     return render(request, "others/subclass_dropdown_list_options.html", context)
 
 
+# teacher signup for admins
 @method_decorator([admin_required], name="dispatch")
 class TeacherSignupView(LoginRequiredMixin, CreateView):
     model = Teacher
@@ -44,29 +52,30 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        if self.request.user.is_admin:
-            return redirect("users:dash")
+        return redirect("users:dash")
 
 
+# Teacher list for students and teachers
 @method_decorator([admin_student], name="dispatch")
 class TeacherListView(LoginRequiredMixin, ListView):
     model = Teacher
-    login_url = "account_login"
+    login_url = "home"
     template_name = "teachers/list.html"
     context_object_name = "teacher"
 
 
 class TeacherProfileView(LoginRequiredMixin, DetailView):
     model = Teacher
-    login_url = "account_login"
+    login_url = "home"
     context_object_name = "teacher"
     template_name = "teachers/teacherprofile.html"
 
 
+# Teacher update view for teachers only
 @method_decorator([teacher_required], name="dispatch")
 class TeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = TeacherModel
-    login_url = "account_login"
+    login_url = "home"  # "account_login"
     template_name = "teachers/update.html"
     fields = [
         "name",
@@ -81,10 +90,11 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("teachers:dash")
 
 
+# Teacher update view for admin
 @method_decorator([admin_required], name="dispatch")
 class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = TeacherModel
-    login_url = "account_login"
+    login_url = "home"  # "account_login"
     template_name = "teachers/update.html"
     fields = [
         "class_name",
@@ -95,6 +105,7 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("teachers:list")
 
 
+# admin only
 @method_decorator([admin_required], name="dispatch")
 class TeacherDeleteView(LoginRequiredMixin, DeleteView):
     model = Teacher
@@ -102,11 +113,6 @@ class TeacherDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("teachers:list")
     login_url = "account_login"
     context_object_name = "teachers"
-
-
-def user_is_teacher(user):
-    if user.is_teacher:
-        return True
 
 
 @user_passes_test(user_is_teacher, login_url="home")
@@ -121,6 +127,7 @@ def teacher_dashboard(request):
     return render(request, "teachers/teacher.html", context)
 
 
+# for teachers to add student result
 @user_passes_test(user_is_teacher, login_url="home")
 def add_result(request):
     students = StudentModel.objects.filter(
@@ -225,6 +232,8 @@ def staff_add_result_save(request):
             return redirect("teachers:add_result")
 
 
+# for teachers to check result
+@user_passes_test(user_is_teacher, login_url="home")
 def show_result(request):
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name,
@@ -263,6 +272,8 @@ def show_student_result(request):
             return redirect("teachers:show_result")
 
 
+# for promoting students up one class
+@user_passes_test(user_is_teacher, login_url="home")
 def promote_student(request):
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name,
@@ -356,6 +367,8 @@ def promote_student_process(request):
             return redirect("teachers:promote")
 
 
+# for teachers to send messages to students
+@user_passes_test(user_is_teacher, login_url="home")
 def send_messages(request):
     form = StudentMessageForm()
     students = StudentModel.objects.filter(
@@ -383,6 +396,8 @@ def send_messages(request):
     return render(request, "teachers/send_message.html", context)
 
 
+# general messages
+@user_passes_test(user_is_teacher, login_url="home")
 def send_general_message(request):
     form = StudentMessageForm()
     students = StudentModel.objects.filter(
@@ -412,6 +427,8 @@ def send_general_message(request):
     return render(request, "teachers/send_general_message.html", context)
 
 
+# for teachers to view messages
+@user_passes_test(user_is_teacher, login_url="home")
 def view_messages(request):
     message = StudentMessages.objects.filter(
         teacher=request.user.teachermodel, private=True
@@ -422,6 +439,8 @@ def view_messages(request):
     return render(request, "student/view_message.html", context)
 
 
+# for teachers to view general messages
+@user_passes_test(user_is_teacher, login_url="home")
 def view_general_messages(request):
     message = StudentMessages.objects.filter(
         teacher=request.user.teachermodel, private=False
@@ -432,6 +451,8 @@ def view_general_messages(request):
     return render(request, "student/view_message.html", context)
 
 
+# for teachers to update messages
+@method_decorator([teacher_admin], name="dispatch")
 class UpdateMessage(UpdateView):
     model = StudentMessages
     template_name = "teachers/update_message.html"
@@ -451,6 +472,7 @@ class UpdateMessage(UpdateView):
         return reverse_lazy("teachers:view_message")
 
 
+@method_decorator([teacher_admin], name="dispatch")
 class DeleteMessage(DeleteView):
     model = StudentMessages
     template_name = "teachers/delete_message.html"
@@ -458,6 +480,8 @@ class DeleteMessage(DeleteView):
     success_url = reverse_lazy("teachers:view_message")
 
 
+# admin list of student
+@user_passes_test(user_is_admin, login_url="home")
 def show_list(request):
     class_name = Class.objects.all()
     sub_class = SubClass.objects.all()

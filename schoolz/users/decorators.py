@@ -79,3 +79,20 @@ def admin_required(
     if function:
         return actual_decorator(function)
     return actual_decorator
+
+
+# test for functions
+def user_is_teacher(user):
+    return user.is_teacher
+
+
+def user_is_admin(user):
+    return user.is_admin
+
+
+def user_is_student(user):
+    return user.is_student
+
+
+def teacher_admin_func(user):
+    return user.is_teacher or user.is_admin
