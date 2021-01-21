@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import (
@@ -91,7 +91,8 @@ class StudentProfileView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         # a vey useful feature that reduces number of queries from 22 to 6
-        # i have added the foreign keys i would use in the html to be preloaded so they wouldnt to called continually
+        # i have added the foreign keys i would use in the html to be
+        # preloaded so they wouldnt to called continually
         # instead they would be cached
         student = Student.objects.all().select_related(
             "studentmodel__class_name",
@@ -258,8 +259,8 @@ def show_student_result(request):
         class_pk = request.POST.get("class_name")
         session_id = request.POST.get("session")
 
-        class_name = Class.objects.get(pk=class_pk)
-        session = Session.objects.get(id=session_id)
+        class_name = get_object_or_404(Class, pk=class_pk)
+        session = get_object_or_404(Session, id=session_id)
 
         student_result = SubjectResult.objects.filter(
             student=request.user.pk, session=session, class_name=class_name
@@ -319,7 +320,7 @@ def search_students(request):
     query = request.GET.get("q")
     if request.GET.get("class_name"):
         classes = request.GET.get("class_name")
-        class_name = Class.objects.get(pk=classes)
+        class_name = get_object_or_404(Class, pk=classes)
         student = StudentModel.objects.filter(
             Q(name__icontains=query), class_name=class_name
         ).select_related("class_name")

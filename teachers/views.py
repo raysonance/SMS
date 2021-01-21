@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -170,9 +170,9 @@ def staff_add_result_save(request):
         remark = request.POST.get("remark")
 
         if student_id and subject_id and session_id:
-            student_obj = StudentModel.objects.get(pk=student_id)
-            subject_obj = Subject.objects.get(id=subject_id)
-            session_obj = Session.objects.get(id=session_id)
+            student_obj = get_object_or_404(StudentModel, pk=student_id)
+            subject_obj = get_object_or_404(Subject, id=subject_id)
+            session_obj = get_object_or_404(Session, id=session_id)
         else:
             messages.error(request, "Failed to Add Result!")
             return redirect("teachers:add_result")
@@ -270,8 +270,8 @@ def show_student_result(request):
         student_id = request.POST.get("students")
         session_id = request.POST.get("session")
 
-        student = StudentModel.objects.get(pk=student_id)
-        session = Session.objects.get(id=session_id)
+        student = get_object_or_404(StudentModel, pk=student_id)
+        session = get_object_or_404(Session, id=session_id)
 
         student_result = SubjectResult.objects.filter(student=student, session=session)
 
@@ -299,7 +299,7 @@ def promote_student(request):
         check_exists = Class.objects.filter(pk=new_class).exists()
 
         if check_exists:
-            new_class_name = Class.objects.get(pk=new_class)
+            new_class_name = get_object_or_404(Class, pk=new_class)
         else:
             messages.error(request, "Can not promote in this class.")
             return redirect("teachers:dash")
@@ -351,12 +351,12 @@ def promote_student_process(request):
         class_id = request.POST.get("classes")
         sub_class_id = request.POST.get("sub_class")
 
-        student = StudentModel.objects.get(pk=student_id)
-        class_name = Class.objects.get(pk=class_id)
+        student = get_object_or_404(StudentModel, pk=student_id)
+        class_name = get_object_or_404(Class, pk=class_id)
         previous_class_id = int(class_id) - 1
-        previous_class = Class.objects.get(pk=previous_class_id)
-        sub_class = SubClass.objects.get(pk=sub_class_id)
-        session = Session.objects.get(pk=3)
+        previous_class = get_object_or_404(Class, pk=previous_class_id)
+        sub_class = get_object_or_404(SubClass, pk=sub_class_id)
+        session = get_object_or_404(Session, pk=3)
 
         student_result = SubjectResult.objects.filter(
             student=student, class_name=previous_class, session=session
@@ -388,7 +388,7 @@ def send_messages(request):
     if request.method == "POST":
         form = StudentMessageForm(request.POST)
         student_id = request.POST.get("students")
-        student = StudentModel.objects.get(pk=student_id)
+        student = get_object_or_404(StudentModel, pk=student_id)
         if form.is_valid():
             student_message = form.save(commit=False)
             student_message.teacher = request.user.teachermodel
@@ -416,7 +416,7 @@ def send_general_message(request):
     )
     if request.method == "POST":
         for pupil in students:
-            student = StudentModel.objects.get(pk=pupil.pk)
+            student = get_object_or_404(StudentModel, pk=pupil.pk)
             form = StudentMessageForm(request.POST)
             if form.is_valid():
                 student_message = form.save(commit=False)
@@ -513,8 +513,8 @@ def show_admin_student(request):
         class_id = request.POST.get("class_name")
         sub_class_id = request.POST.get("sub_class")
 
-        class_name = Class.objects.get(pk=class_id)
-        sub_class = SubClass.objects.get(pk=sub_class_id)
+        class_name = get_object_or_404(Class, pk=class_id)
+        sub_class = get_object_or_404(SubClass, pk=sub_class_id)
 
         student = StudentModel.objects.filter(
             class_name=class_name, sub_class=sub_class
