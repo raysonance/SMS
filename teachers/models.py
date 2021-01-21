@@ -15,7 +15,7 @@ class Class(models.Model):
 
 
 class SubClass(models.Model):
-    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default=4)
+    class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
     sub_class = models.CharField(max_length=50)
 
     class Meta:
@@ -43,8 +43,10 @@ class TeacherModel(models.Model):
     name = models.CharField("Full Name", max_length=150, default="wannabe")
     photo = models.ImageField(upload_to="teacherfile/")
     date_of_birth = models.DateField(blank=True, null=True)
-    class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
-    sub_class = models.ForeignKey(SubClass, on_delete=models.CASCADE, default=1)
+    class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
+    sub_class = models.ForeignKey(
+        SubClass, on_delete=models.SET_NULL, null=True, default=1
+    )
     mobile = models.CharField(max_length=11, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     joining_date = models.DateField(blank=True, null=True)

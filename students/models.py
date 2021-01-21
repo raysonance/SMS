@@ -15,8 +15,10 @@ class StudentModel(models.Model):
     )
     name = models.CharField("Full Name", max_length=100)
     photo = models.ImageField(upload_to="studentsfile/")
-    class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
-    sub_class = models.ForeignKey(SubClass, on_delete=models.CASCADE, default=1)
+    class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
+    sub_class = models.ForeignKey(
+        SubClass, on_delete=models.SET_NULL, null=True, default=1
+    )
     fathers_name = models.CharField("Father's Name", max_length=100)
     mothers_name = models.CharField("Mother's Name", max_length=100)
     date_of_birth = models.DateField("Birth Date", blank=True, null=True)
@@ -24,10 +26,10 @@ class StudentModel(models.Model):
     address = models.TextField()
     emergency_mobile_number = models.CharField("Mobile Number", max_length=11)
     created_by = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, related_name="+", blank=True, null=True
+        "users.User", on_delete=models.SET_NULL, related_name="+", null=True
     )
     updated_by = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, related_name="+", blank=True, null=True
+        "users.User", on_delete=models.SET_NULL, related_name="+", null=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -74,9 +76,11 @@ class Subject(models.Model):
 
 class SubjectResult(models.Model):
     id = models.AutoField(primary_key=True)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     student = models.ForeignKey(StudentModel, on_delete=models.CASCADE)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, default=1)
+    session = models.ForeignKey(
+        Session, on_delete=models.SET_NULL, null=True, default=1
+    )
     class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default=1)
     first_test = models.IntegerField()
     second_test = models.IntegerField()
