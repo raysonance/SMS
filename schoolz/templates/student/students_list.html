@@ -1,5 +1,5 @@
 <head>
-  <title> Student List </title>
+  <title> Students List </title>
 </head>
 {% extends 'base/base.html' %}
 {% load static %}
@@ -8,39 +8,26 @@
   <div class="animated fadeIn">
       <div class="card">
           <div class="card-header">
-              <i class="fa fa-edit"></i> Student Tables
+            <i class="fa fa-edit"></i><b> Students In Class </b>
           </div>
+        {% with students=students %}
           {% if students %}
           <div class="card-body">
               <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                   <div class="row">
                       <div class="col-sm-12">
-                          <table class="table table-striped table-responsive table-bordered datatable dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="border-collapse: collapse !important">
+                          <table class="table table-striped table-bordered datatable dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="border-collapse: collapse !important">
                               <thead>
                                   <tr role="row">
                                       <th>Id</th>
                                       <th>Name</th>
-                                      <th>Email</th>
-                                      <th>Class</th>
-                                      <th>Mobile number</th>
-                                      <th>Date of Birth</th>
-                                      <th>Actions</th>
                                   </tr>
                               </thead>
                               <tbody>
                                 {% for students in students %}
                                     <tr role="row" class="odd">
                                         <td>{{ forloop.counter }}</td>
-                                        <td>{{ students.name }}</td>
-                                        <td>{{ students.email }}</td>
-                                        <td>{{ students.class_name }}</td>
-                                        <td>{{ students.emergency_mobile_number }}</td>
-                                        <td>{{ students.date_of_birth }}</td>
-                                        <td>
-                                            <a class="btn btn-success" href="{% url 'students:profile' students.pk %}">
-                                                <i class="fa fa-search-plus"></i>
-                                            </a>
-                                        </td>
+                                        <td><a class="btn btn-success" href="{% url 'students:profile' students.pk %}">{{ students.name }}</a></td>
                                     </tr>
                                 {% endfor %}
                               </tbody>
@@ -54,6 +41,7 @@
               <h3>No Student Found</h3>
           </div>
           {% endif %}
+        {% endwith %}
       </div>
   </div>
 {% endblock %}

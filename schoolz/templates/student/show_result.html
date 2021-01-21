@@ -57,9 +57,11 @@
               <div class="form-group">
                 <label> Session </label>
                     <select class="form-control" name="session" id="session">
+                      {% with sessions=sessions %}
                         {% for session in sessions %}
                             <option value="{{ session.id }}">{{ session.session_name }}</option>
                         {% endfor %}
+                      {% endwith %}
                     </select>
               </div>
 

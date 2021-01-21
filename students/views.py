@@ -89,6 +89,18 @@ class StudentProfileView(LoginRequiredMixin, DetailView):
     context_object_name = "student"
     template_name = "student/studentprofile.html"
 
+    def get_queryset(self):
+        # a vey useful feature that reduces number of queries from 22 to 6
+        # i have added the foreign keys i would use in the html to be preloaded so they wouldnt to called continually
+        # instead they would be cached
+        student = Student.objects.all().select_related(
+            "studentmodel__class_name",
+            "studentmodel__sub_class",
+            "studentmodel__created_by",
+            "studentmodel__updated_by",
+        )
+        return student
+
 
 # update view of student for admin
 @method_decorator([admin_required], name="dispatch")
@@ -162,9 +174,9 @@ class StudentListView(LoginRequiredMixin, ListView):
 @user_passes_test(user_is_teacher, login_url="home")
 def student_teacher_list(request):
     students = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name,
-        sub_class=request.user.teachermodel.sub_class,
-    )
+        class_name=request.user.teachermodel.class_name_id,
+        sub_class=request.user.teachermodel.sub_class_id,
+    ).select_related("class_name")
 
     context = {"students": students}
 
@@ -175,9 +187,9 @@ def student_teacher_list(request):
 @user_passes_test(user_is_student, login_url="home")
 def student_list(request):
     students = StudentModel.objects.filter(
-        class_name=request.user.studentmodel.class_name,
-        sub_class=request.user.studentmodel.sub_class,
-    )
+        class_name=request.user.studentmodel.class_name_id,
+        sub_class=request.user.studentmodel.sub_class_id,
+    ).values("pk", "name")
 
     context = {"students": students}
 
@@ -197,30 +209,25 @@ class StudentDeleteView(LoginRequiredMixin, DeleteView):
 # student dashboard
 @user_passes_test(user_is_student, login_url="home")
 def student_dashboard(request):
+    class_name = request.user.studentmodel.class_name_id
+    sub_class = request.user.studentmodel.sub_class_id
     total_student = StudentModel.objects.filter(
-        class_name=request.user.studentmodel.class_name.pk,
-        sub_class=request.user.studentmodel.sub_class.pk,
-    ).count()
-    teacher = TeacherModel.objects.filter(
-        class_name=request.user.studentmodel.class_name,
-        sub_class=request.user.studentmodel.sub_class,
+        class_name=class_name,
+        sub_class=sub_class,
     ).count()
     teachers = TeacherModel.objects.filter(
-        class_name=request.user.studentmodel.class_name,
-        sub_class=request.user.studentmodel.sub_class,
+        class_name=class_name,
+        sub_class=sub_class,
     )
     courses = Subject.objects.filter(
-        class_name=request.user.studentmodel.class_name,
+        class_name=class_name,
     ).count()
-    three_message = []
-    message = StudentMessages.objects.filter(student=request.user.studentmodel)
-    for cycle, value in enumerate(message):
-        if cycle <= 2:
-            three_message.append(value)
-        else:
-            break
+    # if you delete teacher it will delete sasuke
+    three_message = StudentMessages.objects.filter(student=request.user.studentmodel)[
+        :3
+    ].select_related("teacher", "student")
+
     context = {
-        "teacher": teacher,
         "student": total_student,
         "teachers": teachers,
         "courses": courses,
@@ -278,7 +285,7 @@ def show_student_result(request):
 def view_messages(request):
     message = StudentMessages.objects.filter(
         student=request.user.studentmodel, private=True
-    )
+    ).select_related("teacher", "student")
 
     context = {"message": message}
 
@@ -290,7 +297,7 @@ def view_messages(request):
 def view_general_messages(request):
     message = StudentMessages.objects.filter(
         student=request.user.studentmodel, private=False
-    )
+    ).select_related("teacher", "student")
 
     context = {"message": message}
 
@@ -315,14 +322,16 @@ def search_students(request):
         class_name = Class.objects.get(pk=classes)
         student = StudentModel.objects.filter(
             Q(name__icontains=query), class_name=class_name
-        )
+        ).select_related("class_name")
         context = {"student": student}
         if request.user.is_admin:
             return render(request, "student/admin_student.html", context)
         else:
             return render(request, "student/students_list.html", {"students": student})
     else:
-        student = StudentModel.objects.filter(Q(name__icontains=query))
+        student = StudentModel.objects.filter(Q(name__icontains=query)).select_related(
+            "class_name"
+        )
         context = {"student": student}
         if request.user.is_admin:
             return render(request, "student/admin_student.html", context)

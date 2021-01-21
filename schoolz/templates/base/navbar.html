@@ -11,9 +11,9 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button"
                aria-haspopup="true" aria-expanded="false">
-                {% if request.user.teachermodel %}
+                {% if request.user.is_teacher %}
                 <img src="{{ request.user.teachermodel.photo.url }}" class="img-avatar" alt="teacher">
-                {% elif request.user.studentmodel %}
+                {% elif request.user.is_student %}
                 <img src="{{ request.user.studentmodel.photo.url }}" class="img-avatar" alt="student">
                 {% else %}
                 <img src="{% static 'src/img/man.png' %}" class="img-avatar" alt="Anonymous">

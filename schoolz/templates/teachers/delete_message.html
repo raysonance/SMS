@@ -9,6 +9,7 @@
 <form method="post" action="">
     {% csrf_token %}
     <p> Are you sure you want to delete {{ message.title }}</p>
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
     <button class="btn btn-danger ml-2" type="submit">Confirm</button>
 </form>
 {% endblock %}

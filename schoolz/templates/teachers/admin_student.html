@@ -47,7 +47,8 @@
             <div class="card-body">
               <div class="form-group">
                 <label> Class </label>
-                    <select class="form-control" name="class_name" id="class_name">
+                    <select class="form-control" name="class_name" id="class_name" required>
+                        <option value="">--------</option>
                         {% for class_name in class_name %}
                             <option value="{{ class_name.pk }}">{{ class_name.class_name }}</option>
                         {% endfor %}
@@ -57,6 +58,7 @@
               <div class="form-group">
                 <label> SubClass </label>
                     <select class="form-control" name="sub_class" id="sub_class" required>
+                        <option value="">--------</option>
                         {% for sub_class in sub_class %}
                             <option value="{{ sub_class.pk }}">{{ sub_class.sub_class }}</option>
                         {% endfor %}

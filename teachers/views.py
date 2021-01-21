@@ -55,13 +55,22 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
         return redirect("users:dash")
 
 
-# Teacher list for students and teachers
+# Teacher list for students and admin
 @method_decorator([admin_student], name="dispatch")
 class TeacherListView(LoginRequiredMixin, ListView):
     model = Teacher
     login_url = "home"
     template_name = "teachers/list.html"
-    context_object_name = "teacher"
+    context_object_name = "teachers"
+
+    def get_queryset(self):
+        # a vey useful feature that reduces number of queries from 22 to 4
+        # i have added the foreign keys i would use in the html to be preloaded so they wouldnt to called continually
+        # instead they would be cached
+        teachers = Teacher.objects.all().select_related(
+            "teachermodel__class_name", "teachermodel__sub_class"
+        )
+        return teachers
 
 
 class TeacherProfileView(LoginRequiredMixin, DetailView):
@@ -118,8 +127,8 @@ class TeacherDeleteView(LoginRequiredMixin, DeleteView):
 @user_passes_test(user_is_teacher, login_url="home")
 def teacher_dashboard(request):
     total_student = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name.pk,
-        sub_class=request.user.teachermodel.sub_class.pk,
+        class_name=request.user.teachermodel.class_name_id,
+        sub_class=request.user.teachermodel.sub_class_id,
     ).count()
     context = {
         "student": total_student,
@@ -130,12 +139,15 @@ def teacher_dashboard(request):
 # for teachers to add student result
 @user_passes_test(user_is_teacher, login_url="home")
 def add_result(request):
+    # using _id at the end of a request method can reduce the query by one
     students = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name,
-        sub_class=request.user.teachermodel.sub_class,
-    )
+        class_name=request.user.teachermodel.class_name_id,
+        sub_class=request.user.teachermodel.sub_class_id,
+    ).values("pk", "name")
     session = Session.objects.all()
-    subjects = Subject.objects.filter(class_name=request.user.teachermodel.class_name)
+    subjects = Subject.objects.filter(
+        class_name=request.user.teachermodel.class_name_id
+    ).values("id", "subject_name")
     context = {"students": students, "subjects": subjects, "sessions": session}
     return render(request, "teachers/add_result.html", context)
 
@@ -236,8 +248,8 @@ def staff_add_result_save(request):
 @user_passes_test(user_is_teacher, login_url="home")
 def show_result(request):
     students = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name,
-        sub_class=request.user.teachermodel.sub_class,
+        class_name=request.user.teachermodel.class_name_id,
+        sub_class=request.user.teachermodel.sub_class_id,
     )
 
     session = Session.objects.all()
@@ -275,16 +287,13 @@ def show_student_result(request):
 # for promoting students up one class
 @user_passes_test(user_is_teacher, login_url="home")
 def promote_student(request):
+    id_name = request.user.teachermodel.class_name_id
     students = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name,
-        sub_class=request.user.teachermodel.sub_class,
-    )
+        class_name=id_name,
+        sub_class=request.user.teachermodel.sub_class_id,
+    ).values("pk", "name")
 
-    class_name = Class.objects.get(
-        class_name=request.user.teachermodel.class_name.class_name
-    )
-
-    new_class = class_name.pk + 1
+    new_class = id_name + 1
 
     try:
         check_exists = Class.objects.filter(pk=new_class).exists()
@@ -322,7 +331,7 @@ def promote_student(request):
         messages.error(request, "Can not promote in this class.")
         return redirect("teachers:dash")
 
-    sub_class = SubClass.objects.filter(class_name=new_class_name)
+    sub_class = SubClass.objects.filter(class_name=new_class)
 
     context = {
         "students": students,
@@ -367,13 +376,14 @@ def promote_student_process(request):
             return redirect("teachers:promote")
 
 
+# note to self study this carefully and use this for all those rubbish two times processing you made before
 # for teachers to send messages to students
 @user_passes_test(user_is_teacher, login_url="home")
 def send_messages(request):
     form = StudentMessageForm()
     students = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name,
-        sub_class=request.user.teachermodel.sub_class,
+        class_name=request.user.teachermodel.class_name_id,
+        sub_class=request.user.teachermodel.sub_class_id,
     )
     if request.method == "POST":
         form = StudentMessageForm(request.POST)
@@ -401,8 +411,8 @@ def send_messages(request):
 def send_general_message(request):
     form = StudentMessageForm()
     students = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name,
-        sub_class=request.user.teachermodel.sub_class,
+        class_name=request.user.teachermodel.class_name_id,
+        sub_class=request.user.teachermodel.sub_class_id,
     )
     if request.method == "POST":
         for pupil in students:
@@ -432,8 +442,7 @@ def send_general_message(request):
 def view_messages(request):
     message = StudentMessages.objects.filter(
         teacher=request.user.teachermodel, private=True
-    ).order_by("-created_at")
-
+    ).select_related("teacher", "student")
     context = {"message": message}
 
     return render(request, "student/view_message.html", context)
@@ -444,7 +453,7 @@ def view_messages(request):
 def view_general_messages(request):
     message = StudentMessages.objects.filter(
         teacher=request.user.teachermodel, private=False
-    ).order_by("-created_at")
+    ).select_related("teacher", "student")
 
     context = {"message": message}
 
@@ -469,7 +478,9 @@ class UpdateMessage(UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, "Message updated successfully")
-        return reverse_lazy("teachers:view_message")
+        # helps it to return directly to the previous page before the form
+        nexto = self.request.POST.get("next", "/")
+        return nexto
 
 
 @method_decorator([teacher_admin], name="dispatch")
@@ -477,7 +488,12 @@ class DeleteMessage(DeleteView):
     model = StudentMessages
     template_name = "teachers/delete_message.html"
     context_object_name = "message"
-    success_url = reverse_lazy("teachers:view_message")
+
+    def get_success_url(self):
+        messages.success(self.request, "Message deleted successfully")
+        # helps it to return directly to the previous page before the form
+        nexto = self.request.POST.get("next", "/")
+        return nexto
 
 
 # admin list of student
@@ -502,8 +518,11 @@ def show_admin_student(request):
 
         student = StudentModel.objects.filter(
             class_name=class_name, sub_class=sub_class
-        )
+        ).select_related("class_name")
 
         context = {"student": student}
 
         return render(request, "student/admin_student.html", context)
+
+
+# next is to add a message for students result update

@@ -43,7 +43,11 @@
     </div>
     {% if request.user.is_teacher %}
     <div class="card-footer">
-      <span class="d-flex justify-content-lg-end"><span class="mx-3"><a href="{% url 'teachers:message_update' article.pk %}" >Edit</a> </span> | <span class="mx-2"><a href="{% url 'teachers:message_delete' article.pk %}">Delete</a></span></span>
+      <span class="d-flex justify-content-lg-end">
+        <span class="mx-3"><a href="{% url 'teachers:message_update' article.pk %}?next={{ request.path|urlencode }}" >Edit</a> </span>
+        |
+        <span class="mx-2"><a href="{% url 'teachers:message_delete' article.pk %}?next={{ request.path|urlencode }}">Delete</a></span>
+      </span>
     </div>
     {% endif %}
   {% comment %}

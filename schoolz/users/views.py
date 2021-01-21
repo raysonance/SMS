@@ -7,8 +7,10 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView, RedirectView, UpdateView
 
+from students.models import StudentModel
+
 from .forms import AdminSignUpForm
-from .models import Admin, Student, Teacher
+from .models import Admin, Teacher
 
 User = get_user_model()
 
@@ -69,10 +71,9 @@ def user_is_admin(user):
 
 @user_passes_test(user_is_admin, login_url="home")
 def admin_dashboard(request):
-    total_student = Student.objects.count()
-    student = Student.objects.all()
+    total_student = StudentModel.objects.count()
     teacher = Teacher.objects.count()
-    context = {"students": student, "student": total_student, "teacher": teacher}
+    context = {"student": total_student, "teacher": teacher}
     return render(request, "users/admin_dashboard.html", context)
 
 
