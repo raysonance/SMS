@@ -4,13 +4,16 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView, RedirectView, UpdateView
 
 from students.models import StudentModel
+from teachers.models import TeacherModel
 
+from .decorators import superuser_required, user_is_admin
 from .forms import AdminSignUpForm
-from .models import Admin, Teacher
+from .models import Admin
 
 User = get_user_model()
 
@@ -64,23 +67,23 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 user_redirect_view = UserRedirectView.as_view()
 
 
-def user_is_admin(user):
-    if user.is_admin:
-        return True
-
-
 @user_passes_test(user_is_admin, login_url="home")
 def admin_dashboard(request):
-    total_student = StudentModel.objects.count()
-    teacher = Teacher.objects.count()
+    total_student = StudentModel.objects.filter(
+        section=request.user.adminmodel.section
+    ).count()
+    teacher = TeacherModel.objects.filter(
+        section=request.user.adminmodel.section
+    ).count()
     context = {"student": total_student, "teacher": teacher}
     return render(request, "users/admin_dashboard.html", context)
 
 
+@method_decorator([superuser_required], name="dispatch")
 class AdminSignUpView(CreateView):
     model = Admin
     form_class = AdminSignUpForm
-    template_name = "users/ASU.html"
+    template_name = "users/admin_signup.html"
 
     def get_context_data(self, **kwargs):
         kwargs["user_type"] = "admin"
@@ -88,4 +91,4 @@ class AdminSignUpView(CreateView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        return redirect("account_logout")
+        return redirect("users:dash")

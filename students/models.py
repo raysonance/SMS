@@ -4,7 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
-from teachers.models import Class, Session, SubClass, TeacherModel
+from teachers.models import Class, Section, Session, SubClass, TeacherModel
 
 # Create your models here.
 
@@ -15,6 +15,7 @@ class StudentModel(models.Model):
     )
     name = models.CharField("Full Name", max_length=100)
     photo = models.ImageField(upload_to="studentsfile/")
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
     sub_class = models.ForeignKey(
         SubClass, on_delete=models.SET_NULL, null=True, default=1
@@ -45,6 +46,7 @@ class StudentModel(models.Model):
 
 
 class StudentMessages(models.Model):
+    id = models.AutoField(primary_key=True)
     teacher = models.ForeignKey(TeacherModel, on_delete=models.CASCADE, default=1)
     student = models.ForeignKey(StudentModel, on_delete=models.CASCADE, default=1)
     title = models.CharField(max_length=50, null=True, blank=True)
@@ -78,6 +80,7 @@ class SubjectResult(models.Model):
     id = models.AutoField(primary_key=True)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     student = models.ForeignKey(StudentModel, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     session = models.ForeignKey(
         Session, on_delete=models.SET_NULL, null=True, default=1
     )

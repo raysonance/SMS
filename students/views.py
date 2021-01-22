@@ -112,6 +112,7 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
     fields = [
         "name",
         "photo",
+        "section",
         "class_name",
         "sub_class",
         "fathers_name",
@@ -324,17 +325,11 @@ def search_students(request):
         student = StudentModel.objects.filter(
             Q(name__icontains=query), class_name=class_name
         ).select_related("class_name")
-        context = {"student": student}
-        if request.user.is_admin:
-            return render(request, "student/admin_student.html", context)
-        else:
-            return render(request, "student/students_list.html", {"students": student})
+        context = {"students": student}
+        return render(request, "student/students_list.html", context)
     else:
         student = StudentModel.objects.filter(Q(name__icontains=query)).select_related(
             "class_name"
         )
-        context = {"student": student}
-        if request.user.is_admin:
-            return render(request, "student/admin_student.html", context)
-        else:
-            return render(request, "student/students_list.html", {"students": student})
+        context = {"students": student}
+        return render(request, "student/students_list.html", context)

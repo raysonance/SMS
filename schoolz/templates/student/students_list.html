@@ -16,11 +16,13 @@
               <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                   <div class="row">
                       <div class="col-sm-12">
-                          <table class="table table-striped table-bordered datatable dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="border-collapse: collapse !important">
+                          <table class="table table-striped table-responsive table-bordered datatable dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="border-collapse: collapse !important">
                               <thead>
                                   <tr role="row">
                                       <th>Id</th>
                                       <th>Name</th>
+                                      <th>Class</th>
+                                      <th>Sub class</th>
                                   </tr>
                               </thead>
                               <tbody>
@@ -28,6 +30,8 @@
                                     <tr role="row" class="odd">
                                         <td>{{ forloop.counter }}</td>
                                         <td><a class="btn btn-success" href="{% url 'students:profile' students.pk %}">{{ students.name }}</a></td>
+                                      <td>{{ students.class_name.class_name }}</td>
+                                      <td>{{ students.sub_class.sub_class }}</td>
                                     </tr>
                                 {% endfor %}
                               </tbody>

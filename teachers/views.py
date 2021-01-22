@@ -65,8 +65,8 @@ class TeacherListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # a vey useful feature that reduces number of queries from 22 to 4
-        # i have added the foreign keys i would use in the html to be preloaded so they wouldnt to called continually
-        # instead they would be cached
+        # i have added the foreign keys i would use in the html to be preloaded so they wouldn't to called continually
+        # instead they would be prefetched
         teachers = Teacher.objects.all().select_related(
             "teachermodel__class_name", "teachermodel__sub_class"
         )
@@ -106,6 +106,7 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
     login_url = "home"  # "account_login"
     template_name = "teachers/update.html"
     fields = [
+        "section",
         "class_name",
         "sub_class",
     ]
@@ -499,7 +500,7 @@ class DeleteMessage(DeleteView):
 # admin list of student
 @user_passes_test(user_is_admin, login_url="home")
 def show_list(request):
-    class_name = Class.objects.all()
+    class_name = Class.objects.filter(section=request.user.adminmodel.section_id)
     sub_class = SubClass.objects.all()
     context = {"class_name": class_name, "sub_class": sub_class}
     return render(request, "teachers/admin_student.html", context)

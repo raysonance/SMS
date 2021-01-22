@@ -4,7 +4,17 @@ from django.urls import reverse
 # Create your models here.
 
 
+class Section(models.Model):
+    id = models.AutoField(primary_key=True)
+    sections = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.sections
+
+
 class Class(models.Model):
+    id = models.AutoField(primary_key=True)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, default=1)
     class_name = models.CharField(max_length=50)
 
     class Meta:
@@ -15,6 +25,7 @@ class Class(models.Model):
 
 
 class SubClass(models.Model):
+    id = models.AutoField(primary_key=True)
     class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
     sub_class = models.CharField(max_length=50)
 
@@ -43,6 +54,7 @@ class TeacherModel(models.Model):
     name = models.CharField("Full Name", max_length=150, default="wannabe")
     photo = models.ImageField(upload_to="teacherfile/")
     date_of_birth = models.DateField(blank=True, null=True)
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
     sub_class = models.ForeignKey(
         SubClass, on_delete=models.SET_NULL, null=True, default=1

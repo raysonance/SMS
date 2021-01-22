@@ -5,7 +5,7 @@ from django.db import transaction
 
 from schoolz.users.models import Teacher
 
-from .models import Class, SubClass, TeacherModel
+from .models import Class, Section, SubClass, TeacherModel
 
 User = get_user_model()
 
@@ -20,6 +20,8 @@ class TeacherSignUpForm(UserCreationForm):
     date_of_birth = forms.DateField(
         required=True, widget=forms.TextInput(attrs={"type": "date"})
     )
+    section = forms.ModelChoiceField(queryset=Section.objects.all(), required=True)
+
     class_name = forms.ModelChoiceField(queryset=Class.objects.all(), required=True)
 
     sub_class = forms.ModelChoiceField(queryset=SubClass.objects.all(), required=True)
@@ -51,6 +53,7 @@ class TeacherSignUpForm(UserCreationForm):
             name=self.cleaned_data.get("name"),
             photo=self.cleaned_data.get("photo"),
             date_of_birth=self.cleaned_data.get("date_of_birth"),
+            section=self.cleaned_data.get("section"),
             class_name=self.cleaned_data.get("class_name"),
             sub_class=self.cleaned_data.get("sub_class"),
             mobile=self.cleaned_data.get("mobile"),

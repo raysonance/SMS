@@ -28,26 +28,26 @@
                                   </tr>
                               </thead>
                               <tbody>
-                                  {% for teachers in teacher %}
+                                  {% for teach in teacher %}
                                     <tr role="row" class="odd">
                                         <td>{{ forloop.counter }}</td>
-                                        <td>{{ teachers.teachermodel.name }}</td>
-                                        <td>{{ teachers.teachermodel.class_name }}</td>
+                                        <td>{{ teach.teachermodel.name }}</td>
+                                        <td>{{ teach.teachermodel.class_name }}</td>
                                       {% if request.user.is_admin %}
-                                        <td>{{ teachers.teachermodel.sub_class }}</td>
+                                        <td>{{ teach.teachermodel.sub_class }}</td>
                                       {% else %}
-                                        <td>{{ teachers.teachermodel.sub_class.sub_class }}</td>
+                                        <td>{{ teach.teachermodel.sub_class.sub_class }}</td>
                                       {% endif %}
-                                        <td>{{ teachers.teachermodel.mobile }}</td>
+                                        <td>{{ teach.teachermodel.mobile }}</td>
                                         <td>
-                                            <a class="btn btn-success" href="{% url 'teachers:profile' teachers.pk %}">
+                                            <a class="btn btn-success" href="{% url 'teachers:profile' teach.pk %}">
                                                 <i class="fa fa-search-plus"></i>
                                             </a>
                                           {% if request.user.is_admin %}
-                                            <a class="btn btn-info" href="{% url 'teachers:admin_update' teachers.teachermodel.pk %}">
+                                            <a class="btn btn-info" href="{% url 'teachers:admin_update' teach.pk %}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger" href="{% url 'teachers:delete' teachers.pk %}">
+                                            <a class="btn btn-danger" href="{% url 'teachers:delete' teach.pk %}">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
                                           {% endif %}

@@ -4,6 +4,8 @@ from django.db.models import CharField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from teachers.models import Section
+
 
 class User(AbstractUser):
     """Default user for Schoolz."""
@@ -105,6 +107,28 @@ class Admin(User):
             self.type = User.Types.ADMIN
             self.is_admin = True
         return super().save(*args, **kwargs)
+
+
+class AdminModel(models.Model):
+    user = models.OneToOneField(
+        "users.User", on_delete=models.CASCADE, primary_key=True
+    )
+    name = models.CharField("Full Name", max_length=150)
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
+    photo = models.ImageField(upload_to="adminfile/")
+    date_of_birth = models.DateField(blank=True, null=True)
+    mobile = models.CharField(max_length=11, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
+    joining_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return "{} ({})".format(self.name, self.section)
+
+    def get_absolute_url(self):
+        return reverse("teachers:dash", args=None)
 
 
 class Teacher(User):
