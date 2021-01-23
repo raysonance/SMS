@@ -78,6 +78,8 @@ class TeacherProfileView(LoginRequiredMixin, DetailView):
     login_url = "home"
     context_object_name = "teacher"
     template_name = "teachers/teacherprofile.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid_pk"
 
 
 # Teacher update view for teachers only

@@ -13,7 +13,7 @@ from teachers.models import TeacherModel
 
 from .decorators import superuser_required, user_is_admin
 from .forms import AdminSignUpForm
-from .models import Admin
+from .models import Admin, AdminModel
 
 User = get_user_model()
 
@@ -92,3 +92,12 @@ class AdminSignUpView(CreateView):
     def form_valid(self, form):
         super().form_valid(form)
         return redirect("users:dash")
+
+
+class AdminDetailView(LoginRequiredMixin, DetailView):
+    model = AdminModel
+    login_url = "home"
+    context_object_name = "admin"
+    template_name = "users/admin_profile.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid_pk"

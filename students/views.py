@@ -306,6 +306,15 @@ def view_general_messages(request):
     return render(request, "student/view_message.html", context)
 
 
+class DetailMessage(LoginRequiredMixin, DetailView):
+    model = StudentMessages
+    login_url = "home"
+    context_object_name = "article"
+    template_name = "student/detail_message.html"
+    slug_field = "slug"
+    slug_url_kwarg = "slugs"
+
+
 # search student for teacher and admin
 @user_passes_test(teacher_admin_func, login_url="home")
 def search_student(request):

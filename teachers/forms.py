@@ -50,6 +50,7 @@ class TeacherSignUpForm(UserCreationForm):
         user.save()
         teacher = TeacherModel.objects.create(
             user=user,
+            uuid=user.uuid,
             name=self.cleaned_data.get("name"),
             photo=self.cleaned_data.get("photo"),
             date_of_birth=self.cleaned_data.get("date_of_birth"),

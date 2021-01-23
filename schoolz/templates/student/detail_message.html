@@ -26,28 +26,22 @@
      </div>
    </div>
 {% endif %}
-{% if message %}
-{% for article in message %}
 <div class="card">
     <div class="card-header {% if article.private == True %} bg-success {% else %} bg-info {% endif %}">
         <span class="font-weight-bold">{{ article.title }}</span> &middot;
         <span class="text-muted"> sent by {{ article.teacher.name }} to {{ article.student.name }} | {{ article.updated_at }}</span>
     </div>
     <div class="card-body">
-        {{ article.message|truncatechars:50 }}
+        {{ article.message }}
       {% comment %}
         <!-- <div style="margin-top: 15px;">
         <p style="color: rgb(0, 255, 0);"> {{ article.votes }}  {% if article.votes == 1 %} vote {% else %} votes {% endif %}</p><a href="{% url 'vote' article.pk %}"> Vote </a> | <a href="{% url 'article_edit' article.pk %}">Edit</a> | <a href="{% url 'article_delete' article.pk %}">Delete</a>
             <span class="d-flex justify-content-lg-end"><a href="{% url 'comments' article.pk %}">comment</a></span>
             </div> --> {% endcomment %}
     </div>
+    {% if request.user.is_teacher %}
     <div class="card-footer">
-    {% if request.user.is_student %}
-    <span class="mx-3"><a href="{% url 'students:detail_message' article.slug %}?next={{ request.path|urlencode }}" >View</a> </span>
-    {% elif request.user.is_teacher %}
       <span class="d-flex justify-content-lg-end">
-        <span class="mx-3"><a href="{% url 'students:detail_message' article.slug %}?next={{ request.path|urlencode }}" >View</a> </span>
-        |
         <span class="mx-3"><a href="{% url 'teachers:message_update' article.pk %}?next={{ request.path|urlencode }}" >Edit</a> </span>
         |
         <span class="mx-2"><a href="{% url 'teachers:message_delete' article.pk %}?next={{ request.path|urlencode }}">Delete</a></span>
@@ -73,8 +67,4 @@
   {% endcomment %}
     <br/>
 </div>
-{% endfor %}
-{% else %}
-<p> There are no messages. </p>
-{% endif %}
 {% endblock %}

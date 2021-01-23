@@ -26,7 +26,7 @@ class Class(models.Model):
 
 class SubClass(models.Model):
     id = models.AutoField(primary_key=True)
-    class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
+    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, null=True)
     sub_class = models.CharField(max_length=50)
 
     class Meta:
@@ -48,6 +48,10 @@ class Session(models.Model):
 
 
 class TeacherModel(models.Model):
+    uuid = models.UUIDField(
+        unique=True,
+        editable=False,
+    )
     user = models.OneToOneField(
         "users.User", on_delete=models.CASCADE, primary_key=True
     )

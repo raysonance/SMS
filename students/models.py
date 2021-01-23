@@ -1,8 +1,10 @@
 import datetime
+import random
+import string
 
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
+from django.utils import text, timezone
 
 from teachers.models import Class, Section, Session, SubClass, TeacherModel
 
@@ -10,6 +12,10 @@ from teachers.models import Class, Section, Session, SubClass, TeacherModel
 
 
 class StudentModel(models.Model):
+    uuid = models.UUIDField(
+        unique=True,
+        editable=False,
+    )
     user = models.OneToOneField(
         "users.User", on_delete=models.CASCADE, primary_key=True
     )
@@ -45,13 +51,20 @@ class StudentModel(models.Model):
         return reverse("teachers:dash", args=None)
 
 
+def rand_slug():
+    return "".join(
+        random.choice(string.ascii_letters + string.digits) for _ in range(6)
+    )
+
+
 class StudentMessages(models.Model):
     id = models.AutoField(primary_key=True)
     teacher = models.ForeignKey(TeacherModel, on_delete=models.CASCADE, default=1)
     student = models.ForeignKey(StudentModel, on_delete=models.CASCADE, default=1)
-    title = models.CharField(max_length=50, null=True, blank=True)
+    title = models.CharField(max_length=50)
     message = models.TextField()
     private = models.BooleanField(default=False)
+    slug = models.SlugField(blank=True, max_length=255, unique=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -60,6 +73,11 @@ class StudentMessages(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = text.slugify(rand_slug() + "-" + self.title)
+        super().save(*args, **kwargs)
 
     def was_published_recently(self):
         return self.updated_at >= timezone.now() - datetime.timedelta(days=30)

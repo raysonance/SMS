@@ -16,7 +16,7 @@
                 {% elif request.user.is_student %}
                 <img src="{{ request.user.studentmodel.photo.url }}" class="img-avatar" alt="student">
                 {% else %}
-                <img src="{% static 'src/img/man.png' %}" class="img-avatar" alt="Anonymous">
+                <img src="{{ request.user.adminmodel.photo.url }}" class="img-avatar" alt="admin">
                 {% endif %}
             </a>
           {% if request.user.is_teacher %}
@@ -24,7 +24,7 @@
                 <div class="dropdown-header text-center">
                     <strong>Account</strong>
                 </div>
-              <a class="dropdown-item" href="{% url 'teachers:profile' request.user.pk %}"><i class="fa fa-user"></i> Profile</a>
+              <a class="dropdown-item" href="{% url 'teachers:profile' request.user.uuid %}"><i class="fa fa-user"></i> Profile</a>
               <a class="dropdown-item" href="{% url 'account_email' %}"><i class="fa fa-wrench"></i>Modify Email</a>
               <a class="dropdown-item" href="{% url 'teachers:update' request.user.teachermodel.pk %}"><i class="fa fa-wrench"></i>Update Profile</a>
               <a class="dropdown-item" href="{% url 'account_change_password' %}"><i class="fa fa-wrench"></i>Change Password?</a>
@@ -35,6 +35,7 @@
                 <div class="dropdown-header text-center">
                     <strong>Account</strong>
                 </div>
+              <a class="dropdown-item" href="{% url 'users:admin_detail' request.user.uuid %}"><i class="fa fa-user"></i> Profile</a>
               <a class="dropdown-item" href="{% url 'account_email' %}"><i class="fa fa-wrench"></i>Modify Email</a>
               <a class="dropdown-item" href="{% url 'account_change_password' %}"><i class="fa fa-wrench"></i>Change Password?</a>
               <a class="dropdown-item" href="{% url 'account_logout' %}"><i class="fa fa-lock"></i>Logout</a>

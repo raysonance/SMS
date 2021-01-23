@@ -14,7 +14,7 @@ User = get_user_model()
 class StudentMessageForm(forms.ModelForm):
     class Meta:
         model = StudentMessages
-        exclude = {"teacher", "student", "updated_at", "created_at", "private"}
+        exclude = {"teacher", "student", "updated_at", "created_at", "private", "slug"}
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "messages": forms.TextInput(attrs={"class": "form-control"}),
@@ -67,6 +67,7 @@ class StudentSignUpForm(UserCreationForm):
         user.save()
         student = StudentModel.objects.create(
             user=user,
+            uuid=user.uuid,
             name=self.cleaned_data.get("name"),
             photo=self.cleaned_data.get("photo"),
             section=self.user.teachermodel.section,

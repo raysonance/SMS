@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.db.models import CharField
@@ -25,6 +27,11 @@ class User(AbstractUser):
 
     #: First and last name do not cover name patterns around the globe
     name = CharField(_("Name of User"), blank=True, max_length=255)
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
@@ -110,6 +117,10 @@ class Admin(User):
 
 
 class AdminModel(models.Model):
+    uuid = models.UUIDField(
+        unique=True,
+        editable=False,
+    )
     user = models.OneToOneField(
         "users.User", on_delete=models.CASCADE, primary_key=True
     )
