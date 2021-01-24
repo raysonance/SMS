@@ -26,7 +26,7 @@
                 </div>
               <a class="dropdown-item" href="{% url 'teachers:profile' request.user.uuid %}"><i class="fa fa-user"></i> Profile</a>
               <a class="dropdown-item" href="{% url 'account_email' %}"><i class="fa fa-wrench"></i>Modify Email</a>
-              <a class="dropdown-item" href="{% url 'teachers:update' request.user.teachermodel.pk %}"><i class="fa fa-wrench"></i>Update Profile</a>
+              <a class="dropdown-item" href="{% url 'teachers:update' request.user.uuid %}"><i class="fa fa-wrench"></i>Update Profile</a>
               <a class="dropdown-item" href="{% url 'account_change_password' %}"><i class="fa fa-wrench"></i>Change Password?</a>
               <a class="dropdown-item" href="{% url 'account_logout' %}"><i class="fa fa-lock"></i>Logout</a>
             </div>
@@ -45,9 +45,9 @@
                 <div class="dropdown-header text-center">
                     <strong>Account</strong>
                 </div>
-              <a class="dropdown-item" href="{% url 'students:profile' request.user.pk %}"><i class="fa fa-user"></i> Profile</a>
+              <a class="dropdown-item" href="{% url 'students:profile' request.user.uuid %}"><i class="fa fa-user"></i> Profile</a>
               <a class="dropdown-item" href="{% url 'account_email' %}"><i class="fa fa-wrench"></i>Modify Email</a>
-              <a class="dropdown-item" href="{% url 'students:updates' request.user.studentmodel.pk %}"><i class="fa fa-wrench"></i>Update Profile</a>
+              <a class="dropdown-item" href="{% url 'students:updates' request.user.uuid %}"><i class="fa fa-wrench"></i>Update Profile</a>
               <a class="dropdown-item" href="{% url 'account_change_password' %}"><i class="fa fa-wrench"></i>Change Password?</a>
               <a class="dropdown-item" href="{% url 'account_logout' %}"><i class="fa fa-lock"></i>Logout</a>
             </div>

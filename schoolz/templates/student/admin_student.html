@@ -40,13 +40,13 @@
                                         <td>{{ students.emergency_mobile_number }}</td>
                                         <td>{{ students.date_of_birth }}</td>
                                         <td>
-                                            <a class="btn btn-success" href="{% url 'students:profile' students.pk %}">
+                                            <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
                                                 <i class="fa fa-search-plus"></i>
                                             </a>
-                                            <a class="btn btn-info" href="{% url 'students:update' students.pk %}">
+                                            <a class="btn btn-info" href="{% url 'students:update' students.uuid %}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger" href="{% url 'students:delete' students.pk %}">
+                                            <a class="btn btn-danger" href="{% url 'students:delete' students.uuid %}">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
                                         </td>

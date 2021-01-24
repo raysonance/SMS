@@ -44,10 +44,10 @@
                                                 <i class="fa fa-search-plus"></i>
                                             </a>
                                           {% if request.user.is_admin %}
-                                            <a class="btn btn-info" href="{% url 'teachers:admin_update' teach.pk %}">
+                                            <a class="btn btn-info" href="{% url 'teachers:admin_update' teach.uuid %}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger" href="{% url 'teachers:delete' teach.pk %}">
+                                            <a class="btn btn-danger" href="{% url 'teachers:delete' teach.uuid %}">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
                                           {% endif %}

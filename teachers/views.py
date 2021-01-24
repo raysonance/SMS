@@ -88,6 +88,8 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = TeacherModel
     login_url = "home"  # "account_login"
     template_name = "teachers/update.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid_pk"
     fields = [
         "name",
         "photo",
@@ -107,6 +109,8 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = TeacherModel
     login_url = "home"  # "account_login"
     template_name = "teachers/update.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid_pk"
     fields = [
         "section",
         "class_name",
@@ -125,6 +129,8 @@ class TeacherDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("teachers:list")
     login_url = "account_login"
     context_object_name = "teachers"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid_pk"
 
 
 @user_passes_test(user_is_teacher, login_url="home")
@@ -468,6 +474,8 @@ def view_general_messages(request):
 class UpdateMessage(UpdateView):
     model = StudentMessages
     template_name = "teachers/update_message.html"
+    slug_field = "slug"
+    slug_url_kwarg = "slug_pk"
     fields = [
         "title",
         "message",
@@ -491,6 +499,8 @@ class DeleteMessage(DeleteView):
     model = StudentMessages
     template_name = "teachers/delete_message.html"
     context_object_name = "message"
+    slug_field = "slug"
+    slug_url_kwarg = "slug_pk"
 
     def get_success_url(self):
         messages.success(self.request, "Message deleted successfully")

@@ -29,7 +29,7 @@
                                 {% for students in students %}
                                     <tr role="row" class="odd">
                                         <td>{{ forloop.counter }}</td>
-                                        <td><a class="btn btn-success" href="{% url 'students:profile' students.pk %}">{{ students.name }}</a></td>
+                                        <td><a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">{{ students.name }}</a></td>
                                       <td>{{ students.class_name.class_name }}</td>
                                       <td>{{ students.sub_class.sub_class }}</td>
                                     </tr>

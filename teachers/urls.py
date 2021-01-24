@@ -30,10 +30,14 @@ app_name = "teachers"
 urlpatterns = [
     path("list/", TeacherListView.as_view(), name="list"),
     path("signup/", TeacherSignupView.as_view(), name="signup"),
-    path("<int:pk>/edit/", TeacherUpdateView.as_view(), name="update"),
-    path("<int:pk>/admin_edit/", AdminTeacherUpdateView.as_view(), name="admin_update"),
+    path("<slug:uuid_pk>/edit/", TeacherUpdateView.as_view(), name="update"),
+    path(
+        "<slug:uuid_pk>/admin_edit/",
+        AdminTeacherUpdateView.as_view(),
+        name="admin_update",
+    ),
     path("<slug:uuid_pk>/profile/", TeacherProfileView.as_view(), name="profile"),
-    path("<int:pk>/delete/", TeacherDeleteView.as_view(), name="delete"),
+    path("<slug:uuid_pk>/delete/", TeacherDeleteView.as_view(), name="delete"),
     path("dashboard/", teacher_dashboard, name="dash"),
     path("add_result/", add_result, name="add_result"),
     path("save_result/", staff_add_result_save, name="save_result"),
@@ -50,8 +54,12 @@ urlpatterns = [
         view_general_messages,
         name="teacher_general_message",
     ),
-    path("<int:pk>/message_edit/", UpdateMessage.as_view(), name="message_update"),
-    path("<int:pk>/message_delete/", DeleteMessage.as_view(), name="message_delete"),
+    path(
+        "<slug:slug_pk>/message_edit/", UpdateMessage.as_view(), name="message_update"
+    ),
+    path(
+        "<slug:slug_pk>/message_delete/", DeleteMessage.as_view(), name="message_delete"
+    ),
     path("show_list/", show_list, name="show_list"),
     path("show_student_admin/", show_admin_student, name="show_admin_student"),
 ]

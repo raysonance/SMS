@@ -88,6 +88,8 @@ class StudentProfileView(LoginRequiredMixin, DetailView):
     login_url = "account_login"
     context_object_name = "student"
     template_name = "student/studentprofile.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid_pk"
 
     def get_queryset(self):
         # a vey useful feature that reduces number of queries from 22 to 6
@@ -109,6 +111,8 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
     model = StudentModel
     login_url = "account_login"
     template_name = "student/update.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid_pk"
     fields = [
         "name",
         "photo",
@@ -139,6 +143,8 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = StudentModel
     login_url = "account_login"
     template_name = "student/update.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid_pk"
     fields = [
         "name",
         "photo",
@@ -206,6 +212,8 @@ class StudentDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("students:list")
     login_url = "account_login"
     context_object_name = "students"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid_pk"
 
 
 # student dashboard

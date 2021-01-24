@@ -48,9 +48,9 @@
       <span class="d-flex justify-content-lg-end">
         <span class="mx-3"><a href="{% url 'students:detail_message' article.slug %}?next={{ request.path|urlencode }}" >View</a> </span>
         |
-        <span class="mx-3"><a href="{% url 'teachers:message_update' article.pk %}?next={{ request.path|urlencode }}" >Edit</a> </span>
+        <span class="mx-3"><a href="{% url 'teachers:message_update' article.slug %}?next={{ request.path|urlencode }}" >Edit</a> </span>
         |
-        <span class="mx-2"><a href="{% url 'teachers:message_delete' article.pk %}?next={{ request.path|urlencode }}">Delete</a></span>
+        <span class="mx-2"><a href="{% url 'teachers:message_delete' article.slug %}?next={{ request.path|urlencode }}">Delete</a></span>
       </span>
     </div>
     {% endif %}
