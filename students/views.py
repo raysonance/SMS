@@ -251,29 +251,16 @@ def student_dashboard(request):
 def show_result(request):
     class_name = Class.objects.all()
     session = Session.objects.all()
-    context = {
-        "classes": class_name,
-        "sessions": session,
-    }
-    return render(request, "student/show_result.html", context)
-
-
-# result processing for students
-@user_passes_test(user_is_student, login_url="home")
-def show_student_result(request):
-    if request.method != "POST":
-        messages.error(request, "Invalid Method")
-        return redirect("students:show_result")
-    else:
-        class_pk = request.POST.get("class_name")
+    if request.method == "POST":
+        class_id = request.POST.get("class_name")
         session_id = request.POST.get("session")
 
-        class_name = get_object_or_404(Class, pk=class_pk)
+        class_name = get_object_or_404(Class, pk=class_id)
         session = get_object_or_404(Session, id=session_id)
 
         student_result = SubjectResult.objects.filter(
             student=request.user.pk, session=session, class_name=class_name
-        )
+        ).select_related("subject")
         if student_result:
             first = student_result[0].session.session_name
             context = {"student_result": student_result, "first": first}
@@ -288,6 +275,13 @@ def show_student_result(request):
             else:
                 messages.error(request, "No result found for this category")
                 return redirect("students:show_result")
+
+    context = {
+        "classes": class_name,
+        "sessions": session,
+    }
+
+    return render(request, "student/show_result.html", context)
 
 
 # view messages for students
@@ -327,26 +321,24 @@ class DetailMessage(LoginRequiredMixin, DetailView):
 @user_passes_test(teacher_admin_func, login_url="home")
 def search_student(request):
     class_name = Class.objects.all()
+    if request.method == "POST":
+        query = request.GET.get("q")
+        if request.GET.get("class_name"):
+            classes = request.GET.get("class_name")
+            class_name = get_object_or_404(Class, pk=classes)
+            student = StudentModel.objects.filter(
+                Q(name__icontains=query), class_name=class_name
+            ).select_related("class_name")
+            context = {"students": student}
+            return render(request, "student/students_list.html", context)
+        else:
+            student = StudentModel.objects.filter(
+                Q(name__icontains=query)
+            ).select_related("class_name")
+            context = {"students": student}
+            return render(request, "student/students_list.html", context)
+
     context = {
         "class_name": class_name,
     }
     return render(request, "student/search_student.html", context)
-
-
-# process searching for students
-def search_students(request):
-    query = request.GET.get("q")
-    if request.GET.get("class_name"):
-        classes = request.GET.get("class_name")
-        class_name = get_object_or_404(Class, pk=classes)
-        student = StudentModel.objects.filter(
-            Q(name__icontains=query), class_name=class_name
-        ).select_related("class_name")
-        context = {"students": student}
-        return render(request, "student/students_list.html", context)
-    else:
-        student = StudentModel.objects.filter(Q(name__icontains=query)).select_related(
-            "class_name"
-        )
-        context = {"students": student}
-        return render(request, "student/students_list.html", context)

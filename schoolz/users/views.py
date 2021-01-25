@@ -2,14 +2,14 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView, RedirectView, UpdateView
 
 from students.models import StudentModel
-from teachers.models import TeacherModel
+from teachers.models import Class, SubClass, TeacherModel
 
 from .decorators import superuser_required, user_is_admin
 from .forms import AdminSignUpForm
@@ -101,3 +101,31 @@ class AdminDetailView(LoginRequiredMixin, DetailView):
     template_name = "users/admin_profile.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
+
+
+# admin list of student
+@user_passes_test(user_is_admin, login_url="home")
+def show_list(request):
+    class_name = Class.objects.filter(section=request.user.adminmodel.section_id)
+    sub_class = SubClass.objects.all()
+    if request.method == "POST":
+        class_id = request.POST.get("class_name")
+        sub_class_id = request.POST.get("sub_class")
+
+        class_name = get_object_or_404(Class, pk=class_id)
+        sub_class = get_object_or_404(SubClass, pk=sub_class_id)
+
+        student = StudentModel.objects.filter(
+            class_name=class_name, sub_class=sub_class
+        ).select_related("class_name")
+
+        context = {"student": student}
+
+        return render(request, "student/admin_student.html", context)
+
+    context = {"class_name": class_name, "sub_class": sub_class}
+
+    return render(request, "teachers/admin_student.html", context)
+
+
+# next is to add a message for students result update

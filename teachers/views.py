@@ -19,7 +19,6 @@ from schoolz.users.decorators import (
     admin_student,
     teacher_admin,
     teacher_required,
-    user_is_admin,
     user_is_teacher,
 )
 from schoolz.users.models import Teacher
@@ -263,19 +262,7 @@ def show_result(request):
 
     session = Session.objects.all()
 
-    context = {
-        "students": students,
-        "sessions": session,
-    }
-
-    return render(request, "teachers/show_result.html", context)
-
-
-def show_student_result(request):
-    if request.method != "POST":
-        messages.error(request, "Invalid Method")
-        return redirect("teachers:show_result")
-    else:
+    if request.method == "POST":
         student_id = request.POST.get("students")
         session_id = request.POST.get("session")
 
@@ -291,6 +278,13 @@ def show_student_result(request):
         else:
             messages.error(request, "No result found for this session")
             return redirect("teachers:show_result")
+
+    context = {
+        "students": students,
+        "sessions": session,
+    }
+
+    return render(request, "teachers/show_result.html", context)
 
 
 # for promoting students up one class
@@ -507,35 +501,3 @@ class DeleteMessage(DeleteView):
         # helps it to return directly to the previous page before the form
         nexto = self.request.POST.get("next", "/")
         return nexto
-
-
-# admin list of student
-@user_passes_test(user_is_admin, login_url="home")
-def show_list(request):
-    class_name = Class.objects.filter(section=request.user.adminmodel.section_id)
-    sub_class = SubClass.objects.all()
-    context = {"class_name": class_name, "sub_class": sub_class}
-    return render(request, "teachers/admin_student.html", context)
-
-
-def show_admin_student(request):
-    if request.method != "POST":
-        messages.error(request, "Invalid Method")
-        return redirect("teachers:show_list")
-    else:
-        class_id = request.POST.get("class_name")
-        sub_class_id = request.POST.get("sub_class")
-
-        class_name = get_object_or_404(Class, pk=class_id)
-        sub_class = get_object_or_404(SubClass, pk=sub_class_id)
-
-        student = StudentModel.objects.filter(
-            class_name=class_name, sub_class=sub_class
-        ).select_related("class_name")
-
-        context = {"student": student}
-
-        return render(request, "student/admin_student.html", context)
-
-
-# next is to add a message for students result update

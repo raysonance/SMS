@@ -15,10 +15,7 @@ from .views import (
     promote_student_process,
     send_general_message,
     send_messages,
-    show_admin_student,
-    show_list,
     show_result,
-    show_student_result,
     staff_add_result_save,
     teacher_dashboard,
     view_general_messages,
@@ -42,10 +39,9 @@ urlpatterns = [
     path("add_result/", add_result, name="add_result"),
     path("save_result/", staff_add_result_save, name="save_result"),
     path("show_result/", show_result, name="show_result"),
-    path("result/", show_student_result, name="show_student_result"),
     path("load_subclass", load_sub_class, name="load_subclass"),
     path("promote/", promote_student, name="promote"),
-    path("process", promote_student_process, name="promote_student"),
+    path("process/", promote_student_process, name="promote_student"),
     path("send_message/", send_messages, name="message"),
     path("send_general_message/", send_general_message, name="general_message"),
     path("view_messages/", view_messages, name="view_message"),
@@ -60,6 +56,4 @@ urlpatterns = [
     path(
         "<slug:slug_pk>/message_delete/", DeleteMessage.as_view(), name="message_delete"
     ),
-    path("show_list/", show_list, name="show_list"),
-    path("show_student_admin/", show_admin_student, name="show_admin_student"),
 ]

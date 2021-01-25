@@ -4,6 +4,7 @@ from .views import (
     AdminDetailView,
     AdminSignUpView,
     admin_dashboard,
+    show_list,
     user_detail_view,
     user_redirect_view,
     user_update_view,
@@ -12,6 +13,7 @@ from .views import (
 app_name = "users"
 
 urlpatterns = [
+    path("show_list/", show_list, name="show_list"),
     path("dashboard/", admin_dashboard, name="dash"),
     path("<slug:uuid_pk>/profile/", AdminDetailView.as_view(), name="admin_detail"),
     path("signup/", AdminSignUpView.as_view(), name="admin"),
