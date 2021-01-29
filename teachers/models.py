@@ -1,5 +1,10 @@
+import datetime
+import random
+import string
+
 from django.db import models
 from django.urls import reverse
+from django.utils import text, timezone
 
 # Create your models here.
 
@@ -74,4 +79,36 @@ class TeacherModel(models.Model):
         return "{} ({})".format(self.name, self.class_name)
 
     def get_absolute_url(self):
-        return reverse("teachers:dash", args=None)
+        return reverse("users:dash", args=None)
+
+
+def rand_slug():
+    return "".join(
+        random.choice(string.ascii_letters + string.digits) for _ in range(6)
+    )
+
+
+class TeacherMessages(models.Model):
+    id = models.AutoField(primary_key=True)
+    admin = models.ForeignKey("users.AdminModel", on_delete=models.CASCADE)
+    teacher = models.ForeignKey(TeacherModel, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=50)
+    message = models.TextField()
+    private = models.BooleanField(default=False)
+    slug = models.SlugField(blank=True, max_length=255, unique=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.title}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = text.slugify(rand_slug() + "-" + self.title)
+        super().save(*args, **kwargs)
+
+    def was_published_recently(self):
+        return self.updated_at >= timezone.now() - datetime.timedelta(days=30)

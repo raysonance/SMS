@@ -132,7 +132,22 @@
           <li class="nav-item nav-dropdown">
             <a class="nav-link nav-dropdown-toggle" href="#">
              <i class="nav-icon icon-puzzle"></i>Message</a>
-            {% if request.user.is_teacher %}
+            {% if request.user.is_admin %}
+            <ul class="nav-dropdown-items">
+              <li class="nav-item">
+                 <a class="nav-link text-nowrap" href="{% url 'users:message' %}">
+                     <i class="nav-icon icon-puzzle"></i>Send Private Message</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link text-nowrap" href="{% url 'users:general_message' %}">
+                     <i class="nav-icon icon-puzzle"></i>Send General Message</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link text-nowrap" href="{% url 'users:view_message' %}">
+                     <i class="nav-icon icon-puzzle"></i>Sent Messages</a>
+              </li>
+            </ul>
+            {% elif request.user.is_teacher %}
             <ul class="nav-dropdown-items">
               <li class="nav-item">
                  <a class="nav-link text-nowrap" href="{% url 'teachers:message' %}">
@@ -144,11 +159,7 @@
               </li>
               <li class="nav-item">
                  <a class="nav-link text-nowrap" href="{% url 'teachers:view_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>View Private Messages</a>
-              </li>
-              <li class="nav-item">
-                 <a class="nav-link text-nowrap" href="{% url 'teachers:teacher_general_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>View General Messages</a>
+                     <i class="nav-icon icon-puzzle"></i>Sent Messages</a>
               </li>
             </ul>
             {% endif %}
@@ -167,6 +178,23 @@
             </ul>
             {% endif %}
           </li>
+          {% if request.user.is_teacher %}
+          <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+             <i class="nav-icon icon-puzzle"></i>Received Messages</a>
+              <ul class="nav-dropdown-items">
+                <li class="nav-item">
+                  <a class="nav-link text-nowrap" href="{% url 'teachers:view_admin_message' %}">
+                     <i class="nav-icon icon-puzzle"></i>Private Messages</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-nowrap" href="{% url 'teachers:view_general_message' %}">
+                     <i class="nav-icon icon-puzzle"></i>General Messages</a>
+                </li>
+              </ul>
+          </li>
+          {% endif %}
+
           <!-- User-Manual Section START -->
           <li class="nav-item nav-dropdown">
             <a class="nav-link" href="#">

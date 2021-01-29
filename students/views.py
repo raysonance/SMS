@@ -48,6 +48,7 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super(StudentSignupView, self).get_form_kwargs()
         kwargs.update({"user": self.request.user})
+        kwargs.update({"request": self.request})
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -70,6 +71,7 @@ class StudentAdminSignupView(LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super(StudentAdminSignupView, self).get_form_kwargs()
         kwargs.update({"user": self.request.user})
+        kwargs.update({"request": self.request})
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -129,9 +131,17 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.updated_by = self.request.user
-        form.save()
-        return super().form_valid(form)
+        if self.object.class_name.section != self.object.section:
+            messages.error(self.request, "The section does not fit the class")
+            return super().form_invalid(form)
+        elif self.object.sub_class.class_name != self.object.class_name:
+            messages.error(self.request, "The sub_class does not fit the class")
+            return super().form_invalid(form)
+        else:
+            self.object.updated_by = self.request.user
+            form.save()
+            messages.success(self.request, "Student has been updated")
+            return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy("users:dash")
@@ -232,7 +242,7 @@ def student_dashboard(request):
     courses = Subject.objects.filter(
         class_name=class_name,
     ).count()
-    # if you delete teacher it will delete sasuke
+
     three_message = StudentMessages.objects.filter(student=request.user.studentmodel)[
         :3
     ].select_related("teacher", "student")

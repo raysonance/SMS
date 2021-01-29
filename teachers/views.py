@@ -26,15 +26,23 @@ from students.forms import StudentMessageForm
 from students.models import StudentMessages, StudentModel, Subject, SubjectResult
 
 from .forms import TeacherSignUpForm
-from .models import Class, Session, SubClass, TeacherModel
+from .models import Class, Session, SubClass, TeacherMessages, TeacherModel
 
 
 def load_sub_class(request):
     class_id = request.GET.get("class")
-    sub_class = SubClass.objects.filter(class_name=class_id).order_by("sub_class")
+    sub_class = SubClass.objects.filter(class_name=class_id)
 
     context = {"sub_class": sub_class}
     return render(request, "others/subclass_dropdown_list_options.html", context)
+
+
+def load_class(request):
+    section_id = request.GET.get("section")
+    class_name = Class.objects.filter(section=section_id)
+
+    context = {"class_name": class_name}
+    return render(request, "others/class_dropdown_list_option.html", context)
 
 
 # teacher signup for admins
@@ -44,6 +52,12 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
     login_url = "account_login"
     form_class = TeacherSignUpForm
     template_name = "teachers/signup.html"
+
+    def get_form_kwargs(self):
+        kwargs = super(TeacherSignupView, self).get_form_kwargs()
+        kwargs.update({"user": self.request.user})
+        kwargs.update({"request": self.request})
+        return kwargs
 
     def get_context_data(self, **kwargs):
         kwargs["user_type"] = "teachers"
@@ -67,7 +81,9 @@ class TeacherListView(LoginRequiredMixin, ListView):
         # i have added the foreign keys i would use in the html to be preloaded so they wouldn't to called continually
         # instead they would be prefetched
         teachers = Teacher.objects.all().select_related(
-            "teachermodel__class_name", "teachermodel__sub_class"
+            "teachermodel__class_name",
+            "teachermodel__sub_class",
+            "teachermodel__section",
         )
         return teachers
 
@@ -115,6 +131,22 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
         "class_name",
         "sub_class",
     ]
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        if self.object.section != self.request.user.adminmodel.section:
+            messages.error(self.request, "Can not assign teacher to this section.")
+            return super().form_invalid(form)
+        elif self.object.class_name.section != self.request.user.adminmodel.section:
+            messages.error(self.request, "The section does not fit the class")
+            return super().form_invalid(form)
+        elif self.object.sub_class.class_name != self.object.class_name:
+            messages.error(self.request, "The sub_class does not fit the class")
+            return super().form_invalid(form)
+        else:
+            form.save()
+            messages.success(self.request, "Teacher has been updated")
+            return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy("teachers:list")
@@ -379,7 +411,6 @@ def promote_student_process(request):
             return redirect("teachers:promote")
 
 
-# note to self study this carefully and use this for all those rubbish two times processing you made before
 # for teachers to send messages to students
 @user_passes_test(user_is_teacher, login_url="home")
 def send_messages(request):
@@ -444,23 +475,35 @@ def send_general_message(request):
 @user_passes_test(user_is_teacher, login_url="home")
 def view_messages(request):
     message = StudentMessages.objects.filter(
-        teacher=request.user.teachermodel, private=True
+        teacher=request.user.teachermodel
     ).select_related("teacher", "student")
     context = {"message": message}
 
     return render(request, "student/view_message.html", context)
 
 
-# for teachers to view general messages
+# view admin messages for teachers
+@user_passes_test(user_is_teacher, login_url="home")
+def view_admin_messages(request):
+    message = TeacherMessages.objects.filter(
+        teacher=request.user.teachermodel, private=True
+    ).select_related("admin", "teacher")
+
+    context = {"message": message}
+
+    return render(request, "users/view_message.html", context)
+
+
+# message checking for students
 @user_passes_test(user_is_teacher, login_url="home")
 def view_general_messages(request):
-    message = StudentMessages.objects.filter(
+    message = TeacherMessages.objects.filter(
         teacher=request.user.teachermodel, private=False
-    ).select_related("teacher", "student")
+    ).select_related("teacher", "admin")
 
     context = {"message": message}
 
-    return render(request, "student/view_message.html", context)
+    return render(request, "users/view_message.html", context)
 
 
 # for teachers to update messages

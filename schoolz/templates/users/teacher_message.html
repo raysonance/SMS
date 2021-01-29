@@ -46,10 +46,10 @@
 
             <div class="card-body">
               <div class="form-group">
-                <label> Students </label>
-                    <select class="form-control" name="students" id="students">
-                        {% for student in students %}
-                            <option value="{{ student.pk }}">{{ student.name }}</option>
+                <label> Teacher </label>
+                    <select class="form-control" name="teachers" id="teachers">
+                        {% for teacher in teachers %}
+                            <option value="{{ teacher.pk }}">{{ teacher.name }}</option>
                         {% endfor %}
                     </select>
               </div>

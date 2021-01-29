@@ -6,11 +6,21 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
-from teachers.models import Section
+from teachers.models import Section, TeacherMessages
 
 from .models import Admin, AdminModel
 
 User = get_user_model()
+
+
+class TeacherMessageForm(form.ModelForm):
+    class Meta:
+        model = TeacherMessages
+        exclude = {"admin", "teacher", "updated_at", "created_at", "private", "slug"}
+        widgets = {
+            "title": form.TextInput(attrs={"class": "form-control"}),
+            "messages": form.TextInput(attrs={"class": "form-control"}),
+        }
 
 
 class UserChangeForm(admin_forms.UserChangeForm):

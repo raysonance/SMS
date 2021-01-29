@@ -3,8 +3,31 @@
 </head>
 {% extends 'base/base.html' %}
 {% load static %}
-
 {% block content %}
+{% if messages %}
+   <div class="form-group">
+     <div class="col-12">
+       {% for message in messages %}
+       {% if message.tags == "error" %}
+           <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+           {{ message }}
+           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+           </button>
+           </div>
+       {% elif message.tags == "success" %}
+           <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+           {{ message }}
+           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+           </button>
+           </div>
+       {% endif %}
+       {% endfor %}
+     </div>
+   </div>
+{% endif %}
+
   <div class="animated fadeIn">
       <div class="card">
           <div class="card-header">
@@ -28,32 +51,34 @@
                                   </tr>
                               </thead>
                               <tbody>
-                                  {% for teach in teacher %}
+                                {% with teachers=teacher %}
+                                  {% for teacher in teachers %}
                                     <tr role="row" class="odd">
                                         <td>{{ forloop.counter }}</td>
-                                        <td>{{ teach.teachermodel.name }}</td>
-                                        <td>{{ teach.teachermodel.class_name }}</td>
+                                        <td>{{ teacher.teachermodel.name }}</td>
+                                        <td>{{ teacher.teachermodel.class_name }}</td>
                                       {% if request.user.is_admin %}
-                                        <td>{{ teach.teachermodel.sub_class }}</td>
+                                        <td>{{ teacher.teachermodel.sub_class }}</td>
                                       {% else %}
-                                        <td>{{ teach.teachermodel.sub_class.sub_class }}</td>
+                                        <td>{{ teacher.teachermodel.sub_class.sub_class }}</td>
                                       {% endif %}
-                                        <td>{{ teach.teachermodel.mobile }}</td>
+                                        <td>{{ teacher.teachermodel.mobile }}</td>
                                         <td>
-                                            <a class="btn btn-success" href="{% url 'teachers:profile' teach.uuid %}">
+                                            <a class="btn btn-success" href="{% url 'teachers:profile' teacher.uuid %}">
                                                 <i class="fa fa-search-plus"></i>
                                             </a>
-                                          {% if request.user.is_admin %}
-                                            <a class="btn btn-info" href="{% url 'teachers:admin_update' teach.uuid %}">
+                                          {% if request.user.is_admin and request.user.adminmodel.section == teacher.teachermodel.section %}
+                                            <a class="btn btn-info" href="{% url 'teachers:admin_update' teacher.uuid %}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger" href="{% url 'teachers:delete' teach.uuid %}">
+                                            <a class="btn btn-danger" href="{% url 'teachers:delete' teacher.uuid %}">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
                                           {% endif %}
                                         </td>
                                     </tr>
                                   {% endfor %}
+                                {% endwith %}
                               </tbody>
                           </table>
                       </div>

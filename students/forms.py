@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
@@ -24,6 +25,7 @@ class StudentMessageForm(forms.ModelForm):
 class StudentSignUpForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
+        self.request = kwargs.pop("request", None)
         super(StudentSignUpForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(
@@ -83,12 +85,14 @@ class StudentSignUpForm(UserCreationForm):
             updated_by=self.user,
         )
         student.save()
+        messages.success(self.request, "Student has been added.")
         return user
 
 
 class StudentAdminSignUpForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
+        self.request = kwargs.pop("request", None)
         super(StudentAdminSignUpForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(
@@ -131,23 +135,38 @@ class StudentAdminSignUpForm(UserCreationForm):
 
     @transaction.atomic
     def save(self):
-        user = super().save(commit=False)
-        user.save()
-        student = StudentModel.objects.create(
-            user=user,
-            name=self.cleaned_data.get("name"),
-            photo=self.cleaned_data.get("photo"),
-            section=self.cleaned_data.get("section"),
-            class_name=self.cleaned_data.get("class_name"),
-            sub_class=self.cleaned_data.get("sub_class"),
-            fathers_name=self.cleaned_data.get("fathers_name"),
-            mothers_name=self.cleaned_data.get("mothers_name"),
-            date_of_birth=self.cleaned_data.get("date_of_birth"),
-            email=self.cleaned_data.get("email"),
-            address=self.cleaned_data.get("address"),
-            emergency_mobile_number=self.cleaned_data.get("emergency_mobile_number"),
-            created_by=self.user,
-            updated_by=self.user,
-        )
-        student.save()
-        return user
+        if (
+            self.cleaned_data.get("section") != self.user.adminmodel.section
+            or self.cleaned_data.get("class_name").section
+            != self.user.adminmodel.section
+            or self.cleaned_data.get("sub_class").class_name
+            != self.cleaned_data.get("class_name")
+        ):
+            user = super().save(commit=False)
+            messages.error(self.request, "This action is not allowed.")
+            return user
+        else:
+            user = super().save(commit=False)
+            user.save()
+            student = StudentModel.objects.create(
+                user=user,
+                uuid=user.uuid,
+                name=self.cleaned_data.get("name"),
+                photo=self.cleaned_data.get("photo"),
+                section=self.cleaned_data.get("section"),
+                class_name=self.cleaned_data.get("class_name"),
+                sub_class=self.cleaned_data.get("sub_class"),
+                fathers_name=self.cleaned_data.get("fathers_name"),
+                mothers_name=self.cleaned_data.get("mothers_name"),
+                date_of_birth=self.cleaned_data.get("date_of_birth"),
+                email=self.cleaned_data.get("email"),
+                address=self.cleaned_data.get("address"),
+                emergency_mobile_number=self.cleaned_data.get(
+                    "emergency_mobile_number"
+                ),
+                created_by=self.user,
+                updated_by=self.user,
+            )
+            student.save()
+            messages.success(self.request, "Student has been added.")
+            return user

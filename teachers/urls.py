@@ -10,6 +10,7 @@ from .views import (
     TeacherUpdateView,
     UpdateMessage,
     add_result,
+    load_class,
     load_sub_class,
     promote_student,
     promote_student_process,
@@ -18,6 +19,7 @@ from .views import (
     show_result,
     staff_add_result_save,
     teacher_dashboard,
+    view_admin_messages,
     view_general_messages,
     view_messages,
 )
@@ -40,16 +42,14 @@ urlpatterns = [
     path("save_result/", staff_add_result_save, name="save_result"),
     path("show_result/", show_result, name="show_result"),
     path("load_subclass", load_sub_class, name="load_subclass"),
+    path("load_class", load_class, name="load_class"),
     path("promote/", promote_student, name="promote"),
     path("process/", promote_student_process, name="promote_student"),
     path("send_message/", send_messages, name="message"),
     path("send_general_message/", send_general_message, name="general_message"),
     path("view_messages/", view_messages, name="view_message"),
-    path(
-        "teacher_general_messages/",
-        view_general_messages,
-        name="teacher_general_message",
-    ),
+    path("view_admin_messages/", view_admin_messages, name="view_admin_message"),
+    path("view_general_messages/", view_general_messages, name="view_general_message"),
     path(
         "<slug:slug_pk>/message_edit/", UpdateMessage.as_view(), name="message_update"
     ),

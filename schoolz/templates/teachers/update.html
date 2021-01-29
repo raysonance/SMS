@@ -5,7 +5,7 @@
 
 {% block content %}
   <h1> Update Teacher </h1>
-  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="TeacherRegistrationForm" data-subclass-url={% url 'teachers:load_subclass' %}>
+  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="TeacherRegistrationForm" data-class-url={% url 'teachers:load_class' %} data-subclass-url={% url 'teachers:load_subclass' %}>
     {% csrf_token %}
     {{ form|crispy }}
     <div class="control-group">
@@ -15,6 +15,22 @@
     </div>
     <script src="{% static 'dist/vendors/js/jquery.min.js' %}"></script>
     <script>
+        $("#id_section").change(function () {
+          var url = $("#TeacherRegistrationForm").attr("data-class-url");
+          var SectionId = $(this).val();
+
+          $.ajax({
+            url: url,
+            data: {
+              'section': SectionId
+            },
+            success: function (data) {
+              $("#id_class_name").html(data);
+            }
+          });
+
+        });
+
         $("#id_class_name").change(function () {
           var url = $("#TeacherRegistrationForm").attr("data-subclass-url");
           var classId = $(this).val();

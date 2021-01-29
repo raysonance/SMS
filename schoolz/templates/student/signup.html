@@ -5,7 +5,7 @@
 
 {% block content %}
   <h1> Student </h1>
-  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="StudentRegistrationForm" data-subclass-url={% url 'students:load_subclass' %} >
+  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="StudentRegistrationForm"  data-class-url={% url 'teachers:load_class' %} data-subclass-url={% url 'students:load_subclass' %}>
     {% csrf_token %}
     {{ form|crispy }}
     <div class="control-group">
@@ -18,6 +18,22 @@
 {% block javascript %}
 {{ block.super }}
     <script>
+        $("#id_section").change(function () {
+          var url = $("#StudentRegistrationForm").attr("data-class-url");
+          var SectionId = $(this).val();
+
+          $.ajax({
+            url: url,
+            data: {
+              'section': SectionId
+            },
+            success: function (data) {
+              $("#id_class_name").html(data);
+            }
+          });
+
+        });
+
         $("#id_class_name").change(function () {
           var url = $("#StudentRegistrationForm").attr("data-subclass-url");
           var classId = $(this).val();
