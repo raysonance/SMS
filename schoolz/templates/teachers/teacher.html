@@ -1,9 +1,5 @@
-<head>
-  <title> Dashboard </title>
-</head>
 {% extends 'base/base.html' %}
-{% load static %}
-
+{% block title %} Dashboard {% endblock title %}
 {% block content %}
 {% comment %} Display Messages {% endcomment %}
  {% if messages %}
@@ -47,4 +43,28 @@
         </div>
     </div>
 </div>
+
+
+<p> <span style="color: purple;"><b> Latest Messages </b></span></p>
+
+
+{% with articles=message %}
+  {% if articles %}
+    {% for article in articles %}
+      <div class="card">
+        <div class="card-header {% if article.private == True %} bg-success {% else %} bg-info {% endif %}">
+          <span class="font-weight-bold">{{ article.title }}</span> &middot;
+          <span class="text-muted"> sent by {{ article.admin.name }} to {{ article.teacher.name }} | {{ article.created_at }}</span>
+        </div>
+        <div class="card-body">
+          {{ article.message }}
+        </div>
+        <br/>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p> There are no messages. </p>
+  {% endif %}
+{% endwith %}
+
 {% endblock %}

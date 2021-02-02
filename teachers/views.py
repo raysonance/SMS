@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -72,7 +73,7 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
 @method_decorator([admin_student], name="dispatch")
 class TeacherListView(LoginRequiredMixin, ListView):
     model = Teacher
-    login_url = "home"
+    login_url = "account_login"
     template_name = "teachers/list.html"
     context_object_name = "teachers"
 
@@ -101,7 +102,7 @@ class TeacherProfileView(LoginRequiredMixin, DetailView):
 @method_decorator([teacher_required], name="dispatch")
 class TeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = TeacherModel
-    login_url = "home"  # "account_login"
+    login_url = "account_login"  # "account_login"
     template_name = "teachers/update.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
@@ -115,6 +116,7 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
     ]
 
     def get_success_url(self):
+        messages.success(self.request, "Updated!")
         return reverse_lazy("teachers:dash")
 
 
@@ -122,7 +124,7 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
 @method_decorator([admin_required], name="dispatch")
 class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = TeacherModel
-    login_url = "home"  # "account_login"
+    login_url = "account_login"  # "account_login"
     template_name = "teachers/update.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
@@ -154,7 +156,7 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
 
 # admin only
 @method_decorator([admin_required], name="dispatch")
-class TeacherDeleteView(LoginRequiredMixin, DeleteView):
+class TeacherDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Teacher
     template_name = "teachers/teacher_delete.html"
     success_url = reverse_lazy("teachers:list")
@@ -162,6 +164,7 @@ class TeacherDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = "teachers"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
+    success_message = "Teacher has been deleted."
 
 
 @user_passes_test(user_is_teacher, login_url="home")
@@ -170,8 +173,12 @@ def teacher_dashboard(request):
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
     ).count()
+    three_message = TeacherMessages.objects.filter(teacher=request.user.teachermodel)[
+        :3
+    ].select_related("teacher", "admin")
     context = {
         "student": total_student,
+        "message": three_message,
     }
     return render(request, "teachers/teacher.html", context)
 
@@ -508,9 +515,10 @@ def view_general_messages(request):
 
 # for teachers to update messages
 @method_decorator([teacher_admin], name="dispatch")
-class UpdateMessage(UpdateView):
+class UpdateMessage(LoginRequiredMixin, UpdateView):
     model = StudentMessages
     template_name = "teachers/update_message.html"
+    login_url = "account_login"
     slug_field = "slug"
     slug_url_kwarg = "slug_pk"
     fields = [
@@ -532,12 +540,14 @@ class UpdateMessage(UpdateView):
 
 
 @method_decorator([teacher_admin], name="dispatch")
-class DeleteMessage(DeleteView):
+class DeleteMessage(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = StudentMessages
     template_name = "teachers/delete_message.html"
+    login_url = "account_login"
     context_object_name = "message"
     slug_field = "slug"
     slug_url_kwarg = "slug_pk"
+    success_message = "Message has been deleted."
 
     def get_success_url(self):
         messages.success(self.request, "Message deleted successfully")

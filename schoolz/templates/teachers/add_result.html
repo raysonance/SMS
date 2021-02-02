@@ -1,8 +1,6 @@
-<head>
-  <title> Add Result </title>
-</head>
 {% extends 'base/base.html' %}
 {% load static %}
+{% block title %} Add Result {% endblock title %}
 
 {% block content %}
 <section class="content">
@@ -84,8 +82,9 @@
 
           </div>
         </form>
-        <script src="{% static 'dist/vendors/js/jquery.min.js' %}"></script>
+        {% block script %}
         <script src="{% static 'src/js/registration.js' %}"></script>
+        {% endblock script %}
 
           <!-- /.card -->
 

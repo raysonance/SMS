@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -174,8 +175,10 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         if self.request.user.is_student:
+            messages.success(self.request, "Updated!")
             return reverse_lazy("students:dash")
         else:
+            messages.success(self.request, "Student has been updated")
             return reverse_lazy("teachers:dash")
 
 
@@ -207,7 +210,7 @@ def student_list(request):
     students = StudentModel.objects.filter(
         class_name=request.user.studentmodel.class_name_id,
         sub_class=request.user.studentmodel.sub_class_id,
-    ).values("pk", "name")
+    ).select_related("class_name", "sub_class")
 
     context = {"students": students}
 
@@ -216,7 +219,7 @@ def student_list(request):
 
 # delete student
 @method_decorator([admin_required], name="dispatch")
-class StudentDeleteView(LoginRequiredMixin, DeleteView):
+class StudentDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Student
     template_name = "student/student_delete.html"
     success_url = reverse_lazy("students:list")
@@ -224,6 +227,7 @@ class StudentDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = "students"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
+    success_message = "Student has been deleted."
 
 
 # student dashboard
@@ -320,7 +324,7 @@ def view_general_messages(request):
 
 class DetailMessage(LoginRequiredMixin, DetailView):
     model = StudentMessages
-    login_url = "home"
+    login_url = "account_login"
     context_object_name = "article"
     template_name = "student/detail_message.html"
     slug_field = "slug"
@@ -332,7 +336,7 @@ class DetailMessage(LoginRequiredMixin, DetailView):
 def search_student(request):
     class_name = Class.objects.all()
     if request.method == "POST":
-        query = request.GET.get("q")
+        query = request.POST.get("q")
         if request.GET.get("class_name"):
             classes = request.GET.get("class_name")
             class_name = get_object_or_404(Class, pk=classes)

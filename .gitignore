@@ -53,6 +53,10 @@ coverage.xml
 # Django stuff:
 staticfiles/
 
+# too stupid
+schoolz/static/project/plugins
+schoolz/static/project/plugins/*
+
 # Sphinx documentation
 docs/_build/
 
@@ -271,6 +275,9 @@ schoolz/media/
 .pytest_cache/
 
 
-.env
-.envs/*
-!.envs/.local/
+.env
+
+.envs/*
+
+!.envs/.local/
+

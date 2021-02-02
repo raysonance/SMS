@@ -13,7 +13,10 @@
         <button type="submit" class="btn btn-primary my-5">Sign Up</button>
       </div>
     </div>
-    <script src="{% static 'dist/vendors/js/jquery.min.js' %}"></script>
+  </form>
+{% endblock %}
+{% block javascript %}
+{{ block.super }}
     <script>
         $("#id_section").change(function () {
           var url = $("#TeacherRegistrationForm").attr("data-class-url");
@@ -46,5 +49,4 @@
 
         });
     </script>
-  </form>
-{% endblock %}
+{% endblock javascript %}

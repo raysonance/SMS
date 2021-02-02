@@ -1,210 +1,366 @@
 {% load static %}
-<div class="sidebar">
-    <nav class="sidebar-nav">
-        <ul class="nav">
-          {% if request.user.is_admin %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:dash' %}"><i class="icon-speedometer"></i> Dashboard</a>
-            </li>
-          {% elif request.user.is_teacher %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'teachers:dash' %}"><i class="icon-speedometer"></i> Dashboard</a>
-            </li>
-          {% elif request.user.is_student %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'students:dash' %}"><i class="icon-speedometer"></i> Dashboard</a>
-            </li>
-          {% endif %}
-            <!-- Administration Section Start -->
+<!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="" class="brand-link">
+      <img src="{% static 'project/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+           style="opacity: .8">
+      <span class="brand-text font-weight-light">Admin Dashboard</span>
+    </a>
 
-           <!-- Class Section END -->
+    <!-- Sidebar -->
+    {% if request.user.is_admin %}
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ request.user.adminmodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="{% url 'users:dash' %}" class="d-block">{{ request.user.adminmodel.name }}</a>
+        </div>
+      </div>
 
-            <!-- Student Section START -->
-            <li class="nav-item nav-dropdown">
-              <a class="nav-link nav-dropdown-toggle" href="#">
-                 <i class="nav-icon icon-puzzle"></i>Student</a>
-              <ul class="nav-dropdown-items">
-               {% if request.user.is_teacher %}
-                 <li class="nav-item">
-                     <a class="nav-link" href="{% url 'students:signup' %}">
-                         <i class="fa fa-plus-circle"></i>Student Registration</a>
-                 </li>
-               {% endif %}
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-graduate"></i>
+              <p>
+                Student
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
 
-               {% if request.user.is_admin %}
-                 <li class="nav-item">
-                     <a class="nav-link" href="{% url 'students:student_signup' %}">
-                         <i class="fa fa-plus-circle"></i>Student Registration</a>
-                 </li>
-               {% endif %}
-
-               {% if request.user.is_admin %}
-                 <li class="nav-item">
-                     <a class="nav-link" href="{% url 'users:show_list' %}">
-                         <i class="fa fa-list"></i>Student List</a>
-                 </li>
-               {% endif %}
-               {% if request.user.is_student %}
-                 <li class="nav-item">
-                     <a class="nav-link" href="{% url 'students:student_list' %}">
-                         <i class="fa fa-list"></i>Student List</a>
-                 </li>
-               {% endif %}
-               {% if request.user.is_teacher %}
-                 <li class="nav-item">
-                     <a class="nav-link" href="{% url 'students:student_teacher_list' %}">
-                         <i class="fa fa-list"></i>Student List</a>
-                 </li>
-               {% endif %}
-
-               {% if request.user.is_admin or request.user.is_teacher %}
-                 <li class="nav-item">
-                     <a class="nav-link" href="{% url 'students:search_student' %}">
-                         <i class="fa fa-search-plus"></i>Student Search</a>
-                 </li>
-               {% endif %}
-             </ul>
-           </li>
-           <!-- Student Section END -->
-
-
-         <!-- Teacher Section START -->
-          {% if request.user.is_admin  or request.user.is_student %}
-            <li class="nav-item nav-dropdown">
-             <a class="nav-link nav-dropdown-toggle" href="#">
-                 <i class="nav-icon icon-puzzle"></i>Teacher</a>
-             <ul class="nav-dropdown-items">
-               {% if request.user.is_admin %}
-                 <li class="nav-item">
-                     <a class="nav-link" href="{% url 'teachers:signup' %}">
-                         <i class="fa fa-plus-circle"></i>Teacher Registration</a>
-                 </li>
-               {% endif %}
-                 <li class="nav-item">
-                     <a class="nav-link" href="{% url 'teachers:list' %}">
-                         <i class="fa fa-list"></i>Teacher List</a>
-                 </li>
-               {% if request.user.is_admin %}
-                 <li class="nav-item">
-                     <a class="nav-link" href="#">
-                         <i class="fa fa-search-plus"></i>Teacher Search</a>
-                 </li>
-               {% endif %}
-             </ul>
-           </li>
-          {% endif %}
-      <!-- Holiday Section END -->
-
-        <!-- Event Section START -->
-          {% if request.user.is_teacher or request.user.is_student %}
-          <li class="nav-item nav-dropdown">
-            <a class="nav-link nav-dropdown-toggle" href="#">
-              <i class="nav-icon icon-puzzle"></i>Result</a>
-            {% if request.user.is_teacher %}
-            <ul class="nav-dropdown-items">
+            <ul class="nav nav-treeview">
               <li class="nav-item">
-                 <a class="nav-link" href="{% url 'teachers:add_result' %}">
-                     <i class="nav-icon icon-puzzle"></i>Add Result</a>
+                <a href="{% url 'students:student_signup' %}" class="nav-link">
+                  <i class="fas fa-user-plus nav-icon"></i>
+                  <p>Student Registration</p>
+                </a>
               </li>
               <li class="nav-item">
-                 <a class="nav-link" href="{% url 'teachers:promote' %}">
-                     <i class="nav-icon icon-puzzle"></i>Promote</a>
+                <a href="{% url 'users:show_list' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>Student List</p>
+                </a>
               </li>
               <li class="nav-item">
-                 <a class="nav-link" href="{% url 'teachers:show_result' %}">
-                     <i class="nav-icon icon-puzzle"></i>Show Result
-                 </a>
-              </li>
-            </ul>
-            {% endif %}
-            {% if request.user.is_student %}
-            <ul class="nav-dropdown-items">
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'students:show_result' %}">
-                  <i class="nav-icon icon-puzzle"></i>Show Result
+                <a href="{% url 'students:search_student' %}" class="nav-link">
+                  <i class="fas fa-search nav-icon"></i>
+                  <p>Student Search</p>
                 </a>
               </li>
             </ul>
-            {% endif %}
           </li>
-          {% endif %}
-       <!-- Event Section END -->
-          <li class="nav-item nav-dropdown">
-            <a class="nav-link nav-dropdown-toggle" href="#">
-             <i class="nav-icon icon-puzzle"></i>Message</a>
-            {% if request.user.is_admin %}
-            <ul class="nav-dropdown-items">
-              <li class="nav-item">
-                 <a class="nav-link text-nowrap" href="{% url 'users:message' %}">
-                     <i class="nav-icon icon-puzzle"></i>Send Private Message</a>
-              </li>
-              <li class="nav-item">
-                 <a class="nav-link text-nowrap" href="{% url 'users:general_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>Send General Message</a>
-              </li>
-              <li class="nav-item">
-                 <a class="nav-link text-nowrap" href="{% url 'users:view_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>Sent Messages</a>
-              </li>
-            </ul>
-            {% elif request.user.is_teacher %}
-            <ul class="nav-dropdown-items">
-              <li class="nav-item">
-                 <a class="nav-link text-nowrap" href="{% url 'teachers:message' %}">
-                     <i class="nav-icon icon-puzzle"></i>Send Private Message</a>
-              </li>
-              <li class="nav-item">
-                 <a class="nav-link text-nowrap" href="{% url 'teachers:general_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>Send General Message</a>
-              </li>
-              <li class="nav-item">
-                 <a class="nav-link text-nowrap" href="{% url 'teachers:view_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>Sent Messages</a>
-              </li>
-            </ul>
-            {% endif %}
-            {% if request.user.is_student %}
-            <ul class="nav-dropdown-items">
-              <li class="nav-item">
-                 <a class="nav-link" href="{% url 'students:message' %}">
-                     <i class="nav-icon icon-puzzle"></i>Private Messages
-                 </a>
-              </li>
-              <li class="nav-item">
-                 <a class="nav-link" href="{% url 'students:general_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>General Messages
-                 </a>
-              </li>
-            </ul>
-            {% endif %}
-          </li>
-          {% if request.user.is_teacher %}
-          <li class="nav-item nav-dropdown">
-            <a class="nav-link nav-dropdown-toggle" href="#">
-             <i class="nav-icon icon-puzzle"></i>Received Messages</a>
-              <ul class="nav-dropdown-items">
-                <li class="nav-item">
-                  <a class="nav-link text-nowrap" href="{% url 'teachers:view_admin_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>Private Messages</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-nowrap" href="{% url 'teachers:view_general_message' %}">
-                     <i class="nav-icon icon-puzzle"></i>General Messages</a>
-                </li>
-              </ul>
-          </li>
-          {% endif %}
 
-          <!-- User-Manual Section START -->
-          <li class="nav-item nav-dropdown">
-            <a class="nav-link" href="#">
-             <i class="nav-icon icon-puzzle"></i>User-Manual</a>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Teacher
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'teachers:signup' %}" class="nav-link">
+                  <i class="fas fa-user-plus nav-icon"></i>
+                  <p>Teacher Registration</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'teachers:list' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>Teacher List</p>
+                </a>
+              </li>
+            </ul>
           </li>
-          <!-- User-Manual Section END -->
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+              <p>
+                Message
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'users:message' %}" class="nav-link">
+                  <i class="fas fa-user-plus nav-icon"></i>
+                  <p>Send Private Message</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'users:general_message' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>Send General Message</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'users:view_message' %}" class="nav-link">
+                  <i class="fas fa-search nav-icon"></i>
+                  <p>Sent Messages</p>
+                </a>
+              </li>
+            </ul>
+          </li>
         </ul>
-    </nav>
-    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+      </nav>
+    </div>
+    <!-- /.sidebar-menu -->
 
-    {% block sidebar %}
-    {% endblock %}
-</div>
+    {% elif request.user.is_teacher %}
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="info">
+          <a href="{% url 'teachers:dash' %}" class="d-block">{{ request.user.teachermodel.name }}</a>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-graduate"></i>
+              <p>
+                Student
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'students:signup' %}" class="nav-link">
+                  <i class="fas fa-user-plus nav-icon"></i>
+                  <p>Student Registration</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'students:student_teacher_list' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>Student List</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'students:search_student' %}" class="nav-link">
+                  <i class="fas fa-search nav-icon"></i>
+                  <p>Student Search</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Result
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'teachers:add_result' %}" class="nav-link">
+                  <i class="fas fa-puzzle-piece nav-icon"></i>
+                  <p>Add Result</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'teachers:promote' %}" class="nav-link">
+                  <i class="fas fa-user-plus nav-icon"></i>
+                  <p>Promote</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'teachers:show_result' %}" class="nav-link">
+                  <i class="fas fa-puzzle-piece nav-icon"></i>
+                  <p>Show Result</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+              <p>
+                Message
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'teachers:message' %}" class="nav-link">
+                  <i class="fas fa-envelope nav-icon"></i>
+                  <p>Send Private Message</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'teachers:general_message' %}" class="nav-link">
+                  <i class="fas fa-envelope nav-icon"></i>
+                  <p>Send General Message</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'teachers:view_message' %}" class="nav-link">
+                  <i class="fas fa-envelope-open nav-icon"></i>
+                  <p>Sent Messages</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+              <p>
+                Recieved Messages
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'teachers:view_admin_message' %}" class="nav-link">
+                  <i class="fas fa-envelope-open-text nav-icon"></i>
+                  <p>Private Messages</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'teachers:view_general_message' %}" class="nav-link">
+                  <i class="fas fa-envelope-open-text nav-icon"></i>
+                  <p>General Messages</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <!-- /.sidebar-menu -->
+
+    {% elif request.user.is_student %}
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ request.user.studentmodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="{% url 'students:dash' %}" class="d-block">{{ request.user.studentmodel.name }}</a>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user-graduate"></i>
+              <p>
+                Student
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'students:student_list' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>Student List</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'students:search_student' %}" class="nav-link">
+                  <i class="fas fa-search nav-icon"></i>
+                  <p>Student Search</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Teacher
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'teachers:list' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>Teacher List</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Result
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'students:show_result' %}" class="nav-link">
+                  <i class="fas fa-puzzle-piece nav-icon"></i>
+                  <p>Show Result</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+              <p>
+                Message
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'students:message' %}" class="nav-link">
+                  <i class="fas fa-user-plus nav-icon"></i>
+                  <p>Private Messages</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'students:general_message' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>General Messages</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+      {% endif %}
+    <!-- /.sidebar-menu -->
+    <!-- /.sidebar -->
+  </aside>
