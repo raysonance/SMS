@@ -3,17 +3,32 @@
 {% load static %}
 {% block title %} Student Update {% endblock %}
 
+{% load i18n %}
+
+
 {% block content %}
-  <h1> Update Student </h1>
-  <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="StudentUpdateForm" data-class-url={% url 'teachers:load_class' %} data-subclass-url={% url 'students:load_subclass' %}>
-    {% csrf_token %}
-    {{ form|crispy }}
-    <div class="control-group">
-      <div class="controls">
-        <button type="submit" class="btn btn-primary my-5">Update</button>
+<body class="hold-transition login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <a><b>Student</b> Update Form</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="card">
+      <div class="card-body login-card-body">
+        <p class="login-box-msg">{% trans 'Update Student.' %}</p>
+        <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="StudentUpdateForm" data-class-url={% url 'teachers:load_class' %} data-subclass-url={% url 'students:load_subclass' %}>
+          {% csrf_token %}
+          {{ form|crispy }}
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-primary my-5">Update</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
-  </form>
+  </div>
+</body>
 {% endblock %}
 {% block javascript %}
     {{ block.super }}
