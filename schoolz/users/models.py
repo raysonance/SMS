@@ -130,6 +130,7 @@ class AdminModel(models.Model):
     date_of_birth = models.DateField(blank=True, null=True)
     mobile = models.CharField(max_length=11, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
+    address = models.TextField(default="reddit")
     joining_date = models.DateField(blank=True, null=True)
 
     class Meta:

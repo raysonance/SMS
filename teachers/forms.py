@@ -42,6 +42,11 @@ class TeacherSignUpForm(UserCreationForm):
         required=True,
         widget=forms.TextInput(attrs={"class": "form-control"}),
     )
+
+    address = forms.CharField(
+        max_length=500, widget=forms.Textarea(attrs={"class": "form-control"})
+    )
+
     joining_date = forms.DateField(
         required=True, widget=forms.TextInput(attrs={"type": "date"})
     )
@@ -75,6 +80,7 @@ class TeacherSignUpForm(UserCreationForm):
                 section=self.cleaned_data.get("section"),
                 class_name=self.cleaned_data.get("class_name"),
                 sub_class=self.cleaned_data.get("sub_class"),
+                address=self.cleaned_data.get("address"),
                 mobile=self.cleaned_data.get("mobile"),
                 email=self.cleaned_data.get("email"),
                 joining_date=self.cleaned_data.get("joining_date"),

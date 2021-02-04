@@ -1,0 +1,70 @@
+{% extends 'base/base.html' %}
+{% block title %} Search {% endblock title %}
+
+{% block content %}
+  <div class="animated fadeIn">
+      <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"> Search </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
+          </div>
+        {% with students=students %}
+        {% with teachers=teachers %}
+          {% if students or teachers %}
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Class</th>
+                        <th>Sub class</th>
+                        <th>Profile</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if students %}
+                  {% for students in students %}
+                      <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>{{ students.name }}</td>
+                          <td> Student </td>
+                          <td>{{ students.class_name.class_name }}</td>
+                          <td>{{ students.sub_class.sub_class }}</td>
+                          <td>
+                              <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
+                                  <i class="fa fa-search-plus"></i>
+                              </a>
+                          </td>
+                      </tr>
+                  {% endfor %}
+                {% endif %}
+                  {% if teachers %}
+                    {% for teacher in teachers %}
+                      <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>{{ teacher.name }}</td>
+                          <td> Teacher </td>
+                          <td>{{ teacher.class_name.class_name }}</td>
+                          <td>{{ teacher.sub_class.sub_class }}</td>
+                          <td>
+                              <a class="btn btn-success" href="{% url 'teachers:profile' teacher.uuid %}">
+                                  <i class="fa fa-search-plus"></i>
+                              </a>
+                          </td>
+                      </tr>
+                  {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="card-body">
+              <h3>Nothing Found</h3>
+          </div>
+          {% endif %}
+        {% endwith %}
+        {% endwith %}
+      </div>
+  </div>
+{% endblock %}

@@ -87,6 +87,11 @@ class AdminSignUpForm(UserCreationForm):
         required=True,
         widget=form.TextInput(attrs={"class": "form-control"}),
     )
+
+    address = form.CharField(
+        max_length=500, widget=form.Textarea(attrs={"class": "form-control"})
+    )
+
     email = form.CharField(
         max_length=255,
         required=True,
@@ -122,6 +127,7 @@ class AdminSignUpForm(UserCreationForm):
             section=self.cleaned_data.get("section"),
             mobile=self.cleaned_data.get("mobile"),
             email=self.cleaned_data.get("email"),
+            address=self.cleaned_data.get("address"),
             joining_date=self.cleaned_data.get("joining_date"),
         )
         admin.save()

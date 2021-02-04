@@ -68,6 +68,7 @@ class TeacherModel(models.Model):
     sub_class = models.ForeignKey(
         SubClass, on_delete=models.SET_NULL, null=True, default=1
     )
+    address = models.TextField(default="clouds")
     mobile = models.CharField(max_length=11, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     joining_date = models.DateField(blank=True, null=True)

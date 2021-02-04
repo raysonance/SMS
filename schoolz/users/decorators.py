@@ -113,5 +113,9 @@ def user_is_student(user):
     return user.is_student
 
 
+def student_admin(user):
+    return user.is_student or user.is_admin
+
+
 def teacher_admin_func(user):
     return user.is_teacher or user.is_admin

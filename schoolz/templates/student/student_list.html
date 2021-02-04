@@ -14,10 +14,7 @@
                      <tr>
                          <th>Id</th>
                          <th>Name</th>
-                         <th>Email</th>
-                         <th>Class</th>
                          <th>Mobile number</th>
-                         <th>Date of Birth</th>
                          <th>Profile</th>
                          <th>Update</th>
                      </tr>
@@ -28,10 +25,7 @@
                        <tr>
                            <td>{{ forloop.counter }}</td>
                            <td>{{ students.name }}</td>
-                           <td>{{ students.email }}</td>
-                           <td>{{ students.class_name }}</td>
                            <td>{{ students.emergency_mobile_number }}</td>
-                           <td>{{ students.date_of_birth }}</td>
                            <td>
                                <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
                                    <i class="fa fa-search-plus"></i>

@@ -318,13 +318,13 @@ def search_student(request):
             class_name = get_object_or_404(Class, pk=classes)
             student = StudentModel.objects.filter(
                 Q(name__icontains=query), class_name=class_name
-            ).select_related("class_name")
+            ).select_related("class_name", "sub_class")
             context = {"students": student}
             return render(request, "student/students_list.html", context)
         else:
             student = StudentModel.objects.filter(
                 Q(name__icontains=query)
-            ).select_related("class_name")
+            ).select_related("class_name", "sub_class")
             context = {"students": student}
             return render(request, "student/students_list.html", context)
 
@@ -332,3 +332,18 @@ def search_student(request):
         "class_name": class_name,
     }
     return render(request, "student/search_student.html", context)
+
+
+# search student for teacher and admin
+@user_passes_test(teacher_admin_student, login_url="home")
+def search_all(request):
+    if request.method == "GET":
+        query = request.GET.get("q")
+        student = StudentModel.objects.filter(
+            Q(name__icontains=query) | Q(class_name__class_name__icontains=query)
+        ).select_related("class_name", "sub_class")
+        teacher = TeacherModel.objects.filter(
+            Q(name__icontains=query) | Q(class_name__class_name__icontains=query)
+        ).select_related("class_name", "sub_class")
+        context = {"students": student, "teachers": teacher}
+        return render(request, "student/search_all.html", context)
