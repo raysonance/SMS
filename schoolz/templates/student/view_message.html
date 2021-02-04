@@ -40,12 +40,12 @@
         <!-- /.card-tools -->
       </div>
       <!-- /.card-header -->
-      <div class="card-body bg-warning">
+      <div class="card-body bg-navy">
         {{ article.message }}
       </div>
       <!-- /.card-body -->
       {% if request.user.is_teacher %}
-      <div class="card-footer bg-secondary">
+      <div class="card-footer bg-navy">
         <span class="d-flex justify-content-lg-end">
           <span class="mx-3"><a style="color:white" href="{% url 'teachers:message_update' article.slug %}?next={{ request.path|urlencode }}" >Edit</a> </span>
           |

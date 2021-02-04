@@ -28,9 +28,9 @@
 {% if message %}
 {% for article in message %}
   <div class="col-md-6">
-    <div class="card {% if article.private == True %} card-danger {% else %} card-success {% endif %} collapsed-card">
+    <div class="card {% if article.private == True %} card-danger {% else %} card-info {% endif %} collapsed-card">
       <div class="card-header">
-        <h3 class="card-title"> {{ article.title }} <span class="text-gray"><small> sent by {{ article.admin.name }} to {{ article.teacher.name }} | {{ article.updated_at }} </small> </span></h3>
+        <h3 class="card-title"> {{ article.title }} <span class="text-gray"><small>   -sent by {{ article.admin.name }} to {{ article.teacher.name }} | {{ article.updated_at }} </small> </span></h3>
 
         <div class="card-tools">
           <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
@@ -40,12 +40,12 @@
         <!-- /.card-tools -->
       </div>
       <!-- /.card-header -->
-      <div class="card-body">
+      <div class="card-body bg-navy">
         {{ article.message }}
       </div>
       <!-- /.card-body -->
       {% if request.user.is_admin %}
-      <div class="card-footer">
+      <div class="card-footer bg-navy">
         <span class="d-flex justify-content-lg-end">
           <span class="mx-3"><a style="color:white" href="{% url 'users:message_update' article.slug %}?next={{ request.path|urlencode }}" >Edit</a> </span>
           |

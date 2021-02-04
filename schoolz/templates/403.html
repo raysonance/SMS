@@ -1,9 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}Forbidden (403){% endblock %}
+{% block title %}Forbidden (403){% endblock title %}
+
 
 {% block content %}
-<h1>Forbidden (403)</h1>
+<body>
+<section class="content">
+      <div class="error-page">
+        <h2 class="headline text-warning"> 403</h2>
 
-<p>CSRF verification failed. Request aborted.</p>
-{% endblock content %}
+        <div class="error-content">
+          <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops! Forbidden (403).</h3>
+
+          <p>
+            CSRF verification failed. Request aborted
+          </p>
+        </div>
+      </div>
+</section>
+</body>
+{% endblock %}

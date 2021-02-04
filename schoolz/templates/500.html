@@ -3,9 +3,19 @@
 {% block title %}Server Error{% endblock %}
 
 {% block content %}
-<h1>Ooops!!! 500</h1>
+<body>
+<section class="content">
+      <div class="error-page">
+        <h2 class="headline text-danger"> 500</h2>
 
-<h3>Looks like something went wrong!</h3>
+        <div class="error-content">
+          <h3><i class="fas fa-exclamation-triangle text-danger"></i>Looks like something went wrong!</h3>
 
-<p>We track these errors automatically, but if the problem persists feel free to contact us. In the meantime, try refreshing.</p>
+          <p>
+            We track these errors automatically, but if the problem persists feel free to contact us. In the meantime, try refreshing.
+          </p>
+        </div>
+      </div>
+</section>
+</body>
 {% endblock content %}

@@ -5,53 +5,50 @@
   <div class="animated fadeIn">
       <div class="card">
           <div class="card-header">
-              <i class="fa fa-edit"></i> Student Tables
+              <h3 class="card-title"> Student Tables </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
           </div>
           {% if students %}
-          <div class="card-body">
-              <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                  <div class="row">
-                      <div class="col-sm-12">
-                          <table class="table table-striped table-responsive table-bordered datatable dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="border-collapse: collapse !important">
-                              <thead>
-                                  <tr role="row">
-                                      <th>Id</th>
-                                      <th>Name</th>
-                                      <th>Email</th>
-                                      <th>Class</th>
-                                      <th>Mobile number</th>
-                                      <th>Date of Birth</th>
-                                      <th>Actions</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                              {% if request.user.is_teacher %}
-                                {% for students in students %}
-                                    <tr role="row" class="odd">
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ students.name }}</td>
-                                        <td>{{ students.email }}</td>
-                                        <td>{{ students.class_name }}</td>
-                                        <td>{{ students.emergency_mobile_number }}</td>
-                                        <td>{{ students.date_of_birth }}</td>
-                                        <td>
-                                            <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
-                                                <i class="fa fa-search-plus"></i>
-                                            </a>
-                                            <a class="btn btn-info" href="{% url 'students:updates' students.uuid %}">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                              {% else %}
-                                <h3> Hello What are you looking for ?</h3>
-                              {% endif %}
-                              </tbody>
-                          </table>
-                      </div>
-                  </div>
-              </div>
+          <div class="card-body table-responsive p-0">
+             <table class="table table-hover text-nowrap table-striped table-bordered">
+                 <thead>
+                     <tr>
+                         <th>Id</th>
+                         <th>Name</th>
+                         <th>Email</th>
+                         <th>Class</th>
+                         <th>Mobile number</th>
+                         <th>Date of Birth</th>
+                         <th>Profile</th>
+                         <th>Update</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                 {% if request.user.is_teacher %}
+                   {% for students in students %}
+                       <tr>
+                           <td>{{ forloop.counter }}</td>
+                           <td>{{ students.name }}</td>
+                           <td>{{ students.email }}</td>
+                           <td>{{ students.class_name }}</td>
+                           <td>{{ students.emergency_mobile_number }}</td>
+                           <td>{{ students.date_of_birth }}</td>
+                           <td>
+                               <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
+                                   <i class="fa fa-search-plus"></i>
+                               </a>
+                           </td>
+                           <td>
+                               <a class="btn btn-info" href="{% url 'students:updates' students.uuid %}">
+                                   <i class="fa fa-edit"></i>
+                               </a>
+                           </td>
+                       </tr>
+                   {% endfor %}
+                 {% else %}
+                   <h3> Hello What are you looking for ?</h3>
+                 {% endif %}
+                 </tbody>
+             </table>
           </div>
           {% else %}
           <div class="card-body">

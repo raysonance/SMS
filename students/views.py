@@ -6,13 +6,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    UpdateView,
-)
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from schoolz.users.decorators import (
     admin_required,
@@ -182,15 +176,6 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
             return reverse_lazy("teachers:dash")
 
 
-# list view for students
-@method_decorator([teacher_admin_student], name="dispatch")
-class StudentListView(LoginRequiredMixin, ListView):
-    model = Student
-    login_url = "account_login"
-    template_name = "student/list.html"
-    context_object_name = "student"
-
-
 # student list for teachers
 @user_passes_test(user_is_teacher, login_url="home")
 def student_teacher_list(request):
@@ -320,15 +305,6 @@ def view_general_messages(request):
     context = {"message": message}
 
     return render(request, "student/view_message.html", context)
-
-
-class DetailMessage(LoginRequiredMixin, DetailView):
-    model = StudentMessages
-    login_url = "account_login"
-    context_object_name = "article"
-    template_name = "student/detail_message.html"
-    slug_field = "slug"
-    slug_url_kwarg = "slugs"
 
 
 # search student for teacher and admin

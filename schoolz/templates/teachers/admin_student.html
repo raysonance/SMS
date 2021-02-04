@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+
 {% block title %} Check Class List {% endblock title %}
 
 {% block content %}
@@ -78,7 +79,9 @@
   </div>
   <!-- /.container-fluid -->
 </section>
-  <script src="{% static 'dist/vendors/js/jquery.min.js' %}"></script>
+
+{% endblock %}
+{% block script %}
     <script>
         $("#class_name").change(function () {
           var url = $("#StudentListForm").attr("data-subclass-url");
@@ -96,4 +99,4 @@
 
         });
     </script>
-{% endblock %}
+{% endblock script %}

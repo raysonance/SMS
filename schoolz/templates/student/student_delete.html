@@ -3,10 +3,14 @@
 {% load static %}
 
 {% block content %}
-<h1 class="display-5"> Delete </h1>
-<form method="post" action="">
-    {% csrf_token %}
-    <p> Are you sure you want to delete {{ students.studentmodel.name }}</p>
-    <button class="btn btn-danger ml-2" type="submit">Confirm</button>
-</form>
+<div class="card">
+      <div class="card-body login-card-body">
+        <h5 class="login-box-msg">Delete</h5>
+          <form method="post" action="">
+            {% csrf_token %}
+            <p> Are you sure you want to delete <b>{{ students.studentmodel.name }}</b>. If you delete {{ students.studentmodel.name }} all data and records of this students will be removed.</p>
+            <button class="btn btn-danger btn-block" type="submit">Confirm</button>
+          </form>
+      </div>
+</div>
 {% endblock %}

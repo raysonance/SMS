@@ -255,3 +255,6 @@ class DeleteMessage(DeleteView):
         # helps it to return directly to the previous page before the form
         nexto = self.request.POST.get("next", "/")
         return nexto
+
+
+# implement active and non active as a way of deleting

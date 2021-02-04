@@ -1,10 +1,8 @@
 from django.urls import path
 
 from .views import (
-    DetailMessage,
     StudentAdminSignupView,
     StudentDeleteView,
-    StudentListView,
     StudentProfileView,
     StudentSignupView,
     StudentTeacherUpdateView,
@@ -22,7 +20,6 @@ from .views import (
 app_name = "students"
 
 urlpatterns = [
-    path("list/", StudentListView.as_view(), name="list"),
     path("signup/", StudentSignupView.as_view(), name="signup"),
     path("student_signup/", StudentAdminSignupView.as_view(), name="student_signup"),
     path("<slug:uuid_pk>/profile/", StudentProfileView.as_view(), name="profile"),
@@ -36,6 +33,5 @@ urlpatterns = [
     path("load_subclass/", load_sub_class, name="load_subclass"),
     path("view_message/", view_messages, name="message"),
     path("general_message/", view_general_messages, name="general_message"),
-    path("<slug:slugs>/detail/", DetailMessage.as_view(), name="detail_message"),
     path("searches/", search_student, name="search_student"),
 ]
