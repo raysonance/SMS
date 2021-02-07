@@ -52,12 +52,13 @@
           <span class="mx-2"><a style="color:white" href="{% url 'users:message_delete' article.slug %}?next={{ request.path|urlencode }}">Delete</a></span>
         </span>
       </div>
+         {% endif %}
     </div>
-    {% endif %}
     <!-- /.card -->
-  </div>
+
 <!-- /.col -->
     <br/>
+    </div>
 {% endfor %}
 {% else %}
   <p> There are no messages. </p>

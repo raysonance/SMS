@@ -13,6 +13,7 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from notifications.signals import notify
 
 # Create your views here.
 from schoolz.users.decorators import (
@@ -436,6 +437,12 @@ def send_messages(request):
             student_message.student = student
             student_message.private = True
             student_message.save()
+            notify.send(
+                sender=request.user,
+                recipient=student.user,
+                verb="new private message!",
+                target=student.user,
+            )
             messages.success(request, "Message sent successfully")
             return redirect("teachers:message")
 
@@ -464,6 +471,12 @@ def send_general_message(request):
                 student_message.teacher = request.user.teachermodel
                 student_message.student = student
                 student_message.save()
+                notify.send(
+                    sender=request.user,
+                    recipient=student.user,
+                    verb="new general message!",
+                    target=student.user,
+                )
             else:
                 messages.error(request, "Message failed to send.")
                 return redirect("teachers:general_message")
@@ -530,6 +543,12 @@ class UpdateMessage(LoginRequiredMixin, UpdateView):
         self.object = form.save(commit=False)
         self.object.updated_at = timezone.now()
         form.save()
+        notify.send(
+            sender=self.object.teacher.user,
+            recipient=self.object.student.user,
+            verb="updated message!",
+            target=self.object.student.user,
+        )
         return super().form_valid(form)
 
     def get_success_url(self):

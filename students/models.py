@@ -69,7 +69,7 @@ class StudentMessages(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ["-updated_at"]
 
     def __str__(self):
         return f"{self.title}"

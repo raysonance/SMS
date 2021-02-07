@@ -14,6 +14,7 @@ from django.views.generic import (
     RedirectView,
     UpdateView,
 )
+from notifications.signals import notify
 
 from students.models import StudentModel
 from teachers.models import Class, SubClass, TeacherMessages, TeacherModel
@@ -149,7 +150,7 @@ class AdminUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("users:dash")
 
 
-# for teachers to send messages to students
+# for admin to send messages to teachers
 @user_passes_test(user_is_admin, login_url="home")
 def send_messages(request):
     form = TeacherMessageForm()
@@ -164,6 +165,12 @@ def send_messages(request):
             teacher_message.teacher = teacher
             teacher_message.private = True
             teacher_message.save()
+            notify.send(
+                sender=request.user,
+                recipient=teacher.user,
+                verb="new private message!",
+                target=teacher.user,
+            )
             messages.success(request, "Message sent successfully")
             return redirect("users:message")
 
@@ -189,6 +196,12 @@ def send_general_message(request):
                 teacher_message.admin = request.user.adminmodel
                 teacher_message.teacher = teacher
                 teacher_message.save()
+                notify.send(
+                    sender=request.user,
+                    recipient=teacher.user,
+                    verb="new general message!",
+                    target=teacher.user,
+                )
             else:
                 messages.error(request, "Message failed to send.")
                 return redirect("users:general_message")
@@ -233,6 +246,12 @@ class UpdateMessage(UpdateView):
         self.object = form.save(commit=False)
         self.object.updated_at = timezone.now()
         form.save()
+        notify.send(
+            sender=self.object.admin.user,
+            recipient=self.object.teacher.user,
+            verb="updated message!",
+            target=self.object.teacher.user,
+        )
         return super().form_valid(form)
 
     def get_success_url(self):

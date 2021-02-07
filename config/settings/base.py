@@ -70,6 +70,7 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
+    "notifications",
     "crispy_forms",
     "allauth",
     "allauth.account",
@@ -295,3 +296,4 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
+DJANGO_NOTIFICATIONS_CONFIG = {"SOFT_DELETE": True, "USE_JSONFIELD": True}
