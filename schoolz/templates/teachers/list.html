@@ -43,8 +43,10 @@
                         <th>Sub-class</th>
                         <th>Mobile number</th>
                         <th>Profile</th>
+                        {% if request.user.is_admin and request.user.adminmodel.section == teacher.teachermodel.section %}
                         <th>Update</th>
                         <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>

@@ -1,73 +1,151 @@
-{% extends 'base/base.html' %}
-{% load static %}
-{% block title %} Result {% endblock title %}
 
-{% block content %}
-  <div class="animated fadeIn">
-    {% if student_result %}
-    <header>
-      <div>
-        <h4 class="d-xl-flex justify-content-xl-center">ELIZABETH HIGH SCHOOL</h4>
-        <span class="d-xl-flex justify-content-xl-center" style="font-size: 16px;color: rgb(222,17,17);"><strong>No 1 Sanni Balogun Ijebu-Ode Street, Lagos</strong></span>
-        <span>
-          <img class="d-xl-flex justify-content-xl-center" src="{% static 'landing\img\blog\img1.jpg' %}" width="100em" height="100em">
-          <img class="d-xl-flex float-right" style="margin: 0px;margin-top: -86px; margin-bottom: 2em;" src="{{ request.user.studentmodel.photo.url }}" width="100em" height="100em">
-        </span>
-      </div>
-    </header>
-    <span class="d-xl-flex justify-content-xl-center" style="clear: both; background-color: #2522c9;color: rgb(241,245,249);">Examination Results</span>
-    <div>
-      <span class="float-right d-xl-flex" style="margin-left: 0px;"><strong>Class:&nbsp; {{ request.user.studentmodel.class_name.class_name }} {{ request.user.studentmodel.sub_class.sub_class }}</strong></span>
-      <span class="d-xl-flex justify-content-xl-start"><strong>Name: {{ request.user.studentmodel.name }} &nbsp;</strong></span>
-    </div>
-    <div style="clear: both;">
-      <span><strong>Term: {{ first }}</strong></span>
-      <span class="float-right"><strong>Percentage: 22.8%</strong></span>
-    </div>
-      <div class="card" style="clear: both;">
-          <div class="card-header">
-              <i class="fa fa-edit"></i> DADEYO HIGH SCHOOL
-          </div>
+{% load static %} <!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-          <div class="card-body table-responsive p-0">
-              <table class="table table-hover text-nowrap table-striped table-bordered">
-                  <thead>
-                      <tr role="row">
-                          <th>S/N</th>
-                          <th>Course</th>
-                          <th>First Test</th>
-                          <th>Second Test</th>
-                          <th>Third Test</th>
-                          <th>Fourth Test</th>
-                          <th>Exam Score</th>
-                          <th>Total Score</th>
-                          <th>Grade</th>
-                          <th>Remark</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {% for results in student_result %}
-                        <tr role="row" class="odd">
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ results.subject.subject_name }}</td>
-                            <td>{{ results.first_test }}</td>
-                            <td>{{ results.second_test }}</td>
-                            <td>{{ results.third_test }}</td>
-                            <td>{{ results.fourth_test }}</td>
-                            <td>{{ results.exam_score }}</td>
-                            <td>{{ results.total_score }}</td>
-                            <td>{{ results.grade }}</td>
-                            <td>{{ results.remark }}</td>
-                        </tr>
-                      {% endfor %}
-                  </tbody>
-              </table>
-          </div>
-          {% else %}
-          <div class="card-body">
-              <h3>No Result Found</h3>
-          </div>
-          {% endif %}
-      </div>
-  </div>
-{% endblock %}
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>{{ request.user.studentmodel.name }} Result</title>
+<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
+<style>
+            @media  print{
+                .hide{
+                    display:none;
+                }
+            }
+
+        </style>
+</head>
+<body style="overflow-x:hidden;">
+<div id="my-node" style="background-color:white !important;">
+<div class="table-responsive" style="margin-left:15% !important; ">
+<table class="card" cellpadding="0" cellspacing="0">
+<tbody><tr class="row">
+<td>
+<img src="{% static 'result/logo.png' %}" alt="school logo" width="200" height="100">
+</td>
+<td> <h2 style="margin-left:30px !important"> Elizabeth HIGH SCHOOL </h2>
+<h4 style="color:red;">Secondary school: 42, idowu str, new okooba, Lagos.
+Primary school: 3, killua street, off Agbe road, Abule-Egba<br>
+<span style=" color:red">TEL:08178976999</span>
+</h4>
+</td>
+<td>
+<img src="{{ request.user.studentmodel.photo.url }}" width="150" height="100" style="border-radius:50%;">
+</td>
+</tr>
+<tr>
+<td colspan="3" style="background-color:blue !important; color:white !important;">
+<div style="margin-left:200px !important"> 2020/2021 ACADEMIC SESSION EXAMINATION RESULTS</div>
+</td>
+</tr>
+<tr>
+<td>
+<div style="">Name : {{ request.user.studentmodel.name }}</div>
+</td>
+<td>
+<div style="padding-left:100px !important; margin-right:0px !important">
+Class :{{ request.user.studentmodel.class_name.class_name }} {{ request.user.studentmodel.sub_class.sub_class }}
+<span style="margin-left:50px !important;">Promoted to : </span>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div>Resumption Date : 04-Jan-2021 </div></td>
+<td>
+<div style="padding-left:100px !important">
+Term : Term: {{ first }}
+<span style="margin-left:40px !important;">Percentage : 71.67%</span>
+</div>
+</td>
+</tr>
+</tbody></table>
+</div>
+<div class="table-responsive" style="padding-left:15% !important; ">
+<table class="table table-striped table-bordered" border="2" cellpadding="2" style="margin-left:30px !impoertant; width:800px; border-color:red; background-color:white !important;">
+<thead>
+<tr style="color:green;">
+<th>S/N</th>
+<th>Course</th>
+<th>1<sup>st</sup> CA</th>
+<th>2<sup>nd</sup> CA</th>
+<th>3<sup>rd</sup> CA</th>
+<th>4<sup>th</sup> CA</th>
+<th>Exam Score</th>
+<th>Total Score</th>
+<th>Grade</th>
+<th>Remark</th>
+</tr>
+</thead>
+<tbody style="color:black !important">
+    {% for results in student_result %}
+      <tr role="row" class="odd">
+          <td>{{ forloop.counter }}</td>
+          <td>{{ results.subject.subject_name }}</td>
+          <td>{{ results.first_test }}</td>
+          <td>{{ results.second_test }}</td>
+          <td>{{ results.third_test }}</td>
+          <td>{{ results.fourth_test }}</td>
+          <td>{{ results.exam_score }}</td>
+          <td>{{ results.total_score }}</td>
+          <td>{{ results.grade }}</td>
+          <td>{{ results.remark }}</td>
+      </tr>
+    {% endfor %}
+<tr>
+<th colspan="7">Total</th><th colspan="">778</th><th colspan="2"></th>
+</tr>
+ </tbody>
+</table>
+</div><br>
+<div style="margin-left:15% !important; ">
+<table style="border-color:red; width:800px;" border="1">
+<tbody><tr class="row">
+<td class="col-md-3 form-group mb-3">
+<div style="">
+<div for="comment">Teacher's Comment</div>
+<textarea readonly="" cols="40" name="comment" placeholder="Comment" class="form-control">He is well behaved and hardworking.</textarea>
+</div>
+</td>
+<td class="col-md-3 form-group mb-3">
+<div for="comment">Head Of School's Comment</div>
+<textarea readonly="" id="remark" cols="55" name="hm_comment" placeholder="Comment" class="form-control">Very good result. You can do better.</textarea>
+</td>
+</tr>
+<tr>
+<td>
+<div for="comment">School's Stamp</div>
+<img width="200" height="60" src="{% static 'result/stamp.png' %}">
+</td>
+<td>
+<div for="comment">Grade Structure</div>
+<table border="1">
+<tbody><tr>
+<td>75-100</td> <td>70-74</td> <td>65-69</td> <td>60-64</td> <td>55-59</td> <td>50-54</td> <td>45-49</td> <td>40-44</td> <td>0-39</td>
+</tr>
+<tr>
+<td>A</td><td>B2</td><td>B3</td><td>C4</td><td>C5</td><td>C6</td><td>D7</td><td>E8</td><td>F9</td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<button class="hide" onclick="download()">download</button> <button class="hide" onclick="window.print()">print</button>
+<script src="{% static 'result/dom-to-image.min.js' %}"></script>
+<script>
+            function download(){
+                domtoimage.toJpeg(document.getElementById('my-node'), { quality: 1.0, height:document.documentElement.scrollHeight })
+                .then(function (dataUrl) {
+                    var link = document.createElement('a');
+                    link.download = document.title;
+                    link.href = dataUrl;
+                    link.click();
+                });
+            }
+
+        </script>
+
+
+</body></html>
