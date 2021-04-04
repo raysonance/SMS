@@ -10,7 +10,6 @@ from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from schoolz.users.decorators import (
     admin_required,
-    teacher_admin_func,
     teacher_admin_student,
     teacher_required,
     user_is_student,
@@ -32,6 +31,7 @@ def load_sub_class(request):
     return render(request, "others/subclass_dropdown_list_options.html", context)
 
 
+# slow
 # signup of students for teachers
 @method_decorator([teacher_required], name="dispatch")
 class StudentSignupView(LoginRequiredMixin, CreateView):
@@ -55,6 +55,7 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
         return redirect("teachers:dash")
 
 
+# slow
 # signup of students for admin
 @method_decorator([admin_required], name="dispatch")
 class StudentAdminSignupView(LoginRequiredMixin, CreateView):
@@ -308,30 +309,30 @@ def view_general_messages(request):
 
 
 # search student for teacher and admin
-@user_passes_test(teacher_admin_func, login_url="home")
-def search_student(request):
-    class_name = Class.objects.all()
-    if request.method == "POST":
-        query = request.POST.get("q")
-        if request.GET.get("class_name"):
-            classes = request.GET.get("class_name")
-            class_name = get_object_or_404(Class, pk=classes)
-            student = StudentModel.objects.filter(
-                Q(name__icontains=query), class_name=class_name
-            ).select_related("class_name", "sub_class")
-            context = {"students": student}
-            return render(request, "student/students_list.html", context)
-        else:
-            student = StudentModel.objects.filter(
-                Q(name__icontains=query)
-            ).select_related("class_name", "sub_class")
-            context = {"students": student}
-            return render(request, "student/students_list.html", context)
-
-    context = {
-        "class_name": class_name,
-    }
-    return render(request, "student/search_student.html", context)
+# @user_passes_test(teacher_admin_func, login_url="home")
+# def search_student(request):
+#    class_name = Class.objects.all()
+#    if request.method == "POST":
+#        query = request.POST.get("q")
+#        if request.GET.get("class_name"):
+#            classes = request.GET.get("class_name")
+#            class_name = get_object_or_404(Class, pk=classes)
+#            student = StudentModel.objects.filter(
+#                Q(name__icontains=query), class_name=class_name
+#            ).select_related("class_name", "sub_class")
+#            context = {"students": student}
+#            return render(request, "student/students_list.html", context)
+#        else:
+#            student = StudentModel.objects.filter(
+#                Q(name__icontains=query)
+#            ).select_related("class_name", "sub_class")
+#            context = {"students": student}
+#            return render(request, "student/students_list.html", context)
+#
+#    context = {
+#        "class_name": class_name,
+#    }
+#    return render(request, "student/search_student.html", context)
 
 
 # search student for teacher and admin

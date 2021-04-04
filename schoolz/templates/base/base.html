@@ -54,9 +54,10 @@
 <!--Footer-->
 {% include 'base/footer.html' %}
 
+</div>
 <!--JS-->
 <!-- jQuery -->
-  {% block javascript %}
+ {% block javascript %}
 <script src="{% static 'project/plugins/jquery/jquery.min.js' %}"></script>
 <!-- Bootstrap 4 -->
 <script src="{% static 'project/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -103,7 +104,6 @@ $(document).ready(function($){
 </script>
 {% block script %}
 {% endblock script %}
-  {% endblock javascript %}
-</div>
+{% endblock javascript %}
 </body>
 </html>

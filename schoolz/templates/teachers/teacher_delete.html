@@ -9,7 +9,7 @@
         <h5 class="login-box-msg">Delete</h5>
           <form method="post" action="">
             {% csrf_token %}
-            <p> Are you sure you want to delete <b>{{ teachers.teachermodel.name }}</b>. All records of this teacher would be erased.</p>
+            <p class="text-center"> Are you sure you want to delete <b>{{ teachers.teachermodel.name }}</b>. All records of this teacher would be erased.</p>
             <button class="btn btn-danger btn-block" type="submit">Confirm</button>
           </form>
       </div>

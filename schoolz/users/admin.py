@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 from schoolz.users.forms import UserChangeForm, UserCreationForm
 
-from .models import Admin, Student, Teacher
+from .models import Admin, AdminModel, Student, Teacher
 
 User = get_user_model()
 
@@ -29,3 +29,6 @@ class UserAdmin(auth_admin.UserAdmin):
         "is_student",
     ]
     search_fields = ["name"]
+
+
+admin.site.register(AdminModel)

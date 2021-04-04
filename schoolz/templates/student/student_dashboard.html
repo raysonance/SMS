@@ -27,7 +27,6 @@
    </div>
  {% endif %}
 <marquee behavior="" direction="">Welcome To Student Management System</marquee>
-<div class="animated fadeIn">
     <div class="row">
       <div class="col-lg-6 col-12">
         <!-- small box -->
@@ -76,39 +75,43 @@
       </div>
     </div>
   </div>
-</div>
-
-<p> <span style="color: purple;"><b> Latest Messages </b></span></p>
 
 
-{% with articles=message %}
-  {% if articles %}
-    {% for article in articles %}
-      <div class="col-md-6">
-    <div class="card {% if article.private == True %} card-danger {% else %} card-success {% endif %} collapsed-card">
-      <div class="card-header">
-        <h3 class="card-title"> {{ article.title }} <span class="text-gray"><small> sent by {{ article.teacher.name }} to {{ article.student.name }} | {{ article.updated_at }} </small> </span></h3>
-
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
-          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-        </div>
-        <!-- /.card-tools -->
-      </div>
-      <!-- /.card-header -->
-      <div class="card-body bg-warning">
-        {{ article.message }}
-      </div>
-      <!-- /.card-body -->
-    </div>
-        <!-- /.card -->
+<div class="card">
+  <div class="card-header bg-navy">
+    <h3 class="card-title text-white"> <b> Latest Messages </b> </h3>
   </div>
-<!-- /.col -->
-    <br/>
-    {% endfor %}
-  {% else %}
-    <p> There are no messages. </p>
-  {% endif %}
-{% endwith %}
+  <div class="card-body bg-white">
+      {% with articles=message %}
+        {% if articles %}
+          {% for article in articles %}
+            <div class="col-md-6">
+          <div class="card {% if article.private == True %} card-danger {% else %} card-success {% endif %} collapsed-card">
+            <div class="card-header">
+              <h3 class="card-title"> {{ article.title }} <span class="text-white"><small> sent by {{ article.teacher.name }} to {{ article.student.name }} | {{ article.updated_at }} </small> </span></h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+              </div>
+              <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body bg-warning">
+              {{ article.message }}
+            </div>
+            <!-- /.card-body -->
+          </div>
+              <!-- /.card -->
+        </div>
+      <!-- /.col -->
+          <br/>
+          {% endfor %}
+        {% else %}
+          <p> There are no messages. </p>
+        {% endif %}
+      {% endwith %}
+  </div>
+</div>
 {% endblock %}

@@ -57,7 +57,6 @@ class TeacherSignUpForm(UserCreationForm):
 
     @transaction.atomic
     def save(self):
-        print(type(self.cleaned_data.get("section")))
         if (
             self.cleaned_data.get("section") != self.user.adminmodel.section
             or self.cleaned_data.get("class_name").section

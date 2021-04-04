@@ -9,7 +9,7 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
+        <a href="{% url 'home' %}" class="nav-link">Home</a>
       </li>
     </ul>
 
@@ -51,6 +51,7 @@
           <a class="dropdown-item dropdown-footer">You have no notifications</a>
           {% endif %}
           {% endwith %}
+        </div>
       </li>
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
@@ -93,10 +94,10 @@
                 <a href="{% url 'account_email' %}">Modify Email</a>
               </div>
               <div class="col-4 text-center">
-                <a href="{% url 'teachers:update' request.user.uuid %}"> Update Profile</a>
+                <a href="{% url 'teachers:update' request.user.uuid %}">Update Profile</a>
               </div>
               <div class="col-4 text-center">
-                <a href="{% url 'account_change_password' %}"> Change Password?</a>
+                <a href="{% url 'account_change_password' %}">Change Password?</a>
               </div>
             <!-- /.row -->
           </li>
@@ -112,10 +113,10 @@
                 <a href="{% url 'account_email' %}">Modify Email</a>
               </div>
               <div class="col-4 text-center">
-                <a href="{% url 'users:admin_update' request.user.uuid %}"> Update Profile</a>
+                <a href="{% url 'users:admin_update' request.user.uuid %}">Update Profile</a>
               </div>
               <div class="col-4 text-center">
-                <a href="{% url 'account_change_password' %}"> Change Password?</a>
+                <a href="{% url 'account_change_password' %}">Change Password?</a>
               </div>
             <!-- /.row -->
           </li>

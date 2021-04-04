@@ -70,6 +70,7 @@ class StudentMessages(models.Model):
 
     class Meta:
         ordering = ["-updated_at"]
+        verbose_name_plural = "Student Messages"
 
     def __str__(self):
         return f"{self.title}"

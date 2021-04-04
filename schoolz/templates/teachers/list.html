@@ -29,7 +29,7 @@
   <div class="animated fadeIn">
       <div class="card">
           <div class="card-header">
-              <h3 class="card-title"> Teacher Tables </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
+              <h3 class="card-title">Class Teacher Tables </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
           </div>
         {% with teacher=teachers %}
           {% if teacher %}
@@ -43,7 +43,7 @@
                         <th>Sub-class</th>
                         <th>Mobile number</th>
                         <th>Profile</th>
-                        {% if request.user.is_admin and request.user.adminmodel.section == teacher.teachermodel.section %}
+                        {% if request.user.is_admin %}
                         <th>Update</th>
                         <th>Delete</th>
                         {% endif %}

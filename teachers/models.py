@@ -24,6 +24,7 @@ class Class(models.Model):
 
     class Meta:
         ordering = ["pk"]
+        verbose_name_plural = "Classes"
 
     def __str__(self):
         return self.class_name
@@ -36,6 +37,7 @@ class SubClass(models.Model):
 
     class Meta:
         ordering = ["pk"]
+        verbose_name_plural = "Subclasses"
 
     def __str__(self):
         return f"{self.sub_class} of {self.class_name}"
@@ -102,6 +104,7 @@ class TeacherMessages(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name_plural = "Teacher Messages"
 
     def __str__(self):
         return f"{self.title}"

@@ -91,12 +91,23 @@ class TeacherListView(LoginRequiredMixin, ListView):
 
 
 class TeacherProfileView(LoginRequiredMixin, DetailView):
-    model = Teacher
+    model = TeacherModel
     login_url = "home"
     context_object_name = "teacher"
     template_name = "teachers/teacherprofile.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
+
+    def get_queryset(self):
+        # a vey useful feature that reduces number of queries from 22 to 6
+        # i have added the foreign keys i would use in the html to be
+        # preloaded so they wouldn't to called continually
+        # instead they would be cached
+        teacher = TeacherModel.objects.all().select_related(
+            "class_name",
+            "sub_class",
+        )
+        return teacher
 
 
 # Teacher update view for teachers only
@@ -112,7 +123,6 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
         "photo",
         "date_of_birth",
         "mobile",
-        "email",
         "joining_date",
     ]
 

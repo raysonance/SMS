@@ -48,6 +48,29 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
     <div class="card-body login-card-body">
       <p class="login-box-msg">Sign in to start your session</p>
       <form class="login" method="POST" action="{% url 'account_login' %}">
+        {% if messages %}
+   <div class="form-group">
+     <div class="col-12">
+       {% for message in messages %}
+       {% if message.tags == "error" %}
+           <div class="alert alert-default-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+           {{ message }}
+           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+           </button>
+           </div>
+       {% elif message.tags == "success" %}
+           <div class="alert alert-default-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+           {{ message }}
+           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+           </button>
+           </div>
+       {% endif %}
+       {% endfor %}
+     </div>
+   </div>
+ {% endif %}
         {% csrf_token %}
         {{ form|crispy }}
         {% if redirect_field_value %}
