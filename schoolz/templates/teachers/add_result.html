@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col-md-12">
         <!-- general form elements -->
-        <form method="POST" action="{% url 'teachers:save_result' %}">
+        <form method="POST" action="">
           {% csrf_token %}
           <div class="card card-primary">
             <div class="card-header">
@@ -77,7 +77,7 @@
 
             {% comment %} Displaying Students Here {% endcomment %}
 
-            <div class="card-footer" id="student_data">
+            <div class="card-footer hidden" id="student_data">
             </div>
 
           </div>
@@ -94,43 +94,50 @@
 <script>
 $("#fill_result").on('click', function(){
        // Displaying Rest of the form
-       var div_data="<div class='form-group'>";
-       div_data+="<label>First Test : </label><input type='text' name='first_test' class='form-control' placeholder='First Test' />";
+       if ($("#student_data").hasClass("hidden")) {
+       $("#student_data").removeClass("hidden").addClass("visible");
+       let div_data="<div class='form-group'>";
+       div_data+="<label>First Test : </label><input type='text' name='first_test' class='form-control' placeholder='First Test' required />";
        div_data+="</div>";
 
        div_data+="<div class='form-group'>";
-       div_data+="<label>Second Test : </label><input type='text' name='second_test' class='form-control' placeholder='Second Test' />";
+       div_data+="<label>Second Test : </label><input type='text' name='second_test' class='form-control' placeholder='Second Test' required />";
        div_data+="</div>";
 
        div_data+="<div class='form-group'>";
-       div_data+="<label>Third Test : </label><input type='text' name='third_test' class='form-control' placeholder='Third Test' />";
+       div_data+="<label>Third Test : </label><input type='text' name='third_test' class='form-control' placeholder='Third Test' required />";
        div_data+="</div>";
 
        div_data+="<div class='form-group'>";
-       div_data+="<label>Fourth Test : </label><input type='text' name='fourth_test' class='form-control' placeholder='Fourth Test' />";
+       div_data+="<label>Fourth Test : </label><input type='text' name='fourth_test' class='form-control' placeholder='Fourth Test' required />";
        div_data+="</div>";
 
 
        div_data+="<div class='form-group'>";
-       div_data+="<label>Exam Score : </label><input type='text' name='exam_score' class='form-control' placeholder='Exam Score' />";
+       div_data+="<label>Exam Score : </label><input type='text' name='exam_score' class='form-control' placeholder='Exam Score' required />";
        div_data+="</div>";
 
        div_data+="<div class='form-group'>";
-       div_data+="<label>Total Score : </label><input type='text' name='total_score' class='form-control' placeholder='Total Score' />";
+       div_data+="<label>Total Score : </label><input type='text' name='total_score' class='form-control' placeholder='Total Score' required />";
        div_data+="</div>";
 
        div_data+="<div class='form-group'>";
-       div_data+="<label>Grade : </label><input type='text' name='grade' class='form-control' placeholder='Grade' />";
+       div_data+="<label>Grade : </label><input type='text' name='grade' class='form-control' placeholder='Grade' required />";
        div_data+="</div>";
 
        div_data+="<div class='form-group'>";
-       div_data+="<label>Remark : </label><input type='text' name='remark' class='form-control' placeholder='Remark' />";
+       div_data+="<label>Remark : </label><input type='text' name='remark' class='form-control' placeholder='Remark' required />";
        div_data+="</div>";
 
        div_data+="<div class='form-group'>";
        div_data+="<button id='save_result' class='btn btn-success' type='submit'>Save Result</button>";
        div_data+="</div>";
        $("#student_data").html(div_data);
+       }
+       else {
+       $("#student_data").removeClass("visible").addClass("hidden");
+       $("#student_data").html("")
+       }
 })
 </script>
 {% endcompress %}

@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
@@ -31,7 +31,7 @@ def load_sub_class(request):
     return render(request, "others/subclass_dropdown_list_options.html", context)
 
 
-# slow
+# fast
 # signup of students for teachers
 @method_decorator([teacher_required], name="dispatch")
 class StudentSignupView(LoginRequiredMixin, CreateView):
@@ -52,7 +52,10 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        return redirect("teachers:dash")
+        if self.request.POST.get("more") == "on":
+            return redirect("students:signup")
+        else:
+            return redirect("teachers:dash")
 
 
 # slow
@@ -76,7 +79,10 @@ class StudentAdminSignupView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        return redirect("users:dash")
+        if self.request.POST.get("more") == "on":
+            return redirect("students:student_signup")
+        else:
+            return redirect("users:dash")
 
 
 # display profile of students
@@ -178,6 +184,7 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
 
 
 # student list for teachers
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def student_teacher_list(request):
     students = StudentModel.objects.filter(
@@ -191,6 +198,7 @@ def student_teacher_list(request):
 
 
 # student list for students
+@login_required
 @user_passes_test(user_is_student, login_url="home")
 def student_list(request):
     students = StudentModel.objects.filter(
@@ -217,6 +225,7 @@ class StudentDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
 
 
 # student dashboard
+@login_required
 @user_passes_test(user_is_student, login_url="home")
 def student_dashboard(request):
     class_name = request.user.studentmodel.class_name_id
@@ -224,29 +233,30 @@ def student_dashboard(request):
     total_student = StudentModel.objects.filter(
         class_name=class_name,
         sub_class=sub_class,
-    ).count()
+    )
     teachers = TeacherModel.objects.filter(
         class_name=class_name,
         sub_class=sub_class,
     )
     courses = Subject.objects.filter(
         class_name=class_name,
-    ).count()
+    )
 
     three_message = StudentMessages.objects.filter(student=request.user.studentmodel)[
         :3
     ].select_related("teacher", "student")
 
     context = {
-        "student": total_student,
+        "student": len(total_student),
         "teachers": teachers,
-        "courses": courses,
+        "courses": len(courses),
         "message": three_message,
     }
     return render(request, "student/student_dashboard.html", context)
 
 
 # result checking for students
+@login_required
 @user_passes_test(user_is_student, login_url="home")
 def show_result(request):
     class_name = Class.objects.all()
@@ -285,6 +295,7 @@ def show_result(request):
 
 
 # view messages for students
+@login_required
 @user_passes_test(user_is_student, login_url="home")
 def view_messages(request):
     message = StudentMessages.objects.filter(
@@ -297,6 +308,7 @@ def view_messages(request):
 
 
 # message checking for students
+@login_required
 @user_passes_test(user_is_student, login_url="home")
 def view_general_messages(request):
     message = StudentMessages.objects.filter(
@@ -309,33 +321,7 @@ def view_general_messages(request):
 
 
 # search student for teacher and admin
-# @user_passes_test(teacher_admin_func, login_url="home")
-# def search_student(request):
-#    class_name = Class.objects.all()
-#    if request.method == "POST":
-#        query = request.POST.get("q")
-#        if request.GET.get("class_name"):
-#            classes = request.GET.get("class_name")
-#            class_name = get_object_or_404(Class, pk=classes)
-#            student = StudentModel.objects.filter(
-#                Q(name__icontains=query), class_name=class_name
-#            ).select_related("class_name", "sub_class")
-#            context = {"students": student}
-#            return render(request, "student/students_list.html", context)
-#        else:
-#            student = StudentModel.objects.filter(
-#                Q(name__icontains=query)
-#            ).select_related("class_name", "sub_class")
-#            context = {"students": student}
-#            return render(request, "student/students_list.html", context)
-#
-#    context = {
-#        "class_name": class_name,
-#    }
-#    return render(request, "student/search_student.html", context)
-
-
-# search student for teacher and admin
+@login_required
 @user_passes_test(teacher_admin_student, login_url="home")
 def search_all(request):
     if request.method == "GET":

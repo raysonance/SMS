@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -75,6 +75,7 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 user_redirect_view = UserRedirectView.as_view()
 
 
+@login_required
 @user_passes_test(user_is_admin, login_url="home")
 def admin_dashboard(request):
     total_student = StudentModel.objects.filter(
@@ -88,9 +89,11 @@ def admin_dashboard(request):
 
 
 @method_decorator([superuser_required], name="dispatch")
-class AdminSignUpView(CreateView):
+class AdminSignUpView(LoginRequiredMixin, CreateView):
     model = Admin
     form_class = AdminSignUpForm
+    login_url = "account_login"
+
     template_name = "users/admin_signup.html"
 
     def get_context_data(self, **kwargs):
@@ -104,7 +107,7 @@ class AdminSignUpView(CreateView):
 
 class AdminDetailView(LoginRequiredMixin, DetailView):
     model = AdminModel
-    login_url = "home"
+    login_url = "account_login"
     context_object_name = "admin"
     template_name = "users/admin_profile.html"
     slug_field = "uuid"
@@ -112,6 +115,7 @@ class AdminDetailView(LoginRequiredMixin, DetailView):
 
 
 # admin list of student
+@login_required
 @user_passes_test(user_is_admin, login_url="home")
 def show_list(request):
     class_name = Class.objects.filter(section=request.user.adminmodel.section_id)
@@ -151,6 +155,7 @@ class AdminUpdateView(LoginRequiredMixin, UpdateView):
 
 
 # for admin to send messages to teachers
+@login_required
 @user_passes_test(user_is_admin, login_url="home")
 def send_messages(request):
     form = TeacherMessageForm()
@@ -183,6 +188,7 @@ def send_messages(request):
 
 
 # general messages
+@login_required
 @user_passes_test(user_is_admin, login_url="home")
 def send_general_message(request):
     form = TeacherMessageForm()
@@ -217,6 +223,7 @@ def send_general_message(request):
 
 
 # for admin to view messages
+@login_required
 @user_passes_test(user_is_admin, login_url="home")
 def view_messages(request):
     message = TeacherMessages.objects.filter(
@@ -232,11 +239,12 @@ def view_messages(request):
 
 # for teachers to update messages
 @method_decorator([admin_required], name="dispatch")
-class UpdateMessage(UpdateView):
+class UpdateMessage(LoginRequiredMixin, UpdateView):
     model = TeacherMessages
     template_name = "teachers/update_message.html"
     slug_field = "slug"
     slug_url_kwarg = "slug_pk"
+    login_url = "account_login"
     fields = [
         "title",
         "message",
@@ -262,8 +270,9 @@ class UpdateMessage(UpdateView):
 
 
 @method_decorator([admin_required], name="dispatch")
-class DeleteMessage(DeleteView):
+class DeleteMessage(LoginRequiredMixin, DeleteView):
     model = TeacherMessages
+    login_url = "account_login"
     template_name = "teachers/delete_message.html"
     context_object_name = "message"
     slug_field = "slug"

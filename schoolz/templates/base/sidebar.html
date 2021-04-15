@@ -123,8 +123,11 @@
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ user.teachermodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
+        </div>
         <div class="info">
-          <a href="{% url 'teachers:dash' %}" class="d-block">{{ request.user.teachermodel.name }}</a>
+          <a href="{% url 'teachers:dash' %}" class="d-block">{{ user.teachermodel.name }}</a>
         </div>
       </div>
 
@@ -180,6 +183,7 @@
                   <p>Promote</p>
                 </a>
               </li>
+
               <li class="nav-item">
                 <a href="{% url 'teachers:show_result' %}" class="nav-link">
                   <i class="fas fa-puzzle-piece nav-icon"></i>
@@ -197,7 +201,6 @@
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{% url 'teachers:message' %}" class="nav-link">
@@ -249,7 +252,7 @@
     </div>
     <!-- /.sidebar-menu -->
 
-    {% elif request.user.is_student %}
+    {% else %}
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">

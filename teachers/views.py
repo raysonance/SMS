@@ -1,7 +1,8 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -67,7 +68,10 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        return redirect("users:dash")
+        if self.request.POST.get("more") == "on":
+            return redirect("teachers:signup")
+        else:
+            return redirect("users:dash")
 
 
 # Teacher list for students and admin
@@ -92,17 +96,14 @@ class TeacherListView(LoginRequiredMixin, ListView):
 
 class TeacherProfileView(LoginRequiredMixin, DetailView):
     model = TeacherModel
-    login_url = "home"
+    login_url = "account_login"
     context_object_name = "teacher"
     template_name = "teachers/teacherprofile.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
 
     def get_queryset(self):
-        # a vey useful feature that reduces number of queries from 22 to 6
-        # i have added the foreign keys i would use in the html to be
-        # preloaded so they wouldn't to called continually
-        # instead they would be cached
+        # a very useful feature that reduces number of queries from 22 to 6
         teacher = TeacherModel.objects.all().select_related(
             "class_name",
             "sub_class",
@@ -178,43 +179,28 @@ class TeacherDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     success_message = "Teacher has been deleted."
 
 
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def teacher_dashboard(request):
     total_student = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
-    ).count()
+    )
     three_message = TeacherMessages.objects.filter(teacher=request.user.teachermodel)[
         :3
-    ].select_related("teacher", "admin")
+    ].select_related("admin")
     context = {
-        "student": total_student,
+        "student": len(total_student),
         "message": three_message,
     }
     return render(request, "teachers/teacher.html", context)
 
 
 # for teachers to add student result
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def add_result(request):
-    # using _id at the end of a request method can reduce the query by one
-    students = StudentModel.objects.filter(
-        class_name=request.user.teachermodel.class_name_id,
-        sub_class=request.user.teachermodel.sub_class_id,
-    ).values("pk", "name")
-    session = Session.objects.all()
-    subjects = Subject.objects.filter(
-        class_name=request.user.teachermodel.class_name_id
-    ).values("id", "subject_name")
-    context = {"students": students, "subjects": subjects, "sessions": session}
-    return render(request, "teachers/add_result.html", context)
-
-
-def staff_add_result_save(request):
-    if request.method != "POST":
-        messages.error(request, "Invalid Method")
-        return redirect("teachers:add_result")
-    else:
+    if request.method == "POST":
         student_id = request.POST.get("students")
         subject_id = request.POST.get("subject")
         session_id = request.POST.get("session")
@@ -274,41 +260,32 @@ def staff_add_result_save(request):
                 result.save()
                 messages.success(request, "Result Added Successfully!")
                 return redirect("teachers:add_result")
-        except (
-            ArithmeticError,
-            ValueError,
-            KeyError,
-            EnvironmentError,
-            TypeError,
-            IndexError,
-            AssertionError,
-            AttributeError,
-            ConnectionAbortedError,
-            ConnectionError,
-            BrokenPipeError,
-            ChildProcessError,
-            ConnectionRefusedError,
-            ConnectionResetError,
-            FileNotFoundError,
-            InterruptedError,
-            NotImplementedError,
-            SystemError,
-            SyntaxError,
-            TimeoutError,
-            UnboundLocalError,
-            UnicodeError,
-        ):
-            messages.error(request, "Failed to Add Result!")
+
+        except Exception as err:
+            messages.error(request, f"{err}")
             return redirect("teachers:add_result")
+
+    # using _id at the end of a request method can reduce the query by one
+    students = StudentModel.objects.filter(
+        class_name=request.user.teachermodel.class_name_id,
+        sub_class=request.user.teachermodel.sub_class_id,
+    ).values("pk", "name")
+    session = Session.objects.all()
+    subjects = Subject.objects.filter(
+        class_name=request.user.teachermodel.class_name_id
+    ).values("id", "subject_name")
+    context = {"students": students, "subjects": subjects, "sessions": session}
+    return render(request, "teachers/add_result.html", context)
 
 
 # for teachers to check result
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def show_result(request):
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
-    )
+    ).values("pk", "name")
 
     session = Session.objects.all()
 
@@ -338,6 +315,7 @@ def show_result(request):
 
 
 # for promoting students up one class
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def promote_student(request):
     id_name = request.user.teachermodel.class_name_id
@@ -357,31 +335,10 @@ def promote_student(request):
             messages.error(request, "Can not promote in this class.")
             return redirect("teachers:dash")
 
-    except (
-        ArithmeticError,
-        ValueError,
-        KeyError,
-        EnvironmentError,
-        TypeError,
-        IndexError,
-        AssertionError,
-        AttributeError,
-        ConnectionAbortedError,
-        ConnectionError,
-        BrokenPipeError,
-        ChildProcessError,
-        ConnectionRefusedError,
-        ConnectionResetError,
-        FileNotFoundError,
-        InterruptedError,
-        NotImplementedError,
-        SystemError,
-        SyntaxError,
-        TimeoutError,
-        UnboundLocalError,
-        UnicodeError,
-    ):
-        messages.error(request, "Can not promote in this class.")
+    except IntegrityError:
+        messages.error(request, "Student already exists in this class.")
+    except Exception as err:
+        messages.error(request, f"Can not promote in this class because {err}")
         return redirect("teachers:dash")
 
     sub_class = SubClass.objects.filter(class_name=new_class)
@@ -430,6 +387,7 @@ def promote_student_process(request):
 
 
 # for teachers to send messages to students
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def send_messages(request):
     form = StudentMessageForm()
@@ -465,6 +423,7 @@ def send_messages(request):
 
 
 # general messages
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def send_general_message(request):
     form = StudentMessageForm()
@@ -502,6 +461,7 @@ def send_general_message(request):
 
 
 # for teachers to view messages
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def view_messages(request):
     message = StudentMessages.objects.filter(
@@ -513,6 +473,7 @@ def view_messages(request):
 
 
 # view admin messages for teachers
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def view_admin_messages(request):
     message = TeacherMessages.objects.filter(
@@ -525,6 +486,7 @@ def view_admin_messages(request):
 
 
 # message checking for students
+@login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def view_general_messages(request):
     message = TeacherMessages.objects.filter(

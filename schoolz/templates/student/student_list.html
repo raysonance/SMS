@@ -20,7 +20,6 @@
                      </tr>
                  </thead>
                  <tbody>
-                 {% if request.user.is_teacher %}
                    {% for students in students %}
                        <tr>
                            <td>{{ forloop.counter }}</td>
@@ -31,16 +30,15 @@
                                    <i class="fa fa-search-plus"></i>
                                </a>
                            </td>
+                          {% if request.user.is_teacher %}
                            <td>
                                <a class="btn btn-info" href="{% url 'students:updates' students.uuid %}">
                                    <i class="fa fa-edit"></i>
                                </a>
                            </td>
+                         {% endif %}
                        </tr>
                    {% endfor %}
-                 {% else %}
-                   <h3> Hello What are you looking for ?</h3>
-                 {% endif %}
                  </tbody>
              </table>
           </div>

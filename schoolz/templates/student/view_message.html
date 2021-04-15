@@ -26,7 +26,8 @@
    </div>
 {% endif %}
 {% if message %}
-{% for article in message %}
+{% with articles=message %}
+{% for article in articles %}
   <div class="col-md-6">
     <div class="card {% if article.private == True %} card-danger {% else %} card-success {% endif %} collapsed-card">
       <div class="card-header">
@@ -47,7 +48,7 @@
       {% if request.user.is_teacher %}
       <div class="card-footer bg-navy">
         <span class="d-flex justify-content-lg-end">
-          <span class="mx-3"><a style="color:white" href="{% url 'teachers:message_update' article.slug %}?next={{ request.path|urlencode }}" >Edit</a> </span>
+          <span class="mx-3"><a style="color:white" href="{% url 'teachers:message_update' article.slug %}?next={{ request.path|urlencode }}">Edit</a> </span>
           |
           <span class="mx-2"><a style="color:white" href="{% url 'teachers:message_delete' article.slug %}?next={{ request.path|urlencode }}">Delete</a></span>
         </span>
@@ -59,6 +60,7 @@
 <!-- /.col -->
     <br/>
 {% endfor %}
+{% endwith %}
 {% else %}
 <p> There are no messages. </p>
 {% endif %}

@@ -14,7 +14,7 @@
     </ul>
 
     <!-- SEARCH FORM -->
-    <form class="form-inline ml-3" {% if request.user.is_student or request.user.is_admin or request.user.is_teacher %} action="{% url 'students:search_all' %}" {% endif %} method="get">
+    <form class="form-inline ml-3" action="{% url 'students:search_all' %}" method="get">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar" name="q" type="search" placeholder="Search" aria-label="Search">
         <div class="input-group-append">
@@ -53,41 +53,21 @@
           {% endwith %}
         </div>
       </li>
+      {% if request.user.is_teacher %}
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-        	  {% if request.user.is_teacher %}
             	<img src="{{ request.user.teachermodel.photo.url }}" class="user-image img-circle elevation-2" alt="teacher">
               <span class="d-none d-md-inline">{{ request.user.teachermodel.name }}</span>
-            {% elif request.user.is_student %}
-                <img src="{{ request.user.studentmodel.photo.url }}" class="user-image img-circle elevation-2" alt="student">
-                <span class="d-none d-md-inline">{{ request.user.studentmodel.name }}</span>
-            {% else %}
-                <img src="{{ request.user.adminmodel.photo.url }}" class="user-image img-circle elevation-2" alt="admin">
-                 <span class="d-none d-md-inline">{{ request.user.adminmodel.name }}</span>
-            {% endif %}
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <!-- User image -->
           <li class="user-header bg-primary">
-            {% if request.user.is_teacher %}
             	<img src="{{ request.user.teachermodel.photo.url }}" class="user-image img-circle elevation-2" alt="teacher">
-            {% elif request.user.is_student %}
-                <img src="{{ request.user.studentmodel.photo.url }}" class="user-image img-circle elevation-2" alt="student">
-            {% else %}
-                <img src="{{ request.user.adminmodel.photo.url }}" class="user-image img-circle elevation-2" alt="admin">
-            {% endif %}
             <p>
-            	{% if request.user.is_teacher %}
             		{{ request.user.teachermodel.name }}
-            	{% elif request.user.is_student %}
-                	{{ request.user.studentmodel.name }}
-            	{% else %}
-                	{{ request.user.adminmodel.name }}
-            	{% endif %}
             </p>
           </li>
           <!-- Menu Body -->
-          {% if request.user.is_teacher %}
           <li class="user-body">
             <div class="row">
               <div class="col-4 text-center">
@@ -99,6 +79,7 @@
               <div class="col-4 text-center">
                 <a href="{% url 'account_change_password' %}">Change Password?</a>
               </div>
+            </div>
             <!-- /.row -->
           </li>
               <!-- Menu Footer-->
@@ -106,7 +87,22 @@
           	<a class="btn btn-default btn-flat" href="{% url 'teachers:profile' request.user.uuid %}"> Profile</a>
           	<a class="btn btn-default btn-flat float-right" href="{% url 'account_logout' %}">Logout</a>
           </li>
-          {% elif request.user.is_admin %}
+        </ul>
+      </li>
+      {% elif request.user.is_admin %}
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+            	<img src="{{ request.user.adminmodel.photo.url }}" class="user-image img-circle elevation-2" alt="admin">
+                 <span class="d-none d-md-inline">{{ request.user.adminmodel.name }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <!-- User image -->
+          <li class="user-header bg-primary">
+            	<img src="{{ request.user.adminmodel.photo.url }}" class="user-image img-circle elevation-2" alt="admin">
+            <p>
+            		{{ request.user.adminmodel.name }}
+            </p>
+          </li>
           <li class="user-body">
             <div class="row">
               <div class="col-4 text-center">
@@ -118,6 +114,7 @@
               <div class="col-4 text-center">
                 <a href="{% url 'account_change_password' %}">Change Password?</a>
               </div>
+            </div>
             <!-- /.row -->
           </li>
               <!-- Menu Footer-->
@@ -125,7 +122,22 @@
           	<a class="btn btn-default btn-flat" href="{% url 'users:admin_detail' request.user.uuid %}">Profile</a>
           	<a class="btn btn-default btn-flat float-right" href="{% url 'account_logout' %}">Logout</a>
           </li>
-          {% elif request.user.is_student %}
+        </ul>
+      </li>
+      {% else %}
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+            	<img src="{{ request.user.studentmodel.photo.url }}" class="user-image img-circle elevation-2" alt="student">
+                <span class="d-none d-md-inline">{{ request.user.studentmodel.name }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <!-- User image -->
+          <li class="user-header bg-primary">
+            	<img src="{{ request.user.studentmodel.photo.url }}" class="user-image img-circle elevation-2" alt="student">
+            <p>
+            		{{ request.user.studentmodel.name }}
+            </p>
+          </li>
           <li class="user-body">
             <div class="row">
               <div class="col-4 text-center">
@@ -137,6 +149,7 @@
               <div class="col-4 text-center">
                 <a href="{% url 'account_change_password' %}"> Change Password?</a>
               </div>
+            </div>
             <!-- /.row -->
           </li>
               <!-- Menu Footer-->
@@ -144,9 +157,9 @@
           	<a class="btn btn-default btn-flat" href="{% url 'students:profile' request.user.uuid %}">Profile</a>
           	<a class="btn btn-default btn-flat float-right" href="{% url 'account_logout' %}">Logout</a>
           </li>
-          {% endif %}
         </ul>
       </li>
+      {% endif %}
     </ul>
   </nav>
   <!-- /.navbar -->
