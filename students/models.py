@@ -103,15 +103,18 @@ class SubjectResult(models.Model):
     session = models.ForeignKey(
         Session, on_delete=models.SET_NULL, null=True, default=1
     )
-    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default=1)
+    class_name = models.ForeignKey(
+        Class, null=True, on_delete=models.SET_NULL, default=1
+    )
     first_test = models.IntegerField()
     second_test = models.IntegerField()
     third_test = models.IntegerField()
     fourth_test = models.IntegerField()
     exam_score = models.IntegerField()
     total_score = models.IntegerField()
-    grade = models.CharField(max_length=10)
-    remark = models.CharField(max_length=50)
+    grade = models.CharField(max_length=3)
+    remark = models.CharField(max_length=20)
+    teachers_comment = models.CharField(max_length=100, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

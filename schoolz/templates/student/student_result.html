@@ -45,7 +45,7 @@ Primary school: 3, killua street, off Agbe road, Abule-Egba<br>
 <td>
 <div style="padding-left:100px !important; margin-right:0px !important">
 Class :{{ request.user.studentmodel.class_name.class_name }} {{ request.user.studentmodel.sub_class.sub_class }}
-<span style="margin-left:50px !important;">Promoted to : </span>
+<span style="margin-left:50px !important;">Promoted : {{ next }} </span>
 </div>
 </td>
 </tr>
@@ -55,7 +55,7 @@ Class :{{ request.user.studentmodel.class_name.class_name }} {{ request.user.stu
 <td>
 <div style="padding-left:100px !important">
 Term : Term: {{ first }}
-<span style="margin-left:40px !important;">Percentage : 71.67%</span>
+<span style="margin-left:40px !important;">Percentage : {{ percentage }} %</span>
 </div>
 </td>
 </tr>
@@ -93,7 +93,7 @@ Term : Term: {{ first }}
       </tr>
     {% endfor %}
 <tr>
-<th colspan="7">Total</th><th colspan="">778</th><th colspan="2"></th>
+<th colspan="7">Total</th><th colspan="">{{ total }}</th><th colspan="2"></th>
 </tr>
  </tbody>
 </table>

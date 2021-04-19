@@ -18,6 +18,7 @@ from .views import (
     send_messages,
     show_result,
     teacher_dashboard,
+    teachers_comment,
     view_admin_messages,
     view_general_messages,
     view_messages,
@@ -54,4 +55,5 @@ urlpatterns = [
     path(
         "<slug:slug_pk>/message_delete/", DeleteMessage.as_view(), name="message_delete"
     ),
+    path("teachers_comment/", teachers_comment, name="teachers_comment"),
 ]

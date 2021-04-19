@@ -278,6 +278,43 @@ def add_result(request):
     return render(request, "teachers/add_result.html", context)
 
 
+# add teacher comment
+def teachers_comment(request):
+    if request.method == "POST":
+        student_id = request.POST.get("students")
+        session_id = request.POST.get("session")
+        teacher_comment = request.POST.get("comment")
+
+        student = get_object_or_404(StudentModel, pk=student_id)
+        session = get_object_or_404(Session, id=session_id)
+
+        student_result = SubjectResult.objects.filter(
+            student=student,
+            class_name=request.user.teachermodel.class_name,
+            session=session,
+        )
+
+        if student_result:
+            try:
+                for subjects in student_result:
+                    if subjects.teachers_comment:
+                        subjects.teachers_comment = teacher_comment
+                        subjects.save(update_fields=["teachers_comment"])
+                        messages.success(request, "Comment updated successfully!")
+                        return redirect("teachers:add_result")
+
+                student_result[0].teachers_comment = teacher_comment
+                subjects.save(update_fields=["teachers_comment"])
+                messages.success(request, "Comment added successfully!")
+                return redirect("teachers:add_result")
+            except Exception as err:
+                messages.error(request, f"{err}")
+                return redirect("teachers:add_result")
+        else:
+            messages.error(request, "Please add student result first")
+            return redirect("teachers:add_result")
+
+
 # for teachers to check result
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")

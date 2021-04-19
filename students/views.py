@@ -273,7 +273,30 @@ def show_result(request):
         ).select_related("subject")
         if student_result:
             first = student_result[0].session.session_name
-            context = {"student_result": student_result, "first": first}
+            # checks either to be promoted to next session or next class
+            if student_result[0].session != Session.objects.last():
+                promote_session = get_object_or_404(
+                    Session, pk=student_result[0].session.id + 1
+                ).session_name
+            else:
+                promote_session = get_object_or_404(
+                    Class, pk=student_result.class_name.pk + 1
+                ).class_name
+            # calculates the total percentage
+            normal_total = 0
+            student_total = 0
+            for result in student_result:
+                normal_total += 100
+                student_total += result.total_score
+            percentage = (student_total / normal_total) * 100
+
+            context = {
+                "student_result": student_result,
+                "first": first,
+                "next": promote_session,
+                "percentage": percentage,
+                "total": student_total,
+            }
             return render(request, "student/student_result.html", context)
         else:
             # checks only for class and student and not session
