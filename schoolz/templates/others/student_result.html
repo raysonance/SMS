@@ -1,0 +1,59 @@
+<div class="card">
+    <div class="card-header bg-navy">
+        <h3 class="card-title"> {{ student }} Student Result </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
+    </div>
+    <div class="card-header table-responsive bg-navy">
+        <table class="table text-nowrap table-bordered">
+            <thead>
+                <tr role="row">
+                    <th>Help</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> Swap the student and session in the form above to view the results of each student and for each session</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% if student_result %}
+    <div class="card-body table-responsive p-0 bg-primary">
+       <table class="table table-hover text-nowrap table-striped table-bordered">
+           <thead>
+               <tr role="row">
+                   <th>S/N</th>
+                   <th>Course</th>
+                   <th>First Test</th>
+                   <th>Second Test</th>
+                   <th>Third Test</th>
+                   <th>Fourth Test</th>
+                   <th>Exam Score</th>
+                   <th>Total Score</th>
+                   <th>Grade</th>
+                   <th>Remark</th>
+               </tr>
+           </thead>
+           <tbody>
+               {% for results in student_result %}
+                 <tr role="row" class="odd">
+                     <td>{{ forloop.counter }}</td>
+                     <td>{{ results.subject.subject_name }}</td>
+                     <td>{{ results.first_test }}</td>
+                     <td>{{ results.second_test }}</td>
+                     <td>{{ results.third_test }}</td>
+                     <td>{{ results.fourth_test }}</td>
+                     <td>{{ results.exam_score }}</td>
+                     <td>{{ results.total_score }}</td>
+                     <td>{{ results.grade }}</td>
+                     <td>{{ results.remark }}</td>
+                 </tr>
+               {% endfor %}
+           </tbody>
+       </table>
+    </div>
+    {% else %}
+    <div class="card-body">
+        <h3>No Result Found for this Student</h3>
+    </div>
+    {% endif %}
+</div>

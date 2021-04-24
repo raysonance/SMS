@@ -11,12 +11,14 @@ from .views import (
     UpdateMessage,
     add_result,
     load_class,
+    load_student_result,
     load_sub_class,
     promote_student,
     promote_student_process,
     send_general_message,
     send_messages,
     show_result,
+    show_teachers_comment,
     teacher_dashboard,
     teachers_comment,
     view_admin_messages,
@@ -56,4 +58,6 @@ urlpatterns = [
         "<slug:slug_pk>/message_delete/", DeleteMessage.as_view(), name="message_delete"
     ),
     path("teachers_comment/", teachers_comment, name="teachers_comment"),
+    path("load_comment", show_teachers_comment, name="load_comment"),
+    path("load_student_result", load_student_result, name="load_student_result"),
 ]

@@ -180,7 +180,7 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
             return reverse_lazy("students:dash")
         else:
             messages.success(self.request, "Student has been updated")
-            return reverse_lazy("teachers:dash")
+            return reverse_lazy("students:student_teacher_list")
 
 
 # student list for teachers
@@ -283,12 +283,18 @@ def show_result(request):
                     Class, pk=student_result.class_name.pk + 1
                 ).class_name
             # calculates the total percentage
-            normal_total = 0
-            student_total = 0
+            normal_total, student_total = 0, 0
             for result in student_result:
                 normal_total += 100
                 student_total += result.total_score
             percentage = (student_total / normal_total) * 100
+
+            for comments in student_result:
+                if comments.teachers_comment:
+                    comment = comments.teachers_comment
+                    break
+                else:
+                    comment = "No comment has been inputed for this student."
 
             context = {
                 "student_result": student_result,
@@ -296,6 +302,7 @@ def show_result(request):
                 "next": promote_session,
                 "percentage": percentage,
                 "total": student_total,
+                "comment": comment,
             }
             return render(request, "student/student_result.html", context)
         else:

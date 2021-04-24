@@ -13,98 +13,101 @@
           <button data-toggle="tooltip" title="Manage existing departments and classes" type="button"
                   class="btn btn-warning" id="button-comment">Add Comment
           </button>
-          <button data-toggle="tooltip" title="Manage existing teachers" type="button" class="btn btn-warning"
-                  id="button-show-comment">Show Comment
-          </button>
       </div>
       <hr>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <!-- general form elements -->
-        <form method="POST" id="form" action="{% url 'teachers:add_result' %}">
-          {% csrf_token %}
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">Add Result</h3>
-            </div>
-            <!-- /.card-header -->
-
-            {% comment %} Display Messages {% endcomment %}
-            {% if messages %}
-              <div class="form-group">
-                <div class="col-12">
-                  {% for message in messages %}
-                    {% if message.tags == "error" %}
-                      <div class="alert alert-default-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                    {% elif message.tags == "success" %}
-                      <div class="alert alert-default-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                    {% endif %}
-                  {% endfor %}
+        <div id="favour">
+            <!-- general form elements -->
+            <form method="POST" id="form" action="{% url 'teachers:add_result' %}">
+              {% csrf_token %}
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Add Result</h3>
                 </div>
-              </div>
-            {% endif %}
+                <!-- /.card-header -->
+
+                {% comment %} Display Messages {% endcomment %}
+                {% if messages %}
+                  <div class="form-group">
+                    <div class="col-12">
+                      {% for message in messages %}
+                        {% if message.tags == "error" %}
+                          <div class="alert alert-default-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                        {% elif message.tags == "success" %}
+                          <div class="alert alert-default-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endif %}
 
 
-            <div class="card-body">
-              <div class="form-group">
-                <label for="students"> Students </label>
-                <select class="form-control" name="students" id="students">
-                  {% for student in students %}
-                    <option value="{{ student.pk }}">{{ student.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div id="result_content" class="form-group">
-                <label for="subject">Subject </label>
-                <select class="form-control" name="subject" id="subject">
-                  {% for subject in subjects %}
-                    <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="students"> Students </label>
+                    <select class="form-control" name="students" id="students">
+                      {% for student in students %}
+                        <option value="{{ student.pk }}">{{ student.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="session">Session </label>
+                    <select class="form-control" name="session" id="session">
+                      {% for session in sessions %}
+                        <option value="{{ session.id }}">{{ session.session_name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div id="result_content" class=''>
+                    <div class="form-group">
+                      <label for="subject">Subject </label>
+                      <select class="form-control" name="subject" id="subject">
+                        {% for subject in subjects %}
+                          <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
                         <!-- /.card-body -->
 
-              <div class="form-group">
-                <label for="session">Session </label>
-                <select class="form-control" name="session" id="session">
-                  {% for session in sessions %}
-                    <option value="{{ session.id }}">{{ session.session_name }}</option>
-                  {% endfor %}
-                </select>
+                    <div id="fill-result-button" class="card-footer">
+                      <button type="button" class="btn btn-primary" id="fill_result">Fill Result</button>
+                    </div>
+                  </div>
+
+                  <div id="comment_content" class='d-none'>
+                    <div class='form-group'>
+                      <label for="comment">Teacher's comment : </label>
+                      <textarea class="form-control" placeholder="comment" name="comment" id="comment" required> </textarea>
+                    </div>
+
+                    <div class="card-footer">
+                      <button type="submit" class="btn btn-primary" >Add comment</button>
+                    </div>
+                  </div>
+                </div>
+                  {% comment %} Displaying Students Here {% endcomment %}
+                  <div class="card-footer" id="student_data">
+                  </div>
               </div>
-
-              <div id="comment_content" class='d-none form-group'>
-                <label for="comment">Teachers comment : </label>
-                <textarea class="form-control" placeholder="comment" name="comment" id="comment" required> </textarea>
-              </div>
-            </div>
-
-            <div id="result_submit" class="card-footer">
-              <button type="button" class="btn btn-primary" id="fill_result">Fill Result</button>
-            </div>
-            <div id="comment_submit" class="d-none card-footer">
-              <button type="submit" class="btn btn-primary" >Add comment</button>
-            </div>
-
-            {% comment %} Displaying Students Here {% endcomment %}
-
-            <div class="card-footer" id="student_data">
-            </div>
-
-          </div>
-        </form>
+            </form>
           <!-- /.card -->
+              <div id="add-comments"></div>
+        </div>
       </div>
     </div>
 
@@ -116,9 +119,7 @@
 <script>
   {# get the content #}
   let result_content = document.getElementById("result_content");
-  let result_submit = document.getElementById("result_submit")
   let comment_content = document.getElementById("comment_content");
-  let comment_submit = document.getElementById("comment_submit");
   let forms = document.getElementById("form")
   {# get the buttons #}
   let dashboard_button = document.getElementById("button-dashboard");
@@ -138,20 +139,14 @@
     if (!comment_content.classList.contains("d-none")) {
         comment_content.classList.add("d-none");
         }
-    if (!comment_submit.classList.contains("d-none")) {
-        comment_submit.classList.add("d-none");
-        }
     if (forms.action != "{% url 'teachers:add_result' %}") {
         forms.action = "{% url 'teachers:add_result' %}";
         }
     if (result_content.classList.contains("d-none")) {
         result_content.classList.remove("d-none");
         }
-    if (result_submit.classList.contains("d-none")) {
-        result_submit.classList.remove("d-none");
-        }
   });
-
+  {# add events when comment_button is clicked #}
   comment_button.addEventListener("click", function () {
     {# handling the button #}
     if (!comment_button.classList.contains("disabled")) {
@@ -165,73 +160,165 @@
     if (!result_content.classList.contains("d-none")) {
         result_content.classList.add("d-none");
         }
-    if (!result_submit.classList.contains("d-none")) {
-        result_submit.classList.add("d-none");
-        }
 
     forms.action = "{% url 'teachers:teachers_comment' %}";
 
     if (comment_content.classList.contains("d-none")) {
         comment_content.classList.remove("d-none");
         }
-    if (comment_submit.classList.contains("d-none")) {
-        comment_submit.classList.remove("d-none");
-        }
   });
 
 </script>
+
 <script>
+
+
+$(document).ready(function () {
+  let SessionId = $("#session").val();
+  let StudentId = $("#students").val();
+  $.ajax({
+          url: "{% url 'teachers:load_student_result' %}",
+          data: {
+            "session": SessionId,
+            "students": StudentId
+            },
+          success: function (data) {
+            $("#add-comments").html(data);
+          }
+        });
+  {# lets a change in session value start an ajax request of loading comments if only in comment page #}
+  $("#session").change(function () {
+    var dark = $("#session").val();
+    if ($("#button-comment").hasClass('disabled')) {
+    $.ajax({
+      url: "{% url 'teachers:load_comment' %}",
+      data: {
+        'session': dark
+      },
+      success: function (data) {
+        $("#add-comments").html(data);
+      }
+    });
+    }
+  });
+
+{# lets a change in student value start an ajax request of loading result #}
+
+    $("#session").change(function () {
+      let SessionId = $("#session").val();
+      let StudentId = $("#students").val();
+      if ($("#button-dashboard").hasClass('disabled')) {
+      $.ajax({
+        url: "{% url 'teachers:load_student_result' %}",
+        data: {
+          "session": SessionId,
+          "students": StudentId
+        },
+        success: function (data) {
+          $("#add-comments").html(data);
+        },
+      });
+      }
+    });
+    $("#students").change(function () {
+      let SessionId = $("#session").val();
+      let StudentId = $("#students").val();
+      if ($("#button-dashboard").hasClass('disabled')) {
+      $.ajax({
+        url: "{% url 'teachers:load_student_result' %}",
+        data: {
+          "session": SessionId,
+          "students": StudentId
+        },
+        success: function (data) {
+          $("#add-comments").html(data);
+        },
+      });
+      }
+    });
+
+{# let an ajax request  to load comments when button-comment is clicked #}
+{# clears tests and exams form when moving to comments #}
 $("#button-comment").on('click', function(){
-      $("#student_data").html("");
+  $("#student_data").html("");
+  $("#add-comments").html("");
+      let SessionId = $("#session").val();
+      $.ajax({
+          url: "{% url 'teachers:load_comment' %}",
+          data: {
+            "session": SessionId
+            },
+          success: function (data) {
+            $("#add-comments").html(data);
+          }
+        });
 });
 
+{# clears comments when in add result page #}
+{# lets fill-result button be shown if it has been set to none #}
+$("#button-dashboard").on('click', function() {
+      $("#add-comments").html("");
+      let SessionId = $("#session").val();
+      let StudentId = $("#students").val();
+      $.ajax({
+          url: "{% url 'teachers:load_student_result' %}",
+          data: {
+            "session": SessionId,
+            "students": StudentId
+            },
+          success: function (data) {
+            $("#add-comments").html(data);
+          }
+        });
+      if ($("#fill-result-button").hasClass("d-none")) {
+       $("#fill-result-button").removeClass("d-none");
+      }
+});
+
+{# shows the rest of the form on add result page #}
+{# sets the fill result button to none #}
 $("#fill_result").on('click', function(){
-       // Displaying Rest of the form
-       if ($("#student_data").hasClass("hidden")) {
-       $("#student_data").removeClass("hidden").addClass("visible");
-       let div_data="<div class='form-group'>";
-       div_data+="<label>First Test : </label><input type='text' name='first_test' class='form-control' placeholder='First Test' required />";
-       div_data+="</div>";
+  $("#fill-result-button").addClass('d-none');
+  // Displaying Rest of the form
+  let div_data="<div class='form-group'>";
+  div_data+="<label>First Test : </label><input type='text' name='first_test' class='form-control' placeholder='First Test' required />";
+  div_data+="</div>";
 
-       div_data+="<div class='form-group'>";
-       div_data+="<label>Second Test : </label><input type='text' name='second_test' class='form-control' placeholder='Second Test' required />";
-       div_data+="</div>";
+  div_data+="<div class='form-group'>";
+  div_data+="<label>Second Test : </label><input type='text' name='second_test' class='form-control' placeholder='Second Test' required />";
+  div_data+="</div>";
 
-       div_data+="<div class='form-group'>";
-       div_data+="<label>Third Test : </label><input type='text' name='third_test' class='form-control' placeholder='Third Test' required />";
-       div_data+="</div>";
+  div_data+="<div class='form-group'>";
+  div_data+="<label>Third Test : </label><input type='text' name='third_test' class='form-control' placeholder='Third Test' required />";
+  div_data+="</div>";
 
-       div_data+="<div class='form-group'>";
-       div_data+="<label>Fourth Test : </label><input type='text' name='fourth_test' class='form-control' placeholder='Fourth Test' required />";
-       div_data+="</div>";
+  div_data+="<div class='form-group'>";
+  div_data+="<label>Fourth Test : </label><input type='text' name='fourth_test' class='form-control' placeholder='Fourth Test' required />";
+  div_data+="</div>";
 
 
-       div_data+="<div class='form-group'>";
-       div_data+="<label>Exam Score : </label><input type='text' name='exam_score' class='form-control' placeholder='Exam Score' required />";
-       div_data+="</div>";
+  div_data+="<div class='form-group'>";
+  div_data+="<label>Exam Score : </label><input type='text' name='exam_score' class='form-control' placeholder='Exam Score' required />";
+  div_data+="</div>";
 
-       div_data+="<div class='form-group'>";
-       div_data+="<label>Total Score : </label><input type='text' name='total_score' class='form-control' placeholder='Total Score' required />";
-       div_data+="</div>";
+  div_data+="<div class='form-group'>";
+  div_data+="<label>Total Score : </label><input type='text' name='total_score' class='form-control' placeholder='Total Score' required />";
+  div_data+="</div>";
 
-       div_data+="<div class='form-group'>";
-       div_data+="<label>Grade : </label><input type='text' name='grade' class='form-control' placeholder='Grade' required />";
-       div_data+="</div>";
+  div_data+="<div class='form-group'>";
+  div_data+="<label>Grade : </label><input type='text' name='grade' class='form-control' placeholder='Grade' required />";
+  div_data+="</div>";
 
-       div_data+="<div class='form-group'>";
-       div_data+="<label>Remark : </label><input type='text' name='remark' class='form-control' placeholder='Remark' required />";
-       div_data+="</div>";
+  div_data+="<div class='form-group'>";
+  div_data+="<label>Remark : </label><input type='text' name='remark' class='form-control' placeholder='Remark' required />";
+  div_data+="</div>";
 
-       div_data+="<div class='form-group'>";
-       div_data+="<button id='save_result' class='btn btn-success' type='submit'>Save Result</button>";
-       div_data+="</div>";
-       $("#student_data").html(div_data);
-       }
-       else {
-       $("#student_data").removeClass("visible").addClass("hidden");
-       $("#student_data").html("")
-       }
-})
+  div_data+="<div class='form-group'>";
+  div_data+="<button id='save_result' class='btn btn-success' type='submit'>Save Result</button>";
+  div_data+="</div>";
+  $("#student_data").html(div_data);
+});
+});
 </script>
 {% endcompress %}
 {% endblock script %}

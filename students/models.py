@@ -106,6 +106,9 @@ class SubjectResult(models.Model):
     class_name = models.ForeignKey(
         Class, null=True, on_delete=models.SET_NULL, default=1
     )
+    sub_class = models.ForeignKey(
+        SubClass, null=True, on_delete=models.SET_NULL, default=2
+    )
     first_test = models.IntegerField()
     second_test = models.IntegerField()
     third_test = models.IntegerField()
@@ -115,6 +118,7 @@ class SubjectResult(models.Model):
     grade = models.CharField(max_length=3)
     remark = models.CharField(max_length=20)
     teachers_comment = models.CharField(max_length=100, null=True)
+    head_teacher_comment = models.CharField(max_length=100, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

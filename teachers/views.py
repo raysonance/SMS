@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -31,6 +30,9 @@ from students.models import StudentMessages, StudentModel, Subject, SubjectResul
 from .forms import TeacherSignUpForm
 from .models import Class, Session, SubClass, TeacherMessages, TeacherModel
 
+# add paid boolean field to students
+# add protection to new functions
+
 
 def load_sub_class(request):
     class_id = request.GET.get("class")
@@ -46,6 +48,39 @@ def load_class(request):
 
     context = {"class_name": class_name}
     return render(request, "others/class_dropdown_list_option.html", context)
+
+
+def show_teachers_comment(request):
+    try:
+        session_id = request.GET.get("session")
+        student_result = SubjectResult.objects.filter(
+            class_name=request.user.teachermodel.class_name_id,
+            sub_class=request.user.teachermodel.sub_class_id,
+            session=session_id,
+        ).select_related("student")
+        context = {"result": student_result}
+        return render(request, "others/comment.html", context)
+    except Exception:
+        messages.error(request, "cannot load teacher comments, contact administrator.")
+        return render(request, "teachers/add_result.html", context)
+
+
+def load_student_result(request):
+    if request.method == "GET":
+        student_id = request.GET.get("students")
+        session_id = request.GET.get("session")
+
+        student = get_object_or_404(StudentModel, pk=student_id)
+        session = get_object_or_404(Session, id=session_id)
+
+        student_result = SubjectResult.objects.filter(student=student, session=session)
+
+        context = {"student_result": student_result, "student": student.name}
+
+        if student_result:
+            return render(request, "others/student_result.html", context)
+        else:
+            return render(request, "others/student_result.html", context)
 
 
 # teacher signup for admins
@@ -279,6 +314,8 @@ def add_result(request):
 
 
 # add teacher comment
+@login_required
+@user_passes_test(user_is_teacher, login_url="home")
 def teachers_comment(request):
     if request.method == "POST":
         student_id = request.POST.get("students")
@@ -290,12 +327,13 @@ def teachers_comment(request):
 
         student_result = SubjectResult.objects.filter(
             student=student,
-            class_name=request.user.teachermodel.class_name,
+            class_name=request.user.teachermodel.class_name_id,
             session=session,
         )
 
         if student_result:
             try:
+                # why wont it add when there are more than two subjects
                 for subjects in student_result:
                     if subjects.teachers_comment:
                         subjects.teachers_comment = teacher_comment
@@ -304,9 +342,10 @@ def teachers_comment(request):
                         return redirect("teachers:add_result")
 
                 student_result[0].teachers_comment = teacher_comment
-                subjects.save(update_fields=["teachers_comment"])
+                student_result[0].save(update_fields=["teachers_comment"])
                 messages.success(request, "Comment added successfully!")
                 return redirect("teachers:add_result")
+
             except Exception as err:
                 messages.error(request, f"{err}")
                 return redirect("teachers:add_result")
@@ -371,9 +410,6 @@ def promote_student(request):
         else:
             messages.error(request, "Can not promote in this class.")
             return redirect("teachers:dash")
-
-    except IntegrityError:
-        messages.error(request, "Student already exists in this class.")
     except Exception as err:
         messages.error(request, f"Can not promote in this class because {err}")
         return redirect("teachers:dash")
