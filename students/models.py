@@ -26,6 +26,7 @@ class StudentModel(models.Model):
     sub_class = models.ForeignKey(
         SubClass, on_delete=models.SET_NULL, null=True, default=1
     )
+    paid = models.BooleanField(default=False)
     fathers_name = models.CharField("Father's Name", max_length=100)
     mothers_name = models.CharField("Mother's Name", max_length=100)
     date_of_birth = models.DateField("Birth Date", blank=True, null=True)

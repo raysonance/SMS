@@ -8,6 +8,7 @@ from .views import (  # search_student,
     StudentTeacherUpdateView,
     StudentUpdateView,
     load_sub_class,
+    payment,
     search_all,
     show_result,
     student_dashboard,
@@ -35,4 +36,5 @@ urlpatterns = [
     path("general_message/", view_general_messages, name="general_message"),
     # path("searches/", search_student, name="search_student"),
     path("find/", search_all, name="search_all"),
+    path("payment/", payment, name="payment"),
 ]

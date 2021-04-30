@@ -17,7 +17,7 @@ from django.views.generic import (
 from notifications.signals import notify
 
 from students.models import StudentModel
-from teachers.models import Class, SubClass, TeacherMessages, TeacherModel
+from teachers.models import Class, Section, SubClass, TeacherMessages, TeacherModel
 
 from .decorators import admin_required, superuser_required, user_is_admin
 from .forms import AdminSignUpForm, TeacherMessageForm
@@ -78,13 +78,38 @@ user_redirect_view = UserRedirectView.as_view()
 @login_required
 @user_passes_test(user_is_admin, login_url="home")
 def admin_dashboard(request):
-    total_student = StudentModel.objects.filter(
-        section=request.user.adminmodel.section
-    ).count()
-    teacher = TeacherModel.objects.filter(
-        section=request.user.adminmodel.section
-    ).count()
-    context = {"student": total_student, "teacher": teacher}
+    section = request.user.adminmodel.section
+    if section.pk == 1:
+        not_section = 2
+    else:
+        not_section = 1
+
+    spectre = Section.objects.get(pk=not_section)
+
+    section_students = StudentModel.objects.filter(section=section).values("pk", "paid")
+    section_teachers = TeacherModel.objects.filter(section=section).count()
+    other_students = StudentModel.objects.filter(section=not_section).values(
+        "pk", "paid"
+    )
+    other_teachers = TeacherModel.objects.filter(section=not_section).count()
+
+    paid_section_students = [student for student in section_students if student["paid"]]
+    unpaid = len(section_students) - len(paid_section_students)
+
+    paid_other_students = [student for student in other_students if student["paid"]]
+    unpaid_other = len(other_students) - len(paid_other_students)
+
+    context = {
+        "student": len(section_students),
+        "teacher": section_teachers,
+        "other_students": len(other_students),
+        "other_teachers": other_teachers,
+        "paid_students": len(paid_section_students),
+        "unpaid": unpaid,
+        "paid_other": len(paid_other_students),
+        "unpaid_other": unpaid_other,
+        "spectre": spectre.sections,
+    }
     return render(request, "users/admin_dashboard.html", context)
 
 

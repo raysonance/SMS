@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n compress %}
 {% load notifications_tags %}
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +13,9 @@
     <meta name="keyword" content="">
     <title>{% block title %}{% endblock title %}</title>
 
+    {% block css %}
+
+    {% compress css %}
   	<!-- Font Awesome -->
   	<link rel="stylesheet" href="{% static 'project/plugins/fontawesome-free/css/all.min.css' %}">
   	<!-- Theme style -->
@@ -21,6 +24,8 @@
   	<link rel="stylesheet" href="{% static 'project/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
   	<!-- Google Font: Source Sans Pro -->
   	<!-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> -->
+    {% endcompress %}
+    {% endblock %}
 
     {% block extrahead %}
     {% endblock extrahead %}
@@ -46,7 +51,7 @@
               </div><!-- /.col -->
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item"><a href="home">Home</a></li>
+                  <li class="breadcrumb-item"><a href={% url 'home' %}>Home</a></li>
                   <li class="breadcrumb-item active">Dashboard</li>
                 </ol>
               </div><!-- /.col -->
@@ -79,6 +84,7 @@
 <!--JS-->
 <!-- jQuery -->
  {% block javascript %}
+ {% compress js %}
 <script src="{% static 'project/plugins/jquery/jquery.min.js' %}"></script>
 <!-- Bootstrap 4 -->
 <script src="{% static 'project/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -125,6 +131,7 @@ $(document).ready(function($){
 </script>
 {% block script %}
 {% endblock script %}
+{% endcompress %}
 {% endblock javascript %}
 </body>
 </html>

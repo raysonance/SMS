@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% block title %} School Management System {% endblock title %}
 
 {% block content %}
@@ -26,15 +27,15 @@
      </div>
    </div>
  {% endif %}
-<marquee behavior="" direction="">Welcome To Student Management System</marquee>
+<marquee behavior="" direction="">Welcome To The Management System</marquee>
 <div class="animated fadeIn">
     <div class="row">
-      <div class="col-lg-6 col-12">
+      <div class="col-lg-3 col-12">
         <!-- small box -->
         <div class="small-box bg-info">
           <div class="inner">
             <h3>{{ student }}</h3>
-            <p>Total Student in Section</p>
+            <p>Total Student in {{ request.user.adminmodel.section }}</p>
           </div>
           <div class="icon">
             <i class="ion ion-stats-bars"></i>
@@ -42,12 +43,38 @@
           <a href="{% url 'users:show_list' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
       </div>
-      <div class="col-lg-6 col-12">
+      <div class="col-lg-3 col-12">
         <!-- small box -->
         <div class="small-box bg-success">
           <div class="inner">
             <h3>{{ teacher }}</h3>
-            <p>Total Teacher</p>
+            <p>Total Class Teachers in {{ request.user.adminmodel.section }} </p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-stats-bars"></i>
+          </div>
+          <a href="{% url 'teachers:list' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-12">
+        <!-- small box -->
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3>{{ other_students }}</h3>
+            <p>Total Student in {{ spectre }}</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-stats-bars"></i>
+          </div>
+          <a href="{% url 'teachers:list' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-12">
+        <!-- small box -->
+        <div class="small-box bg-danger">
+          <div class="inner">
+            <h3>{{ other_teachers }}</h3>
+            <p>Total Class Teachers in {{ spectre }}</p>
           </div>
           <div class="icon">
             <i class="ion ion-stats-bars"></i>
@@ -56,5 +83,106 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-lg-6 col-12">
+        <!-- DONUT CHART -->
+        <div class="card card-success">
+          <div class="card-header">
+            <h3 class="card-title"> Paid {{ request.user.adminmodel.section }} Students Chart</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <div class="col-lg-6 col-12">
+        <!-- DONUT CHART -->
+        <div class="card card-danger">
+          <div class="card-header">
+            <h3 class="card-title">Paid {{ spectre }} Students Chart</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="donutChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
 </div>
 {% endblock %}
+
+{% block script %}
+  <script src="{% static 'project/plugins/chart.js/Chart.min.js' %}"></script>
+  <script>
+  $(function () {
+        //- DONUT CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData        = {
+      labels: [
+          'Paid',
+          'Not Paid',
+      ],
+      datasets: [
+        {
+          data: [{{ paid_students }}, {{ unpaid }}],
+          backgroundColor : ['#3c8dbc', '#f56954'],
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var donutChart = new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
+    });
+
+        //- DONUT CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var donutChartCanvas2 = $('#donutChart2').get(0).getContext('2d')
+    var donutData2        = {
+      labels: [
+          'Paid',
+          'Not Paid',
+      ],
+      datasets: [
+        {
+          data: [{{ paid_other }}, {{ unpaid_other }}],
+          backgroundColor : ['#3c8dbc', '#f56954'],
+        }
+      ]
+    }
+    var donutOptions2     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var donutChart2 = new Chart(donutChartCanvas2, {
+      type: 'doughnut',
+      data: donutData2,
+      options: donutOptions2
+    });
+  });
+  </script>
+{% endblock script %}

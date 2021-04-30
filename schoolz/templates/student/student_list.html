@@ -7,29 +7,31 @@
           <div class="card-header">
               <h3 class="card-title"> Student Tables </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
           </div>
-          {% if messages %}
-              <div class="form-group">
-                <div class="col-12">
-                  {% for message in messages %}
-                  {% if message.tags == "error" %}
-                      <div class="alert alert-default-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
-                      {{ message }}
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                      </div>
-                  {% elif message.tags == "success" %}
-                      <div class="alert alert-default-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
-                      {{ message }}
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                      </div>
-                  {% endif %}
-                  {% endfor %}
+          <div id="messages">
+            {% if messages %}
+                <div class="form-group">
+                  <div class="col-12">
+                    {% for message in messages %}
+                    {% if message.tags == "error" %}
+                        <div class="alert alert-default-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                    {% elif message.tags == "success" %}
+                        <div class="alert alert-default-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                    {% endif %}
+                    {% endfor %}
+                  </div>
                 </div>
-              </div>
-            {% endif %}
+              {% endif %}
+            </div>
           {% if students %}
           <div class="card-body table-responsive p-0">
              <table class="table table-hover text-nowrap table-striped table-bordered">
@@ -40,25 +42,33 @@
                          <th>Mobile number</th>
                          <th>Profile</th>
                          <th>Update</th>
+                         <th>Paid</th>
                      </tr>
                  </thead>
                  <tbody>
                    {% for students in students %}
                        <tr>
-                           <td>{{ forloop.counter }}</td>
-                           <td>{{ students.name }}</td>
-                           <td>{{ students.emergency_mobile_number }}</td>
-                           <td>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ students.name }}</td>
+                            <td>{{ students.emergency_mobile_number }}</td>
+                            <td>
                                <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
                                    <i class="fa fa-search-plus"></i>
                                </a>
-                           </td>
-                          {% if request.user.is_teacher %}
-                           <td>
+                            </td>
+                            {% if request.user.is_teacher %}
+                            <td>
                                <a class="btn btn-info" href="{% url 'students:updates' students.uuid %}">
                                    <i class="fa fa-edit"></i>
                                </a>
-                           </td>
+                            </td>
+                            <td>
+                                {% csrf_token %}
+                                <div class="custom-control custom-checkbox">
+                                    <input type='checkbox' {% if students.paid == True %} checked {% else %} {% endif %} name='{{ students.name }}' class='custom-control-input' id="{{ students.pk }}"/>
+                                    <label class="custom-control-label" for="{{ students.pk }}"> Have Paid? </label>
+                                </div>
+                            </td>
                          {% endif %}
                        </tr>
                    {% endfor %}
@@ -73,3 +83,31 @@
       </div>
   </div>
 {% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            {#  #}
+            $("input[type='checkbox']").change(function () {
+                let value = '';
+                ($(this).is(":checked")) ? value = "True" : value = "False" ;
+                let name = $(this).attr("name");
+                let primary_key = $(this).attr("id")
+                $.ajax({
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': $("input[name='csrfmiddlewaretoken']").val(),
+                    },
+                    url: "{% url 'students:payment' %}",
+                    data: {
+                        'name': name,
+                        'value': value,
+                        'primary_key': primary_key,
+                    },
+                    success: function (data) {
+                        $("#messages").html(data);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock script %}

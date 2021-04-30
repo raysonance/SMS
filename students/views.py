@@ -183,6 +183,29 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
             return reverse_lazy("students:student_teacher_list")
 
 
+def payment(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        primary_key = request.POST.get("primary_key")
+        value = request.POST.get("value")
+        student = get_object_or_404(StudentModel, pk=primary_key)
+        try:
+            if value != "False":
+                student.paid = True
+                student.save()
+                messages.success(request, f"{name} has Paid")
+                return render(request, "others/message.html")
+            else:
+                student.paid = False
+                student.save()
+                messages.error(request, f"{name} has not Paid")
+                return render(request, "others/message.html")
+
+        except Exception as err:
+            messages.error(request, f"{err}")
+            return render(request, "others/message.html")
+
+
 # student list for teachers
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
@@ -190,7 +213,7 @@ def student_teacher_list(request):
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
-    ).select_related("class_name")
+    ).values("pk", "name", "emergency_mobile_number", "uuid", "paid")
 
     context = {"students": students}
 

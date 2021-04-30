@@ -17,7 +17,7 @@
           <img src="{{ request.user.adminmodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="{% url 'users:dash' %}" class="d-block">{{ request.user.adminmodel.name }}</a>
+          <a href="{% url 'users:dash' %}" class="d-block">Dashboard</a>
         </div>
       </div>
 
@@ -127,7 +127,7 @@
           <img src="{{ user.teachermodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="{% url 'teachers:dash' %}" class="d-block">{{ user.teachermodel.name }}</a>
+          <a href="{% url 'teachers:dash' %}" class="d-block">Dashboard</a>
         </div>
       </div>
 
@@ -260,7 +260,7 @@
           <img src="{{ request.user.studentmodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="{% url 'students:dash' %}" class="d-block">{{ request.user.studentmodel.name }}</a>
+          <a href="{% url 'students:dash' %}" class="d-block">Dashboard</a>
         </div>
       </div>
 

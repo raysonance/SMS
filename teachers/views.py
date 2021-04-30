@@ -220,16 +220,23 @@ def teacher_dashboard(request):
     total_student = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
-    )
+    ).values("pk", "paid")
     three_message = TeacherMessages.objects.filter(teacher=request.user.teachermodel)[
         :3
-    ].select_related("admin")
+    ].values("admin__name", "title", "private", "message", "updated_at")
+    paid_students = [student for student in total_student if student["paid"]]
+    unpaid = len(total_student) - len(paid_students)
+
     context = {
         "student": len(total_student),
+        "paid_students": len(paid_students),
         "message": three_message,
+        "unpaid": unpaid,
     }
     return render(request, "teachers/teacher.html", context)
 
+
+# to do: check soak for index
 
 # for teachers to add student result
 @login_required
@@ -305,7 +312,7 @@ def add_result(request):
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
     ).values("pk", "name")
-    session = Session.objects.all()
+    session = Session.objects.all().values("id", "session_name")
     subjects = Subject.objects.filter(
         class_name=request.user.teachermodel.class_name_id
     ).values("id", "subject_name")
@@ -333,7 +340,6 @@ def teachers_comment(request):
 
         if student_result:
             try:
-                # why wont it add when there are more than two subjects
                 for subjects in student_result:
                     if subjects.teachers_comment:
                         subjects.teachers_comment = teacher_comment
@@ -363,7 +369,7 @@ def show_result(request):
         sub_class=request.user.teachermodel.sub_class_id,
     ).values("pk", "name")
 
-    session = Session.objects.all()
+    session = Session.objects.all().values("id", "session_name")
 
     if request.method == "POST":
         student_id = request.POST.get("students")
@@ -394,19 +400,19 @@ def show_result(request):
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def promote_student(request):
-    id_name = request.user.teachermodel.class_name_id
     students = StudentModel.objects.filter(
-        class_name=id_name,
+        class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
     ).values("pk", "name")
 
-    new_class = id_name + 1
+    new_class = request.user.teachermodel.class_name_id + 1
 
     try:
         check_exists = Class.objects.filter(pk=new_class).exists()
 
         if check_exists:
-            new_class_name = get_object_or_404(Class, pk=new_class)
+            klass = Class.objects.values("pk", "class_name")
+            new_class_name = get_object_or_404(klass, pk=new_class)
         else:
             messages.error(request, "Can not promote in this class.")
             return redirect("teachers:dash")
@@ -414,7 +420,7 @@ def promote_student(request):
         messages.error(request, f"Can not promote in this class because {err}")
         return redirect("teachers:dash")
 
-    sub_class = SubClass.objects.filter(class_name=new_class)
+    sub_class = SubClass.objects.filter(class_name=new_class).values("pk", "sub_class")
 
     context = {
         "students": students,
@@ -448,6 +454,7 @@ def promote_student_process(request):
         if student_result:
             student.class_name = class_name
             student.sub_class = sub_class
+            student.paid = False
             student.save()
             messages.success(request, "Student promoted Successfully")
             return redirect("teachers:promote")
@@ -467,7 +474,7 @@ def send_messages(request):
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
-    )
+    ).values("pk", "name")
     if request.method == "POST":
         form = StudentMessageForm(request.POST)
         student_id = request.POST.get("students")
@@ -506,7 +513,7 @@ def send_general_message(request):
     )
     if request.method == "POST":
         for pupil in students:
-            student = get_object_or_404(StudentModel, pk=pupil.pk)
+            student = get_object_or_404(students, pk=pupil.pk)
             form = StudentMessageForm(request.POST)
             if form.is_valid():
                 student_message = form.save(commit=False)
@@ -558,7 +565,7 @@ def view_admin_messages(request):
     return render(request, "users/view_message.html", context)
 
 
-# message checking for students
+# view admin messagesfor teachers
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def view_general_messages(request):
@@ -573,7 +580,7 @@ def view_general_messages(request):
 
 # for teachers to update messages
 @method_decorator([teacher_admin], name="dispatch")
-class UpdateMessage(LoginRequiredMixin, UpdateView):
+class UpdateMessage(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = StudentMessages
     template_name = "teachers/update_message.html"
     login_url = "account_login"
@@ -583,6 +590,7 @@ class UpdateMessage(LoginRequiredMixin, UpdateView):
         "title",
         "message",
     ]
+    success_message = "Message updated successfully"
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -597,24 +605,23 @@ class UpdateMessage(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        messages.success(self.request, "Message updated successfully")
         # helps it to return directly to the previous page before the form
         nexto = self.request.POST.get("next", "/")
         return nexto
 
 
+# for teachers to delete messages
 @method_decorator([teacher_admin], name="dispatch")
-class DeleteMessage(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DeleteMessage(LoginRequiredMixin, DeleteView):
     model = StudentMessages
     template_name = "teachers/delete_message.html"
     login_url = "account_login"
     context_object_name = "message"
     slug_field = "slug"
     slug_url_kwarg = "slug_pk"
-    success_message = "Message has been deleted."
 
     def get_success_url(self):
-        messages.success(self.request, "Message deleted successfully")
+        messages.success(self.request, "messsage deleted successfully")
         # helps it to return directly to the previous page before the form
         nexto = self.request.POST.get("next", "/")
         return nexto
