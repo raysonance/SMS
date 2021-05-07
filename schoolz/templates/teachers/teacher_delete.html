@@ -10,6 +10,7 @@
           <form method="post" action="">
             {% csrf_token %}
             <p class="text-center"> Are you sure you want to delete <b>{{ teachers.teachermodel.name }}</b>. All records of this teacher would be erased.</p>
+               <input type="hidden" name="next" value="{{ request.GET.next }}">
             <button class="btn btn-danger btn-block" type="submit">Confirm</button>
           </form>
       </div>

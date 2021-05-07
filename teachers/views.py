@@ -27,10 +27,9 @@ from schoolz.users.models import Teacher
 from students.forms import StudentMessageForm
 from students.models import StudentMessages, StudentModel, Subject, SubjectResult
 
-from .forms import TeacherSignUpForm
-from .models import Class, Session, SubClass, TeacherMessages, TeacherModel
+from .forms import TeacherModelForm, TeacherSignUpForm
+from .models import Class, Section, Session, SubClass, TeacherMessages, TeacherModel
 
-# add paid boolean field to students
 # add protection to new functions
 
 
@@ -89,6 +88,7 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
     model = Teacher
     login_url = "account_login"
     form_class = TeacherSignUpForm
+    form2 = TeacherModelForm
     template_name = "teachers/signup.html"
 
     def get_form_kwargs(self):
@@ -99,6 +99,7 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs["user_type"] = "teachers"
+        kwargs["form2"] = self.form2
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
@@ -127,6 +128,26 @@ class TeacherListView(LoginRequiredMixin, ListView):
             "teachermodel__section",
         )
         return teachers
+
+
+# list for student and admin
+def teacher_list(request, section):
+    if section == "Primary":
+        get_section = get_object_or_404(Section, pk=1)
+        teachers = TeacherModel.objects.filter(section=get_section).select_related(
+            "class_name",
+            "sub_class",
+        )
+        context = {"teachers": teachers, "section": get_section}
+        return render(request, "teachers/list.html", context)
+    else:
+        get_section = get_object_or_404(Section, pk=2)
+        teachers = TeacherModel.objects.filter(section=get_section).select_related(
+            "class_name",
+            "sub_class",
+        )
+        context = {"teachers": teachers, "section": get_section}
+        return render(request, "teachers/list.html", context)
 
 
 class TeacherProfileView(LoginRequiredMixin, DetailView):
@@ -198,7 +219,9 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
             return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("teachers:list")
+        # helps it to return directly to the previous page before the form
+        nexto = self.request.POST.get("next", "/")
+        return nexto
 
 
 # admin only
@@ -206,12 +229,16 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
 class TeacherDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Teacher
     template_name = "teachers/teacher_delete.html"
-    success_url = reverse_lazy("teachers:list")
     login_url = "account_login"
     context_object_name = "teachers"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
     success_message = "Teacher has been deleted."
+
+    def get_success_url(self):
+        # helps it to return directly to the previous page before the form
+        nexto = self.request.POST.get("next", "/")
+        return nexto
 
 
 @login_required
@@ -221,22 +248,31 @@ def teacher_dashboard(request):
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
     ).values("pk", "paid")
+    total_student_count = len(total_student)
     three_message = TeacherMessages.objects.filter(teacher=request.user.teachermodel)[
         :3
-    ].values("admin__name", "title", "private", "message", "updated_at")
-    paid_students = [student for student in total_student if student["paid"]]
-    unpaid = len(total_student) - len(paid_students)
+    ]
+    for i in three_message:
+        if not i.was_published_recently():
+            del i
+
+    paid_students = len([student for student in total_student if student["paid"]])
+    unpaid = total_student_count - paid_students
 
     context = {
-        "student": len(total_student),
-        "paid_students": len(paid_students),
+        "student": total_student_count,
+        "paid_students": paid_students,
         "message": three_message,
         "unpaid": unpaid,
     }
     return render(request, "teachers/teacher.html", context)
 
 
-# to do: check soak for index
+# to do: create adding system for teachers to add students that have been promoted
+# example by adding new field
+
+
+# to do: make a program to mass make paid False for new session or promotion
 
 # for teachers to add student result
 @login_required

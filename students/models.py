@@ -2,6 +2,7 @@ import datetime
 import random
 import string
 
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import text, timezone
@@ -20,11 +21,13 @@ class StudentModel(models.Model):
         "users.User", on_delete=models.CASCADE, primary_key=True
     )
     name = models.CharField("Full Name", max_length=100)
-    photo = models.ImageField(upload_to="studentsfile/")
+    photo = models.ImageField(upload_to="studentsfile/", null=True, blank=True)
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
     sub_class = models.ForeignKey(
-        SubClass, on_delete=models.SET_NULL, null=True, default=1
+        SubClass,
+        on_delete=models.SET_NULL,
+        null=True,
     )
     paid = models.BooleanField(default=False)
     fathers_name = models.CharField("Father's Name", max_length=100)
@@ -47,6 +50,10 @@ class StudentModel(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.name, self.class_name)
+
+    @property
+    def get_photo_url(self):
+        return f"{settings.MEDIA_URL}{self.photo}"
 
     def get_absolute_url(self):
         return reverse("teachers:dash", args=None)
@@ -81,6 +88,7 @@ class StudentMessages(models.Model):
             self.slug = text.slugify(rand_slug() + "-" + self.title)
         super().save(*args, **kwargs)
 
+    @property
     def was_published_recently(self):
         return self.updated_at >= timezone.now() - datetime.timedelta(days=30)
 

@@ -78,35 +78,44 @@ user_redirect_view = UserRedirectView.as_view()
 @login_required
 @user_passes_test(user_is_admin, login_url="home")
 def admin_dashboard(request):
-    section = request.user.adminmodel.section
-    if section.pk == 1:
-        not_section = 2
+    # get current admin section
+    request.session["section_id"] = request.user.adminmodel.section_id
+    # assign other section
+    if request.session["section_id"] == 1:
+        section, not_section = 1, 2
     else:
-        not_section = 1
+        section, not_section = 2, 1
 
-    spectre = Section.objects.get(pk=not_section)
+    # get other section
+    spectre = Section.objects.get(id=not_section)
 
     section_students = StudentModel.objects.filter(section=section).values("pk", "paid")
     section_teachers = TeacherModel.objects.filter(section=section).count()
     other_students = StudentModel.objects.filter(section=not_section).values(
         "pk", "paid"
     )
+    students_count, other_students_count = len(section_students), len(other_students)
     other_teachers = TeacherModel.objects.filter(section=not_section).count()
 
-    paid_section_students = [student for student in section_students if student["paid"]]
-    unpaid = len(section_students) - len(paid_section_students)
+    # get number of paid students
+    paid_section_students = len(
+        [student for student in section_students if student["paid"]]
+    )
+    unpaid = students_count - paid_section_students
 
-    paid_other_students = [student for student in other_students if student["paid"]]
-    unpaid_other = len(other_students) - len(paid_other_students)
+    paid_other_students = len(
+        [student for student in other_students if student["paid"]]
+    )
+    unpaid_other = other_students_count - paid_other_students
 
     context = {
-        "student": len(section_students),
+        "student": students_count,
         "teacher": section_teachers,
-        "other_students": len(other_students),
+        "other_students": other_students_count,
         "other_teachers": other_teachers,
-        "paid_students": len(paid_section_students),
+        "paid_students": paid_section_students,
         "unpaid": unpaid,
-        "paid_other": len(paid_other_students),
+        "paid_other": paid_other_students,
         "unpaid_other": unpaid_other,
         "spectre": spectre.sections,
     }
@@ -154,7 +163,7 @@ def show_list(request):
 
         student = StudentModel.objects.filter(
             class_name=class_name, sub_class=sub_class
-        ).select_related("class_name")
+        ).select_related("class_name", "sub_class")
 
         context = {"student": student}
 

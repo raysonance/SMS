@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.db.models import CharField
@@ -138,6 +139,10 @@ class AdminModel(models.Model):
 
     def __str__(self):
         return "{} ({})".format(self.name, self.section)
+
+    @property
+    def get_photo_url(self):
+        return f"{settings.MEDIA_URL}{self.photo}"
 
     def get_absolute_url(self):
         return reverse("teachers:dash", args=None)

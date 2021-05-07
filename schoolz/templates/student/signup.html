@@ -43,6 +43,7 @@
         <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="StudentRegistrationForm"  data-class-url={% url 'teachers:load_class' %} data-subclass-url={% url 'students:load_subclass' %}>
           {% csrf_token %}
           {{ form|crispy }}
+          {{ forms|crispy }}
           <div class="custom-control custom-checkbox">
             <input type='checkbox' name='more' class='custom-control-input' id="customCheck"/>
             <label class="custom-control-label" for="customCheck"> Save and add more </label>

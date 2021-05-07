@@ -43,7 +43,7 @@
                         <th>Sub-class</th>
                         <th>Mobile number</th>
                         <th>Profile</th>
-                        {% if request.user.is_admin %}
+                        {% if request.user.is_admin and request.user.adminmodel.section == section %}
                         <th>Update</th>
                         <th>Delete</th>
                         {% endif %}
@@ -54,27 +54,27 @@
                     {% for teacher in teachers %}
                       <tr>
                           <td>{{ forloop.counter }}</td>
-                          <td>{{ teacher.teachermodel.name }}</td>
-                          <td>{{ teacher.teachermodel.class_name }}</td>
+                          <td>{{ teacher.name }}</td>
+                          <td>{{ teacher.class_name.class_name }}</td>
                         {% if request.user.is_admin %}
-                          <td>{{ teacher.teachermodel.sub_class }}</td>
+                          <td>{{ teacher.sub_class.sub_class }}</td>
                         {% else %}
-                          <td>{{ teacher.teachermodel.sub_class.sub_class }}</td>
+                          <td>{{ teacher.sub_class.sub_class }}</td>
                         {% endif %}
-                          <td>{{ teacher.teachermodel.mobile }}</td>
+                          <td>{{ teacher.mobile }}</td>
                           <td>
                               <a class="btn btn-success" href="{% url 'teachers:profile' teacher.uuid %}">
                                   <i class="fa fa-search-plus"></i>
                               </a>
                           </td>
-                            {% if request.user.is_admin and request.user.adminmodel.section == teacher.teachermodel.section %}
+                            {% if request.user.is_admin and request.user.adminmodel.section == teacher.section %}
                           <td>
-                              <a class="btn btn-info" href="{% url 'teachers:admin_update' teacher.uuid %}">
+                              <a class="btn btn-info" href="{% url 'teachers:admin_update' teacher.uuid %}?next={{ request.path|urlencode }}">
                                   <i class="fa fa-edit"></i>
                               </a>
                           </td>
                           <td>
-                              <a class="btn btn-danger" href="{% url 'teachers:delete' teacher.uuid %}">
+                              <a class="btn btn-danger" href="{% url 'teachers:delete' teacher.uuid %}?next={{ request.path|urlencode }}">
                                   <i class="fa fa-trash"></i>
                               </a>
                           </td>

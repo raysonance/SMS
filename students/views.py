@@ -18,7 +18,7 @@ from schoolz.users.models import Student
 from teachers.models import Class, Session, SubClass, TeacherModel
 from teachers.views import user_is_teacher
 
-from .forms import StudentAdminSignUpForm, StudentSignUpForm
+from .forms import StudentAdminSignUpForm, StudentModelForm, StudentSignUpForm
 from .models import StudentMessages, StudentModel, Subject, SubjectResult
 
 
@@ -65,6 +65,7 @@ class StudentAdminSignupView(LoginRequiredMixin, CreateView):
     model = Student
     login_url = "account_login"
     form_class = StudentAdminSignUpForm
+    form2 = StudentModelForm
     template_name = "student/signup.html"
 
     def get_form_kwargs(self):
@@ -75,6 +76,7 @@ class StudentAdminSignupView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs["user_type"] = "students"
+        kwargs["forms"] = self.form2
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):

@@ -2,6 +2,7 @@ import datetime
 import random
 import string
 
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import text, timezone
@@ -62,16 +63,14 @@ class TeacherModel(models.Model):
     user = models.OneToOneField(
         "users.User", on_delete=models.CASCADE, primary_key=True
     )
-    name = models.CharField("Full Name", max_length=150, default="wannabe")
-    photo = models.ImageField(upload_to="teacherfile/")
+    name = models.CharField("Full Name", max_length=150)
+    photo = models.ImageField(upload_to="teacherfile/", null=True, blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
-    sub_class = models.ForeignKey(
-        SubClass, on_delete=models.SET_NULL, null=True, default=1
-    )
-    address = models.TextField(default="clouds")
-    mobile = models.CharField(max_length=11, blank=True, null=True)
+    sub_class = models.ForeignKey(SubClass, on_delete=models.SET_NULL, null=True)
+    address = models.TextField()
+    mobile = models.CharField(max_length=11, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     joining_date = models.DateField(blank=True, null=True)
 
@@ -80,6 +79,10 @@ class TeacherModel(models.Model):
 
     def __str__(self):
         return "{} ({})".format(self.name, self.class_name)
+
+    @property
+    def get_photo_url(self):
+        return f"{settings.MEDIA_URL}{self.photo}"
 
     def get_absolute_url(self):
         return reverse("users:dash", args=None)

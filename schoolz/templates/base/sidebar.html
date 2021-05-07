@@ -14,7 +14,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{ request.user.adminmodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ request.user.adminmodel.get_photo_url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="{% url 'users:dash' %}" class="d-block">Dashboard</a>
@@ -76,9 +76,15 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{% url 'teachers:list' %}" class="nav-link">
+                <a href="{% url 'teachers:list' 'Primary' %}" class="nav-link">
                   <i class="fas fa-list nav-icon"></i>
-                  <p>Teacher List</p>
+                  <p>Primary Teachers</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'teachers:list' 'Secondary' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>Secondary Teachers</p>
                 </a>
               </li>
             </ul>
@@ -124,7 +130,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{ user.teachermodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ user.teachermodel.get_photo_url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="{% url 'teachers:dash' %}" class="d-block">Dashboard</a>
@@ -257,7 +263,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{ request.user.studentmodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ request.user.studentmodel.get_photo_url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="{% url 'students:dash' %}" class="d-block">Dashboard</a>
@@ -299,9 +305,15 @@
 
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{% url 'teachers:list' %}" class="nav-link">
+                <a href="{% url 'teachers:list' 'Primary' %}" class="nav-link">
                   <i class="fas fa-list nav-icon"></i>
-                  <p>Teacher List</p>
+                  <p>Primary Teachers</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'teachers:list' 'Secondary' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>Secondary Teachers</p>
                 </a>
               </li>
             </ul>

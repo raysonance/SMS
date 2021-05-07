@@ -4,7 +4,6 @@ from .views import (
     AdminTeacherUpdateView,
     DeleteMessage,
     TeacherDeleteView,
-    TeacherListView,
     TeacherProfileView,
     TeacherSignupView,
     TeacherUpdateView,
@@ -20,6 +19,7 @@ from .views import (
     show_result,
     show_teachers_comment,
     teacher_dashboard,
+    teacher_list,
     teachers_comment,
     view_admin_messages,
     view_general_messages,
@@ -29,7 +29,7 @@ from .views import (
 app_name = "teachers"
 
 urlpatterns = [
-    path("list/", TeacherListView.as_view(), name="list"),
+    path("<slug:section>/list/", teacher_list, name="list"),
     path("signup/", TeacherSignupView.as_view(), name="signup"),
     path("<slug:uuid_pk>/edit/", TeacherUpdateView.as_view(), name="update"),
     path(

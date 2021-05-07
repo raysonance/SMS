@@ -27,6 +27,7 @@
 {% endif %}
 {% if message %}
 {% with articles=message %}
+<div class="row">
 {% for article in articles %}
   <div class="col-md-6">
     <div class="card {% if article.private == True %} card-danger {% else %} card-success {% endif %} collapsed-card">
@@ -60,6 +61,7 @@
 <!-- /.col -->
     <br/>
 {% endfor %}
+</div>
 {% endwith %}
 {% else %}
 <p> There are no messages. </p>
