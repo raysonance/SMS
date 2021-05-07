@@ -11,6 +11,12 @@ Behold My Awesome Project!
      :alt: Black code style
 
 
+Description 
+--------
+
+This is a school website project. It can be used by admin to add teachers, send messages to teachers,  add students, view the number of students that have paid in school. It can be used by teachers to add students, edit student profile, add results and comments, send messages to students, look up students profile, view paid students in class. It can be used by students to view messages,  download and print results. All three users can search for s
+
+
 Settings
 --------
 
@@ -24,17 +30,16 @@ Basic Commands
 Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
 
-* To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+* Three types of users exist that can be created. The admin, teacher and student. The final one is the director but this cannot be created normally but is created only at the start of the project as a superuser. 
 
 * To create an **superuser account**, use this command::
 
     $ python manage.py createsuperuser
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+For convenience, you can keep your admin user logged in on Chrome and your teacher user logged in on Firefox (or similar) interchangeably, so that you can see how the site behaves for both kinds of users.
 
 Type checks
 ^^^^^^^^^^^
-
 Running type checks with mypy:
 
 ::
