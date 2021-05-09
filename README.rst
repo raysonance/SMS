@@ -14,7 +14,7 @@ Behold My Awesome Project!
 Description 
 --------
 
-This is a school website project. It can be used by admin to add teachers, send messages to teachers,  add students, view the number of students that have paid in school. It can be used by teachers to add students, edit student profile, add results and comments, send messages to students, look up students profile, view paid students in class. It can be used by students to view messages,  download and print results. All three users can search for s
+This is a school website project. It can be used by admin to add teachers, send messages to teachers,  add students, view the number of students that have paid in school. It can be used by teachers to add students, edit student profile, add results and comments, send messages to students, look up students profile, view paid students in class. It can be used by students to view messages,  download and print results. All three users can search for other users. 
 
 
 Settings
