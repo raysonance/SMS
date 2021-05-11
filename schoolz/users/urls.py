@@ -7,6 +7,7 @@ from .views import (
     DeleteMessage,
     UpdateMessage,
     admin_dashboard,
+    load_students,
     send_general_message,
     send_messages,
     show_list,
@@ -19,6 +20,7 @@ from .views import (
 app_name = "users"
 
 urlpatterns = [
+    path("load_students/", load_students, name="load"),
     path(
         "<slug:slug_pk>/message_edit/", UpdateMessage.as_view(), name="message_update"
     ),

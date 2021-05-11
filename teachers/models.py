@@ -7,8 +7,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils import text, timezone
 
-# Create your models here.
-
 
 class Section(models.Model):
     id = models.AutoField(primary_key=True)
@@ -65,17 +63,17 @@ class TeacherModel(models.Model):
     )
     name = models.CharField("Full Name", max_length=150)
     photo = models.ImageField(upload_to="teacherfile/", null=True, blank=True)
-    date_of_birth = models.DateField(blank=True, null=True)
+    date_of_birth = models.DateField(blank=False)
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
     sub_class = models.ForeignKey(SubClass, on_delete=models.SET_NULL, null=True)
     address = models.TextField()
-    mobile = models.CharField(max_length=11, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
-    joining_date = models.DateField(blank=True, null=True)
+    mobile = models.CharField(max_length=11)
+    email = models.CharField(max_length=255, blank=True)
+    joining_date = models.DateField(blank=True)
 
     class Meta:
-        ordering = ["joining_date", "name"]
+        ordering = ["name"]
 
     def __str__(self):
         return "{} ({})".format(self.name, self.class_name)

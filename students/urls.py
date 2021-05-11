@@ -34,7 +34,6 @@ urlpatterns = [
     path("load_subclass/", load_sub_class, name="load_subclass"),
     path("view_message/", view_messages, name="message"),
     path("general_message/", view_general_messages, name="general_message"),
-    # path("searches/", search_student, name="search_student"),
     path("find/", search_all, name="search_all"),
     path("payment/", payment, name="payment"),
 ]

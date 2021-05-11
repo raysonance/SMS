@@ -21,7 +21,7 @@ class StudentModel(models.Model):
         "users.User", on_delete=models.CASCADE, primary_key=True
     )
     name = models.CharField("Full Name", max_length=100)
-    photo = models.ImageField(upload_to="studentsfile/", null=True, blank=True)
+    photo = models.ImageField(upload_to="studentsfile/", blank=True, null=True)
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
     sub_class = models.ForeignKey(
@@ -32,9 +32,9 @@ class StudentModel(models.Model):
     paid = models.BooleanField(default=False)
     fathers_name = models.CharField("Father's Name", max_length=100)
     mothers_name = models.CharField("Mother's Name", max_length=100)
-    date_of_birth = models.DateField("Birth Date", blank=True, null=True)
+    date_of_birth = models.DateField("Birth Date")
     email = models.EmailField("Email Address")
-    address = models.TextField()
+    address = models.TextField(blank=True)
     emergency_mobile_number = models.CharField("Mobile Number", max_length=11)
     created_by = models.ForeignKey(
         "users.User", on_delete=models.SET_NULL, related_name="+", null=True
@@ -56,7 +56,13 @@ class StudentModel(models.Model):
         return f"{settings.MEDIA_URL}{self.photo}"
 
     def get_absolute_url(self):
-        return reverse("teachers:dash", args=None)
+        try:
+            if self.user.is_teacher:
+                return reverse("teachers:dash", args=None)
+            else:
+                return reverse("users:dash", args=None)
+        except Exception:
+            return reverse("users:dash", args=None)
 
 
 def rand_slug():

@@ -104,6 +104,7 @@ class AdminSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = Admin
         fields = UserCreationForm.Meta.fields + ("email",)
+        exclude = ["username"]
 
     def clean_username(self):
         username = self.cleaned_data["username"]
@@ -117,6 +118,7 @@ class AdminSignUpForm(UserCreationForm):
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)
+        user.name = self.cleaned_data.get("name")
         user.save()
         admin = AdminModel.objects.create(
             user=user,

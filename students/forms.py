@@ -62,10 +62,12 @@ class StudentSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = Student
         fields = UserCreationForm.Meta.fields + ("email",)
+        exclude = ["username"]
 
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)
+        user.name = self.cleaned_data.get("name")
         user.save()
         student = StudentModel.objects.create(
             user=user,
@@ -95,6 +97,7 @@ class StudentModelForm(forms.ModelForm):
         exclude = ["user", "created_by", "updated_by", "paid", "email"]
         widgets = {
             "date_of_birth": forms.TextInput(attrs={"type": "date"}),
+            "photo": forms.ClearableFileInput(attrs={"class": "form-control"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -131,7 +134,6 @@ class StudentModelForm(forms.ModelForm):
             ].queryset = self.instance.class_name.sub_class_set.order_by("sub_class")
 
 
-# do the same for teachers
 class StudentAdminSignUpForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
@@ -141,37 +143,46 @@ class StudentAdminSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = Student
         fields = UserCreationForm.Meta.fields + ("email",)
+        exclude = ["username"]
 
     @transaction.atomic
     def save(self):
-        student_model = StudentModelForm(self.request.POST)
-        student_model.is_valid()
-        if student_model.cleaned_data.get("section") != self.user.adminmodel.section:
-            user = super().save(commit=False)
-            messages.error(self.request, "This action is not allowed.")
-            return user
+        student_model = StudentModelForm(self.request.POST, self.request.FILES)
+        if student_model.is_valid():
+            if (
+                student_model.cleaned_data.get("section")
+                != self.user.adminmodel.section
+            ):
+                user = super().save(commit=False)
+                messages.error(self.request, "This action is not allowed.")
+                return user
+            else:
+                user = super().save(commit=False)
+                user.name = student_model.cleaned_data.get("name")
+                user.save()
+                student = StudentModel.objects.create(
+                    user=user,
+                    uuid=user.uuid,
+                    name=student_model.cleaned_data.get("name"),
+                    photo=student_model.cleaned_data.get("photo"),
+                    section=student_model.cleaned_data.get("section"),
+                    class_name=student_model.cleaned_data.get("class_name"),
+                    sub_class=student_model.cleaned_data.get("sub_class"),
+                    fathers_name=student_model.cleaned_data.get("fathers_name"),
+                    mothers_name=student_model.cleaned_data.get("mothers_name"),
+                    date_of_birth=student_model.cleaned_data.get("date_of_birth"),
+                    email=self.cleaned_data.get("email"),
+                    address=student_model.cleaned_data.get("address"),
+                    emergency_mobile_number=student_model.cleaned_data.get(
+                        "emergency_mobile_number"
+                    ),
+                    created_by=self.user,
+                    updated_by=self.user,
+                )
+                student.save()
+                messages.success(self.request, "Student has been added.")
+                return user
         else:
             user = super().save(commit=False)
-            user.save()
-            student = StudentModel.objects.create(
-                user=user,
-                uuid=user.uuid,
-                name=student_model.cleaned_data.get("name"),
-                photo=student_model.cleaned_data.get("photo"),
-                section=student_model.cleaned_data.get("section"),
-                class_name=student_model.cleaned_data.get("class_name"),
-                sub_class=student_model.cleaned_data.get("sub_class"),
-                fathers_name=student_model.cleaned_data.get("fathers_name"),
-                mothers_name=student_model.cleaned_data.get("mothers_name"),
-                date_of_birth=student_model.cleaned_data.get("date_of_birth"),
-                email=self.cleaned_data.get("email"),
-                address=student_model.cleaned_data.get("address"),
-                emergency_mobile_number=student_model.cleaned_data.get(
-                    "emergency_mobile_number"
-                ),
-                created_by=self.user,
-                updated_by=self.user,
-            )
-            student.save()
-            messages.success(self.request, "Student has been added.")
+            messages.success(self.request, "Form is invalid.")
             return user

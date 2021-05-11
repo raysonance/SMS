@@ -115,7 +115,6 @@
 </section>
 {% endblock %}
 {% block script %}
-{% compress js %}
 <script>
   {# get the content #}
   let result_content = document.getElementById("result_content");
@@ -320,5 +319,4 @@ $("#fill_result").on('click', function(){
 });
 });
 </script>
-{% endcompress %}
 {% endblock script %}

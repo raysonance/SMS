@@ -1,3 +1,5 @@
+import random
+import string
 import uuid
 
 from django.conf import settings
@@ -27,7 +29,9 @@ class User(AbstractUser):
     )
 
     #: First and last name do not cover name patterns around the globe
+    username = CharField(_("Username"), blank=True, max_length=255, unique=True)
     name = CharField(_("Name of User"), blank=True, max_length=255)
+    email = models.EmailField(_("email address"), blank=False, unique=True)
     uuid = models.UUIDField(
         unique=True,
         default=uuid.uuid4,
@@ -38,7 +42,7 @@ class User(AbstractUser):
         return reverse("users:detail", kwargs={"username": self.username})
 
 
-class AdminManager(BaseUserManager):
+class FavourManager(BaseUserManager):
     def create_user(self, email, password=None):
         if not email:
             raise ValueError("Users must have a valid email.")
@@ -56,52 +60,26 @@ class AdminManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
+class AdminManager(FavourManager):
     def get_queryset(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(type=User.Types.ADMIN)
 
 
-class TeacherManager(BaseUserManager):
-    def create_user(self, email, password=None):
-        if not email:
-            raise ValueError("Users must have a valid email.")
-        user = self.model(email=self.normalize_email(email))
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, password=None):
-        user = self.create_user(
-            email,
-            password=password,
-        )
-        user.is_admin = True
-        user.save(using=self._db)
-        return user
-
+class TeacherManager(FavourManager):
     def get_queryset(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(type=User.Types.TEACHER)
 
 
-class StudentManager(BaseUserManager):
-    def create_user(self, email, password=None):
-        if not email:
-            raise ValueError("Users must have a valid email.")
-        user = self.model(email=self.normalize_email(email))
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, password=None):
-        user = self.create_user(
-            email,
-            password=password,
-        )
-        user.is_admin = True
-        user.save(using=self._db)
-        return user
-
+class StudentManager(FavourManager):
     def get_queryset(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(type=User.Types.STUDENT)
+
+
+def rand_slug():
+    return "".join(
+        random.choice(string.ascii_letters + string.digits) for _ in range(6)
+    )
 
 
 class Admin(User):
@@ -114,6 +92,11 @@ class Admin(User):
         if not self.pk:
             self.type = User.Types.ADMIN
             self.is_admin = True
+        if not self.username:
+            username = self.name + "-" + rand_slug()
+            while Admin.objects.filter(username=username):
+                username = self.name + "-" + rand_slug()
+            self.username = username
         return super().save(*args, **kwargs)
 
 
@@ -158,6 +141,11 @@ class Teacher(User):
         if not self.pk:
             self.type = User.Types.TEACHER
             self.is_teacher = True
+        if not self.username:
+            username = self.name + "-" + rand_slug()
+            while Teacher.objects.filter(username=username):
+                username = self.name + "-" + rand_slug()
+            self.username = username
         return super().save(*args, **kwargs)
 
 
@@ -171,4 +159,9 @@ class Student(User):
         if not self.pk:
             self.type = User.Types.STUDENT
             self.is_student = True
+        if not self.username:
+            username = self.name + "-" + rand_slug()
+            while Student.objects.filter(username=username):
+                username = self.name + "-" + rand_slug()
+            self.username = username
         return super().save(*args, **kwargs)

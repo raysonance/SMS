@@ -26,8 +26,27 @@ from .models import Admin, AdminModel
 User = get_user_model()
 
 
-class UserDetailView(LoginRequiredMixin, DetailView):
+def load_students(request):
+    if request.method == "GET":
+        # get class and subclass id
+        class_id = request.GET.get("class_name")
+        sub_class_id = request.GET.get("sub_class")
+        if class_id and sub_class_id:
+            request.session["sub_class"] = sub_class_id
+            # get class and subclass
+            class_name = get_object_or_404(Class, pk=class_id)
+            sub_class = get_object_or_404(SubClass, pk=sub_class_id)
+            # get students
+            student = StudentModel.objects.filter(
+                class_name=class_name, sub_class=sub_class
+            ).select_related("class_name", "sub_class")
+        else:
+            student = {}
+        context = {"student": student}
+        return render(request, "others/student_list.html", context)
 
+
+class UserDetailView(LoginRequiredMixin, DetailView):
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
@@ -37,7 +56,6 @@ user_detail_view = UserDetailView.as_view()
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
-
     model = User
     fields = ["name"]
 
@@ -58,7 +76,6 @@ user_update_view = UserUpdateView.as_view()
 
 
 class UserRedirectView(LoginRequiredMixin, RedirectView):
-
     permanent = False
 
     def get_redirect_url(self):
@@ -153,25 +170,13 @@ class AdminDetailView(LoginRequiredMixin, DetailView):
 @user_passes_test(user_is_admin, login_url="home")
 def show_list(request):
     class_name = Class.objects.filter(section=request.user.adminmodel.section_id)
-    sub_class = SubClass.objects.all()
-    if request.method == "POST":
-        class_id = request.POST.get("class_name")
-        sub_class_id = request.POST.get("sub_class")
-
-        class_name = get_object_or_404(Class, pk=class_id)
-        sub_class = get_object_or_404(SubClass, pk=sub_class_id)
-
-        student = StudentModel.objects.filter(
-            class_name=class_name, sub_class=sub_class
-        ).select_related("class_name", "sub_class")
-
-        context = {"student": student}
-
-        return render(request, "student/admin_student.html", context)
+    sub_class = SubClass.objects.filter(
+        class_name__section=request.user.adminmodel.section_id
+    ).select_related("class_name")
 
     context = {"class_name": class_name, "sub_class": sub_class}
 
-    return render(request, "teachers/admin_student.html", context)
+    return render(request, "student/admin_student.html", context)
 
 
 @method_decorator([admin_required], name="dispatch")
@@ -182,7 +187,7 @@ class AdminUpdateView(LoginRequiredMixin, UpdateView):
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
 
-    fields = ["name", "section", "photo", "date_of_birth", "mobile", "email"]
+    fields = ["name", "photo", "date_of_birth", "mobile", "email"]
 
     def get_success_url(self):
         return reverse_lazy("users:dash")

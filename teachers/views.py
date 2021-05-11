@@ -27,7 +27,7 @@ from schoolz.users.models import Teacher
 from students.forms import StudentMessageForm
 from students.models import StudentMessages, StudentModel, Subject, SubjectResult
 
-from .forms import TeacherModelForm, TeacherSignUpForm
+from .forms import TeacherModelForm, TeacherSignUpForm, TeacherUpdateForm
 from .models import Class, Section, Session, SubClass, TeacherMessages, TeacherModel
 
 # add protection to new functions
@@ -194,13 +194,14 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = TeacherModel
     login_url = "account_login"  # "account_login"
     template_name = "teachers/update.html"
+    form_class = TeacherUpdateForm
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
-    fields = [
-        "section",
-        "class_name",
-        "sub_class",
-    ]
+
+    def get_form_kwargs(self):
+        kwargs = super(AdminTeacherUpdateView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user.adminmodel
+        return kwargs
 
     def form_valid(self, form):
         self.object = form.save(commit=False)

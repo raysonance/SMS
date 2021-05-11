@@ -1,0 +1,29 @@
+{% if request.user.is_admin and student %}
+   {% for students in student %}
+       <tr>
+           <td>{{ forloop.counter }}</td>
+           <td>{{ students.name }}</td>
+           <td>{{ students.class_name }}</td>
+           <td>{{ students.sub_class.sub_class }}</td>
+           <td>
+               <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
+                   <i class="fa fa-search-plus"></i>
+               </a>
+           </td>
+            <td>
+               <a class="btn btn-info" href="{% url 'students:update' students.uuid %}">
+                   <i class="fa fa-edit"></i>
+               </a>
+            </td>
+            <td>
+               <a class="btn btn-danger" href="{% url 'students:delete' students.uuid %}">
+                   <i class="fa fa-trash"></i>
+               </a>
+            </td>
+       </tr>
+   {% endfor %}
+{% else %}
+  <tr>
+    <td colspan="9"> No student found </td>
+  </tr>
+{% endif %}

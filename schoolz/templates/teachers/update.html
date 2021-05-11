@@ -10,7 +10,7 @@
 <body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-logo">
-      <a><b>Teacher</b> Update</a>
+      <a> Update</a>
     </div>
     {% if messages %}
       <div class="form-group">
@@ -38,7 +38,7 @@
     <!-- /.login-logo -->
     <div class="card">
       <div class="card-body login-card-body">
-         <p class="login-box-msg">{% trans 'Update teacher.' %}</p>
+         <p class="login-box-msg">{% trans 'Update.' %}</p>
          <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="TeacherRegistrationForm" data-class-url={% url 'teachers:load_class' %} data-subclass-url={% url 'teachers:load_subclass' %}>
            {% csrf_token %}
            {{ form|crispy }}

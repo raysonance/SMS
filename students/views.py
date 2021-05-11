@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
@@ -31,7 +31,29 @@ def load_sub_class(request):
     return render(request, "others/subclass_dropdown_list_options.html", context)
 
 
-# fast
+def payment(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        primary_key = request.POST.get("primary_key")
+        value = request.POST.get("value")
+        student = get_object_or_404(StudentModel, pk=primary_key)
+        try:
+            if value != "False":
+                student.paid = True
+                student.save()
+                messages.success(request, f"{name} has Paid")
+                return render(request, "others/message.html")
+            else:
+                student.paid = False
+                student.save()
+                messages.error(request, f"{name} has not Paid")
+                return render(request, "others/message.html")
+
+        except Exception as err:
+            messages.error(request, f"{err}")
+            return render(request, "others/message.html")
+
+
 # signup of students for teachers
 @method_decorator([teacher_required], name="dispatch")
 class StudentSignupView(LoginRequiredMixin, CreateView):
@@ -58,7 +80,6 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
             return redirect("teachers:dash")
 
 
-# slow
 # signup of students for admin
 @method_decorator([admin_required], name="dispatch")
 class StudentAdminSignupView(LoginRequiredMixin, CreateView):
@@ -148,7 +169,7 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
             return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("users:dash")
+        return reverse("students:profile", args=[self.object.uuid])
 
 
 # update view of student for teacher and student
@@ -185,29 +206,6 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
             return reverse_lazy("students:student_teacher_list")
 
 
-def payment(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        primary_key = request.POST.get("primary_key")
-        value = request.POST.get("value")
-        student = get_object_or_404(StudentModel, pk=primary_key)
-        try:
-            if value != "False":
-                student.paid = True
-                student.save()
-                messages.success(request, f"{name} has Paid")
-                return render(request, "others/message.html")
-            else:
-                student.paid = False
-                student.save()
-                messages.error(request, f"{name} has not Paid")
-                return render(request, "others/message.html")
-
-        except Exception as err:
-            messages.error(request, f"{err}")
-            return render(request, "others/message.html")
-
-
 # student list for teachers
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
@@ -241,7 +239,7 @@ def student_list(request):
 class StudentDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Student
     template_name = "student/student_delete.html"
-    success_url = reverse_lazy("students:list")
+    success_url = reverse_lazy("users:show_list")
     login_url = "account_login"
     context_object_name = "students"
     slug_field = "uuid"
@@ -319,7 +317,7 @@ def show_result(request):
                     comment = comments.teachers_comment
                     break
                 else:
-                    comment = "No comment has been inputed for this student."
+                    comment = "No comment has been inputted for this student."
 
             context = {
                 "student_result": student_result,
