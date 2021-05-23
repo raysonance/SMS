@@ -51,6 +51,7 @@
           <div class="control-group">
             <div class="controls">
               <button type="submit" class="btn btn-primary my-5">Sign Up</button>
+              <a class="text-red ml-3 ml-md-5" href="{% if user.is_admin %} {% url 'users:dash' %} {% else %} {% url 'teachers:dash' %} {% endif %}">Dashboard &#8954</a>
             </div>
           </div>
         </form>

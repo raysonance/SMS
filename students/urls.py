@@ -7,6 +7,7 @@ from .views import (  # search_student,
     StudentSignupView,
     StudentTeacherUpdateView,
     StudentUpdateView,
+    active,
     load_sub_class,
     payment,
     search_all,
@@ -36,4 +37,5 @@ urlpatterns = [
     path("general_message/", view_general_messages, name="general_message"),
     path("find/", search_all, name="search_all"),
     path("payment/", payment, name="payment"),
+    path("<slug:uuid_key>/active/", active, name="active"),
 ]

@@ -22,6 +22,7 @@
           <div class="control-group">
             <div class="controls">
               <button type="submit" class="btn btn-primary my-5">Update</button>
+              <a class="text-red ml-3 ml-md-5" href="{% if user.is_admin %} {% url 'users:dash' %} {% elif user.is_teacher %} {% url 'teachers:dash' %} {% else %} {% url 'students:dash' %} {% endif %}">Dashboard &#8954</a>
             </div>
           </div>
         </form>
@@ -34,8 +35,8 @@
     {{ block.super }}
     <script>
         $("#id_section").change(function () {
-          var url = $("#StudentUpdateForm").attr("data-class-url");
-          var SectionId = $(this).val();
+          let url = $("#StudentUpdateForm").attr("data-class-url");
+          let SectionId = $(this).val();
 
           $.ajax({
             url: url,

@@ -140,6 +140,7 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "student/update.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
+
     fields = [
         "name",
         "photo",
@@ -164,6 +165,28 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
             return super().form_invalid(form)
         else:
             self.object.updated_by = self.request.user
+            # set paid field to false if  class is changed
+            if "class_name" in form.changed_data:
+                self.object.paid = False
+            if "class_name" or "sub_class" in form.changed_data:
+                self.object.active = False
+
+            if "email" in form.changed_data:
+                try:
+                    student = Student.objects.get(pk=self.object.pk)
+                    student.email = self.object.email
+                    student.save()
+                except Exception as err:
+                    messages.error(self.request, f"{err}")
+                    return super().form_invalid(form)
+            if "name" in form.changed_data:
+                try:
+                    student = Student.objects.get(pk=self.object.pk)
+                    student.name = self.object.name
+                    student.save()
+                except Exception as err:
+                    messages.error(self.request, f"{err}")
+                    return super().form_invalid(form)
             form.save()
             messages.success(self.request, "Student has been updated")
             return super().form_valid(form)
@@ -186,7 +209,6 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
         "fathers_name",
         "mothers_name",
         "date_of_birth",
-        "email",
         "address",
         "emergency_mobile_number",
     ]
@@ -194,6 +216,14 @@ class StudentTeacherUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.updated_by = self.request.user
+        if "name" in form.changed_data:
+            try:
+                student = Student.objects.get(pk=self.object.pk)
+                student.name = self.object.name
+                student.save()
+            except Exception as err:
+                messages.error(self.request, f"{err}")
+                return super().form_invalid(form)
         form.save()
         return super().form_valid(form)
 
@@ -213,11 +243,30 @@ def student_teacher_list(request):
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
+        active=True,
+    ).values("pk", "name", "emergency_mobile_number", "uuid", "paid")
+    inactive_students = StudentModel.objects.filter(
+        class_name=request.user.teachermodel.class_name_id,
+        sub_class=request.user.teachermodel.sub_class_id,
+        active=False,
     ).values("pk", "name", "emergency_mobile_number", "uuid", "paid")
 
-    context = {"students": students}
+    context = {"students": students, "inactive": inactive_students}
 
     return render(request, "student/student_list.html", context)
+
+
+@login_required
+def active(request, uuid_key):
+    try:
+        student = get_object_or_404(StudentModel, uuid=uuid_key)
+        student.active = True
+        student.save()
+        messages.success(request, f"{student.name} has been made active")
+        return redirect("students:student_teacher_list")
+    except Exception as err:
+        messages.error(request, f"{err}")
+        return redirect("students:student_teacher_list")
 
 
 # student list for students
@@ -251,28 +300,35 @@ class StudentDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
 @login_required
 @user_passes_test(user_is_student, login_url="home")
 def student_dashboard(request):
-    class_name = request.user.studentmodel.class_name_id
-    sub_class = request.user.studentmodel.sub_class_id
+    class_name = int(request.user.studentmodel.class_name_id)
+    sub_class = int(request.user.studentmodel.sub_class_id)
     total_student = StudentModel.objects.filter(
         class_name=class_name,
         sub_class=sub_class,
-    )
+    ).count()
     teachers = TeacherModel.objects.filter(
         class_name=class_name,
         sub_class=sub_class,
     )
     courses = Subject.objects.filter(
         class_name=class_name,
+    ).count()
+
+    sub_class = SubClass.objects.filter(id=sub_class).values(
+        "class_name__class_name", "sub_class"
     )
 
-    three_message = StudentMessages.objects.filter(student=request.user.studentmodel)[
-        :3
-    ].select_related("teacher", "student")
+    three_message = [
+        x
+        for x in StudentMessages.objects.filter(student=request.user.studentmodel)[:3]
+        if x.was_published_recently()
+    ]
 
     context = {
-        "student": len(total_student),
+        "student": total_student,
         "teachers": teachers,
-        "courses": len(courses),
+        "courses": courses,
+        "sub_class": sub_class,
         "message": three_message,
     }
     return render(request, "student/student_dashboard.html", context)

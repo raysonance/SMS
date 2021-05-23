@@ -69,12 +69,14 @@
           </li>
           <!-- Menu Body -->
           <li class="user-body">
-            <div class="row">
+            <div class="row"><!--
               <div class="col-4 text-center">
                 <a href="{% url 'account_email' %}">Modify Email</a>
-              </div>
+              </div> -->
               <div class="col-4 text-center">
                 <a href="{% url 'teachers:update' request.user.uuid %}">Update Profile</a>
+              </div>
+              <div class="col-4 text-center">
               </div>
               <div class="col-4 text-center">
                 <a href="{% url 'account_change_password' %}">Change Password?</a>
@@ -104,14 +106,16 @@
             </p>
           </li>
           <li class="user-body">
-            <div class="row">
+            <div class="row"> <!--
               <div class="col-4 text-center">
                 <a href="{% url 'account_email' %}">Modify Email</a>
-              </div>
-              <div class="col-4 text-center">
+              </div> -->
+              <div class="col-4 text-left">
                 <a href="{% url 'users:admin_update' request.user.uuid %}">Update Profile</a>
               </div>
               <div class="col-4 text-center">
+              </div>
+              <div class="col-4 text-right">
                 <a href="{% url 'account_change_password' %}">Change Password?</a>
               </div>
             </div>
@@ -139,15 +143,17 @@
             </p>
           </li>
           <li class="user-body">
-            <div class="row">
+            <div class="row"> <!--
               <div class="col-4 text-center">
                 <a href="{% url 'account_email' %}">Modify Email</a>
+              </div> -->
+              <div class="col-4 text-center">
+                <a href="{% url 'account_change_password' %}">Change Password?</a>
               </div>
               <div class="col-4 text-center">
-                <a href="{% url 'students:updates' request.user.uuid %}"> Update Profile</a>
               </div>
               <div class="col-4 text-center">
-                <a href="{% url 'account_change_password' %}"> Change Password?</a>
+                <a href="{% url 'students:updates' request.user.uuid %}">Update Profile</a>
               </div>
             </div>
             <!-- /.row -->

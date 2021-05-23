@@ -20,6 +20,13 @@
                    <i class="fa fa-trash"></i>
                </a>
             </td>
+            <td>
+                {% csrf_token %}
+                <div class="custom-control custom-checkbox">
+                    <input type='checkbox' {% if students.paid == True %} checked {% else %} {% endif %} name='{{ students.name }}' class='custom-control-input' id="{{ students.pk }}"/>
+                    <label class="custom-control-label" for="{{ students.pk }}"> Have Paid? </label>
+                </div>
+            </td>
        </tr>
    {% endfor %}
 {% else %}
@@ -27,3 +34,31 @@
     <td colspan="9"> No student found </td>
   </tr>
 {% endif %}
+{% block script %}
+<script>
+  $(document).ready(function () {
+    {# To send a request back to the backend for appopriate changing of the status of field Paid #}
+    $("input[type='checkbox']").change(function () {
+      let value = '';
+      ($(this).is(":checked")) ? value = "True" : value = "False" ;
+      let name = $(this).attr("name");
+      let primary_key = $(this).attr("id")
+      $.ajax({
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': $("input[name='csrfmiddlewaretoken']").val(),
+        },
+        url: "{% url 'students:payment' %}",
+        data: {
+          'name': name,
+          'value': value,
+          'primary_key': primary_key,
+        },
+        success: function (data) {
+          $("#messages").html(data);
+        }
+      });
+    });
+  });
+</script>
+{% endblock script %}

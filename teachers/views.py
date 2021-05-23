@@ -6,19 +6,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    UpdateView,
-)
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from notifications.signals import notify
 
 # Create your views here.
 from schoolz.users.decorators import (
     admin_required,
-    admin_student,
     teacher_admin,
     teacher_required,
     user_is_teacher,
@@ -57,10 +50,12 @@ def show_teachers_comment(request):
             sub_class=request.user.teachermodel.sub_class_id,
             session=session_id,
         ).select_related("student")
+
         context = {"result": student_result}
         return render(request, "others/comment.html", context)
+
     except Exception:
-        messages.error(request, "cannot load teacher comments, contact administrator.")
+        messages.error(request, "Cannot load teacher comments, contact administrator.")
         return render(request, "teachers/add_result.html", context)
 
 
@@ -82,7 +77,7 @@ def load_student_result(request):
             return render(request, "others/student_result.html", context)
 
 
-# teacher signup for admins
+# teacher signup
 @method_decorator([admin_required], name="dispatch")
 class TeacherSignupView(LoginRequiredMixin, CreateView):
     model = Teacher
@@ -108,26 +103,6 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
             return redirect("teachers:signup")
         else:
             return redirect("users:dash")
-
-
-# Teacher list for students and admin
-@method_decorator([admin_student], name="dispatch")
-class TeacherListView(LoginRequiredMixin, ListView):
-    model = Teacher
-    login_url = "account_login"
-    template_name = "teachers/list.html"
-    context_object_name = "teachers"
-
-    def get_queryset(self):
-        # a vey useful feature that reduces number of queries from 22 to 4
-        # i have added the foreign keys i would use in the html to be preloaded so they wouldn't to called continually
-        # instead they would be prefetched
-        teachers = Teacher.objects.all().select_related(
-            "teachermodel__class_name",
-            "teachermodel__sub_class",
-            "teachermodel__section",
-        )
-        return teachers
 
 
 # list for student and admin
@@ -171,7 +146,7 @@ class TeacherProfileView(LoginRequiredMixin, DetailView):
 @method_decorator([teacher_required], name="dispatch")
 class TeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = TeacherModel
-    login_url = "account_login"  # "account_login"
+    login_url = "account_login"
     template_name = "teachers/update.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
@@ -183,6 +158,18 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
         "joining_date",
     ]
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+
+        if "name" in form.changed_data:
+            try:
+                teacher = Teacher.objects.get(pk=self.object.pk)
+                teacher.name = self.object.name
+                teacher.save()
+            except Exception as err:
+                messages.error(self.request, f"{err}")
+                return super().form_invalid(form)
+
     def get_success_url(self):
         messages.success(self.request, "Updated!")
         return reverse_lazy("teachers:dash")
@@ -192,7 +179,7 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
 @method_decorator([admin_required], name="dispatch")
 class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = TeacherModel
-    login_url = "account_login"  # "account_login"
+    login_url = "account_login"
     template_name = "teachers/update.html"
     form_class = TeacherUpdateForm
     slug_field = "uuid"
@@ -206,7 +193,7 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         if self.object.section != self.request.user.adminmodel.section:
-            messages.error(self.request, "Can not assign teacher to this section.")
+            messages.error(self.request, "Can not assign teacher to this section!")
             return super().form_invalid(form)
         elif self.object.class_name.section != self.request.user.adminmodel.section:
             messages.error(self.request, "The section does not fit the class")
@@ -215,8 +202,26 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
             messages.error(self.request, "The sub_class does not fit the class")
             return super().form_invalid(form)
         else:
+            # this changes the value in the user model
+            if "email" in form.changed_data:
+                try:
+                    teacher = Teacher.objects.get(pk=self.object.pk)
+                    # this just adds a new email address but doesn't delete the old one
+                    teacher.email = self.object.email
+                    teacher.save()
+                except Exception as err:
+                    messages.error(self.request, f"{err}")
+                    return super().form_invalid(form)
+            if "name" in form.changed_data:
+                try:
+                    teacher = Teacher.objects.get(pk=self.object.pk)
+                    teacher.name = self.object.name
+                    teacher.save()
+                except Exception as err:
+                    messages.error(self.request, f"{err}")
+                    return super().form_invalid(form)
             form.save()
-            messages.success(self.request, "Teacher has been updated")
+            messages.success(self.request, "Teacher has been updated!")
             return super().form_valid(form)
 
     def get_success_url(self):
@@ -234,7 +239,7 @@ class TeacherDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     context_object_name = "teachers"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
-    success_message = "Teacher has been deleted."
+    success_message = "Teacher has been deleted!"
 
     def get_success_url(self):
         # helps it to return directly to the previous page before the form
@@ -248,14 +253,16 @@ def teacher_dashboard(request):
     total_student = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
-    ).values("pk", "paid")
+    ).values("pk", "paid", "class_name__class_name", "sub_class__sub_class")
+    sub_class = SubClass.objects.filter(
+        id=request.user.teachermodel.sub_class_id,
+    ).values("class_name__class_name", "sub_class")
     total_student_count = len(total_student)
-    three_message = TeacherMessages.objects.filter(teacher=request.user.teachermodel)[
-        :3
+    three_message = [
+        x
+        for x in TeacherMessages.objects.filter(teacher=request.user.teachermodel)[:3]
+        if x.was_published_recently()
     ]
-    for i in three_message:
-        if not i.was_published_recently():
-            del i
 
     paid_students = len([student for student in total_student if student["paid"]])
     unpaid = total_student_count - paid_students
@@ -265,15 +272,13 @@ def teacher_dashboard(request):
         "paid_students": paid_students,
         "message": three_message,
         "unpaid": unpaid,
+        "sub_class": sub_class,
     }
     return render(request, "teachers/teacher.html", context)
 
 
-# to do: create adding system for teachers to add students that have been promoted
-# example by adding new field
-
-
-# to do: make a program to mass make paid False for new session or promotion
+# todo: make a dashboard button in change password html page
+# todo: make a view to mass make  promotion
 
 # for teachers to add student result
 @login_required
@@ -319,7 +324,7 @@ def add_result(request):
                 result.grade = grade
                 result.remark = remark
                 result.save()
-                messages.success(request, "Result Updated Successfully!")
+                messages.success(request, "Result updated successfully!")
                 return redirect("teachers:add_result")
             else:
                 result = SubjectResult(
@@ -337,7 +342,7 @@ def add_result(request):
                     remark=remark,
                 )
                 result.save()
-                messages.success(request, "Result Added Successfully!")
+                messages.success(request, "Result added successfully!")
                 return redirect("teachers:add_result")
 
         except Exception as err:
@@ -440,6 +445,7 @@ def promote_student(request):
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
+        active=True,
     ).values("pk", "name")
 
     new_class = request.user.teachermodel.class_name_id + 1
@@ -492,8 +498,9 @@ def promote_student_process(request):
             student.class_name = class_name
             student.sub_class = sub_class
             student.paid = False
+            student.active = False
             student.save()
-            messages.success(request, "Student promoted Successfully")
+            messages.success(request, "Student promoted successfully!")
             return redirect("teachers:promote")
         else:
             messages.error(
@@ -528,7 +535,7 @@ def send_messages(request):
                 verb="new private message!",
                 target=student.user,
             )
-            messages.success(request, "Message sent successfully")
+            messages.success(request, "Message sent successfully!")
             return redirect("teachers:message")
 
     context = {
@@ -567,7 +574,7 @@ def send_general_message(request):
                 messages.error(request, "Message failed to send.")
                 return redirect("teachers:general_message")
         if pupil == students.last():
-            messages.success(request, "Message sent to all students successfully")
+            messages.success(request, "Message sent to all students successfully!")
             return redirect("teachers:general_message")
 
     context = {
@@ -627,7 +634,7 @@ class UpdateMessage(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         "title",
         "message",
     ]
-    success_message = "Message updated successfully"
+    success_message = "Message updated successfully!"
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -658,7 +665,7 @@ class DeleteMessage(LoginRequiredMixin, DeleteView):
     slug_url_kwarg = "slug_pk"
 
     def get_success_url(self):
-        messages.success(self.request, "messsage deleted successfully")
+        messages.success(self.request, "Message deleted successfully!")
         # helps it to return directly to the previous page before the form
         nexto = self.request.POST.get("next", "/")
         return nexto

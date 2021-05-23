@@ -81,12 +81,67 @@
           </div>
           {% endif %}
       </div>
+    {% if inactive %}
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"> Recently Promoted Student Tables </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
+        </div>
+        <div class="card-header table-responsive">
+          <table class="table text-nowrap table-bordered">
+              <thead>
+                  <tr role="row">
+                      <th>Help</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td class="text-muted" style="font-size: small"> This is the list of students that have just been promoted or have changed classes. Students in this list will not appear to be promoted till they are confirmed active.</td>
+                  </tr>
+              </tbody>
+          </table>
+        </div>
+        <div class="card-body table-responsive p-0">
+           <table class="table table-hover text-nowrap table-striped table-bordered">
+               <thead>
+                   <tr>
+                       <th>Id</th>
+                       <th>Name</th>
+                       <th>Mobile number</th>
+                       <th>Profile</th>
+                       <th>Make Active</th>
+                   </tr>
+               </thead>
+               <tbody>
+                 {% for student in inactive %}
+                     <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>{{ student.name }}</td>
+                          <td>{{ student.emergency_mobile_number }}</td>
+                          <td>
+                             <a class="btn btn-success" href="{% url 'students:profile' student.uuid %}">
+                                 <i class="fa fa-search-plus"></i>
+                             </a>
+                          </td>
+                          {% if request.user.is_teacher %}
+                          <td>
+                             <a class="btn btn-info" href="{% url 'students:active' student.uuid %}">
+                                 <i class="fa fa-user"></i>
+                             </a>
+                          </td>
+                       {% endif %}
+                     </tr>
+                 {% endfor %}
+               </tbody>
+           </table>
+        </div>
+        {% endif %}
+      </div>
   </div>
 {% endblock %}
 {% block script %}
     <script>
         $(document).ready(function () {
-            {#  #}
+            {# To send a request back to the backend for appopriate changing of the status of field Paid #}
             $("input[type='checkbox']").change(function () {
                 let value = '';
                 ($(this).is(":checked")) ? value = "True" : value = "False" ;

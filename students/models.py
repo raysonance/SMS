@@ -30,9 +30,10 @@ class StudentModel(models.Model):
         null=True,
     )
     paid = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
     fathers_name = models.CharField("Father's Name", max_length=100)
     mothers_name = models.CharField("Mother's Name", max_length=100)
-    date_of_birth = models.DateField("Birth Date")
+    date_of_birth = models.DateField("Birth Date", null=True, blank=True)
     email = models.EmailField("Email Address")
     address = models.TextField(blank=True)
     emergency_mobile_number = models.CharField("Mobile Number", max_length=11)
@@ -94,7 +95,6 @@ class StudentMessages(models.Model):
             self.slug = text.slugify(rand_slug() + "-" + self.title)
         super().save(*args, **kwargs)
 
-    @property
     def was_published_recently(self):
         return self.updated_at >= timezone.now() - datetime.timedelta(days=30)
 

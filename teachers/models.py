@@ -63,14 +63,14 @@ class TeacherModel(models.Model):
     )
     name = models.CharField("Full Name", max_length=150)
     photo = models.ImageField(upload_to="teacherfile/", null=True, blank=True)
-    date_of_birth = models.DateField(blank=False)
+    date_of_birth = models.DateField(blank=True, null=True)
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
     sub_class = models.ForeignKey(SubClass, on_delete=models.SET_NULL, null=True)
     address = models.TextField()
-    mobile = models.CharField(max_length=11)
+    mobile = models.CharField(max_length=11, blank=True)
     email = models.CharField(max_length=255, blank=True)
-    joining_date = models.DateField(blank=True)
+    joining_date = models.DateField(blank=True, default=timezone.now)
 
     class Meta:
         ordering = ["name"]

@@ -116,8 +116,4 @@ class TeacherUpdateForm(forms.ModelForm):
 
     class Meta:
         model = TeacherModel
-        fields = [
-            "section",
-            "class_name",
-            "sub_class",
-        ]
+        exclude = ["uuid", "user", "section"]
