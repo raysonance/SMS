@@ -1,5 +1,5 @@
 
-{% load notifications_tags %}
+{% load notifications_tags static %}
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-dark navbar-navy">
@@ -87,7 +87,9 @@
               <!-- Menu Footer-->
           <li class="user-footer">
           	<a class="btn btn-default btn-flat" href="{% url 'teachers:profile' request.user.uuid %}"> Profile</a>
-          	<a class="btn btn-default btn-flat float-right" href="{% url 'account_logout' %}">Logout</a>
+            <button type="button" class="btn btn-danger btn-flat float-right" data-toggle="modal" data-target="#modal-danger">
+                  Logout
+            </button>
           </li>
         </ul>
       </li>
@@ -124,7 +126,9 @@
               <!-- Menu Footer-->
           <li class="user-footer">
           	<a class="btn btn-default btn-flat" href="{% url 'users:admin_detail' request.user.uuid %}">Profile</a>
-          	<a class="btn btn-default btn-flat float-right" href="{% url 'account_logout' %}">Logout</a>
+            <button type="button" class="btn btn-danger btn-flat float-right" data-toggle="modal" data-target="#modal-danger">
+                  Logout
+            </button>
           </li>
         </ul>
       </li>
@@ -161,7 +165,9 @@
               <!-- Menu Footer-->
           <li class="user-footer">
           	<a class="btn btn-default btn-flat" href="{% url 'students:profile' request.user.uuid %}">Profile</a>
-          	<a class="btn btn-default btn-flat float-right" href="{% url 'account_logout' %}">Logout</a>
+            <button type="button" class="btn btn-danger btn-flat float-right" data-toggle="modal" data-target="#modal-danger">
+                  Logout
+            </button>
           </li>
         </ul>
       </li>
@@ -169,3 +175,6 @@
     </ul>
   </nav>
   <!-- /.navbar -->
+
+  {% block script %}
+  {% endblock script %}

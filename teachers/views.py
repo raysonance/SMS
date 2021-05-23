@@ -23,7 +23,7 @@ from students.models import StudentMessages, StudentModel, Subject, SubjectResul
 from .forms import TeacherModelForm, TeacherSignUpForm, TeacherUpdateForm
 from .models import Class, Section, Session, SubClass, TeacherMessages, TeacherModel
 
-# add protection to new functions
+# todo: add protection to new functions
 
 
 def load_sub_class(request):
@@ -277,9 +277,6 @@ def teacher_dashboard(request):
     return render(request, "teachers/teacher.html", context)
 
 
-# todo: make a dashboard button in change password html page
-# todo: make a view to mass make  promotion
-
 # for teachers to add student result
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
@@ -422,7 +419,7 @@ def show_result(request):
 
         student_result = SubjectResult.objects.filter(student=student, session=session)
 
-        context = {"student_result": student_result}
+        context = {"student_result": student_result, "student": student}
 
         if student_result:
             return render(request, "teachers/student_result.html", context)

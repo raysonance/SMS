@@ -26,6 +26,9 @@ from .models import Admin, AdminModel
 User = get_user_model()
 
 
+# todo: make head teacher comment field
+
+
 def load_students(request):
     if request.method == "GET":
         # get class and subclass id

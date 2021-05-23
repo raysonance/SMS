@@ -435,6 +435,9 @@ def view_general_messages(request):
 def search_all(request):
     if request.method == "GET":
         query = request.GET.get("q")
+        if len(str(query)) < 3:
+            messages.error(request, "Search character's length must be three or more!")
+            return render(request, "student/search_all.html")
         student = StudentModel.objects.filter(
             Q(name__icontains=query) | Q(class_name__class_name__icontains=query)
         ).select_related("class_name", "sub_class")
