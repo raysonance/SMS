@@ -4,35 +4,8 @@
 {% block content %}
   <div class="animated fadeIn">
       <div class="card">
-        <div class="card-header">
-          <h3 class="card-title"> Options </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
-        </div>
-        <div class="card-body">
-          <div class="form-row">
-              <div class="col">
-                <label> Class </label>
-                    <select class="form-control" name="class_name" id="class_name" required>
-                        <option value="">--------</option>
-                        {% for class_name in class_name %}
-                            <option value="{{ class_name.pk }}">{{ class_name.class_name }}</option>
-                        {% endfor %}
-                    </select>
-              </div>
-              <div class="col">
-                <label> SubClass </label>
-                    <select class="form-control" name="sub_class" id="sub_class" required>
-                        <option value="">--------</option>
-                        {% for sub_class in sub_class %}
-                            <option value="{{ sub_class.pk }}">{{ sub_class.sub_class }} of {{ sub_class.class_name.class_name }}</option>
-                        {% endfor %}
-                    </select>
-              </div>
-         </div>
-        </div>
-      </div>
-      <div class="card">
-          <div class="card-header">
-              <h3 class="card-title"> Student Tables </h3> <div class="card-tools"><i class="fa fa-child"></i></div>
+          <div class="card-header" style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%)">
+              <h3 class="card-title text-white"> Student Table </h3> <div class="card-tools text-white"><i class="fa fa-child"></i></div>
           </div>
         {% comment %} Display Messages {% endcomment %}
           <div id="messages">
@@ -63,11 +36,23 @@
           <div class="card-body table-responsive p-0">
              <table class="table table-hover text-nowrap table-striped table-bordered">
                  <thead>
-                     <tr>
+                     <tr class="text-gray-dark">
                        <th>Id</th>
                        <th>Name</th>
-                       <th>Class</th>
-                       <th>Sub class</th>
+                       <th>
+                          <select class="form-control" name="class_name" id="class_name" required>
+                            {% for class_name in class_name %}
+                              <option value="{{ class_name.pk }}">{{ class_name.class_name }}</option>
+                            {% endfor %}
+                          </select>
+                       </th>
+                       <th>
+                         <select class="form-control" name="sub_class" id="sub_class" required>
+                        {% for sub_class in sub_class %}
+                            <option value="{{ sub_class.pk }}">{{ sub_class.sub_class }} of {{ sub_class.class_name.class_name }}</option>
+                        {% endfor %}
+                          </select>
+                       </th>
                        <th>Profile</th>
                        <th>Update</th>
                        <th>Delete</th>

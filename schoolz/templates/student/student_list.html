@@ -4,8 +4,8 @@
 {% block content %}
   <div class="animated fadeIn">
       <div class="card">
-          <div class="card-header">
-              <h3 class="card-title"> Student Tables </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
+          <div class="card-header" style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%);">
+              <h3 class="card-title text-white"> Student Table </h3> <div class="card-tools text-white"><i class="fa fa-edit"></i></div>
           </div>
           <div id="messages">
             {% if messages %}
@@ -36,7 +36,7 @@
           <div class="card-body table-responsive p-0">
              <table class="table table-hover text-nowrap table-striped table-bordered">
                  <thead>
-                     <tr>
+                     <tr class="text-gray-dark">
                          <th>Id</th>
                          <th>Name</th>
                          <th>Mobile number</th>
@@ -47,26 +47,28 @@
                  </thead>
                  <tbody>
                    {% for students in students %}
-                       <tr>
+                       <tr class="text-gray">
                             <td>{{ forloop.counter }}</td>
                             <td>{{ students.name }}</td>
                             <td>{{ students.emergency_mobile_number }}</td>
                             <td>
-                               <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
+                               <a class="btn" style="background-color: #00da5f; color: white" href="{% url 'students:profile' students.uuid %}">
                                    <i class="fa fa-search-plus"></i>
                                </a>
                             </td>
                             {% if request.user.is_teacher %}
                             <td>
-                               <a class="btn btn-info" href="{% url 'students:updates' students.uuid %}">
+                               <a class="btn" style="background-color: #7fc9fb; color: white" href="{% url 'students:updates' students.uuid %}">
                                    <i class="fa fa-edit"></i>
                                </a>
                             </td>
                             <td>
                                 {% csrf_token %}
-                                <div class="custom-control custom-checkbox">
+                                <div class="form-group">
+                                  <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                     <input type='checkbox' {% if students.paid == True %} checked {% else %} {% endif %} name='{{ students.name }}' class='custom-control-input' id="{{ students.pk }}"/>
                                     <label class="custom-control-label" for="{{ students.pk }}"> Have Paid? </label>
+                                  </div>
                                 </div>
                             </td>
                          {% endif %}

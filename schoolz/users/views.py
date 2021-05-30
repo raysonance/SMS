@@ -27,6 +27,7 @@ User = get_user_model()
 
 
 # todo: make head teacher comment field
+# todo: make a javascript spinner when page is loading or smth
 
 
 def load_students(request):
@@ -35,7 +36,6 @@ def load_students(request):
         class_id = request.GET.get("class_name")
         sub_class_id = request.GET.get("sub_class")
         if class_id and sub_class_id:
-            request.session["sub_class"] = sub_class_id
             # get class and subclass
             class_name = get_object_or_404(Class, pk=class_id)
             sub_class = get_object_or_404(SubClass, pk=sub_class_id)

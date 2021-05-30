@@ -31,10 +31,10 @@
     <div class="row">
       <div class="col-lg-3 col-12">
         <!-- small box -->
-        <div class="small-box bg-info">
+        <div class="small-box" style="background-color: #f6b0d0; color: #8c68ce">
           <div class="inner">
             <h3>{{ student }}</h3>
-            <p>Total Student in {{ request.user.adminmodel.section }}</p>
+            <p>Student in {{ request.user.adminmodel.section }}</p>
           </div>
           <div class="icon">
             <i class="ion ion-stats-bars"></i>
@@ -44,10 +44,10 @@
       </div>
       <div class="col-lg-3 col-12">
         <!-- small box -->
-        <div class="small-box bg-success">
+        <div class="small-box" style="background-color: #00ff80; color: #1c7430">
           <div class="inner">
             <h3>{{ teacher }}</h3>
-            <p>Total Class Teachers in {{ request.user.adminmodel.section }} </p>
+            <p>Class Teacher in {{ request.user.adminmodel.section }} </p>
           </div>
           <div class="icon">
             <i class="ion ion-stats-bars"></i>
@@ -57,10 +57,10 @@
       </div>
       <div class="col-lg-3 col-12">
         <!-- small box -->
-        <div class="small-box bg-warning">
+        <div class="small-box" style="background-color: #f8bb86; color: #fc5f1c">
           <div class="inner">
             <h3>{{ other_students }}</h3>
-            <p>Total Student in {{ spectre }}</p>
+            <p>Student in {{ spectre }}</p>
           </div>
           <div class="icon">
             <i class="ion ion-stats-bars"></i>
@@ -70,10 +70,10 @@
       </div>
       <div class="col-lg-3 col-12">
         <!-- small box -->
-        <div class="small-box bg-danger">
+        <div class="small-box" style="background-color: #7fc9fb; color: #005ebf">
           <div class="inner">
             <h3>{{ other_teachers }}</h3>
-            <p>Total Class Teachers in {{ spectre }}</p>
+            <p>Class Teacher in {{ spectre }}</p>
           </div>
           <div class="icon">
             <i class="ion ion-stats-bars"></i>
@@ -85,9 +85,9 @@
     <div class="row">
       <div class="col-lg-6 col-12">
         <!-- DONUT CHART -->
-        <div class="card card-info">
-          <div class="card-header">
-            <h3 class="card-title"> Paid {{ request.user.adminmodel.section }} Students Chart</h3>
+        <div class="card">
+          <div class="card-header" style="background-color: #f6b0d0; color: #8c68ce">
+            <h3 class="card-title"> Paid {{ request.user.adminmodel.section }} Student Chart</h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
               </button>
@@ -103,9 +103,9 @@
       </div>
       <div class="col-lg-6 col-12">
         <!-- DONUT CHART -->
-        <div class="card card-danger">
-          <div class="card-header">
-            <h3 class="card-title">Paid {{ spectre }} Students Chart</h3>
+        <div class="card">
+          <div class="card-header" style="background-color: #f8bb86; color: #fc5f1c">
+            <h3 class="card-title">Paid {{ spectre }} Student Chart</h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
               </button>
@@ -141,7 +141,7 @@
         datasets: [
           {
             data: [{{ paid_students }}, {{ unpaid }}],
-            backgroundColor : ['#3c8dbc', '#f56954'],
+            backgroundColor : ['#7fc9fb', '#fc5f1c'],
           }
         ]
       }
@@ -169,7 +169,7 @@
         datasets: [
           {
             data: [{{ paid_other }}, {{ unpaid_other }}],
-            backgroundColor : ['#3c8dbc', '#f56954'],
+            backgroundColor : ['#7fc9fb', '#fc5f1c'],
           }
         ]
       }

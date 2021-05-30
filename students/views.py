@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -285,15 +284,17 @@ def student_list(request):
 
 # delete student
 @method_decorator([admin_required], name="dispatch")
-class StudentDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class StudentDeleteView(LoginRequiredMixin, DeleteView):
     model = Student
     template_name = "student/student_delete.html"
-    success_url = reverse_lazy("users:show_list")
     login_url = "account_login"
     context_object_name = "students"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
-    success_message = "Student has been deleted."
+
+    def get_success_url(self):
+        messages.success(self.request, "Student has been deleted!")
+        return reverse_lazy("users:show_list")
 
 
 # student dashboard

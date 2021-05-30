@@ -1,31 +1,33 @@
 {% if request.user.is_admin and student %}
    {% for students in student %}
-       <tr>
+       <tr class="text-gray">
            <td>{{ forloop.counter }}</td>
            <td>{{ students.name }}</td>
            <td>{{ students.class_name }}</td>
            <td>{{ students.sub_class.sub_class }}</td>
            <td>
-               <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
+               <a class="btn" style="background-color: #00da5f; color: white" href="{% url 'students:profile' students.uuid %}">
                    <i class="fa fa-search-plus"></i>
                </a>
            </td>
             <td>
-               <a class="btn btn-info" href="{% url 'students:update' students.uuid %}">
+               <a class="btn" style="background-color: #7fc9fb; color: white" href="{% url 'students:update' students.uuid %}">
                    <i class="fa fa-edit"></i>
                </a>
             </td>
             <td>
-               <a class="btn btn-danger" href="{% url 'students:delete' students.uuid %}">
+               <a class="btn" style="background-color: #ff0080; color: white" href="{% url 'students:delete' students.uuid %}">
                    <i class="fa fa-trash"></i>
                </a>
             </td>
             <td>
                 {% csrf_token %}
-                <div class="custom-control custom-checkbox">
-                    <input type='checkbox' {% if students.paid == True %} checked {% else %} {% endif %} name='{{ students.name }}' class='custom-control-input' id="{{ students.pk }}"/>
-                    <label class="custom-control-label" for="{{ students.pk }}"> Have Paid? </label>
-                </div>
+                  <div class="form-group">
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                      <input type='checkbox' {% if students.paid == True %} checked {% else %} {% endif %} name='{{ students.name }}' class='custom-control-input' id="{{ students.pk }}"/>
+                      <label class="custom-control-label" for="{{ students.pk }}"> Have Paid? </label>
+                    </div>
+                  </div>
             </td>
        </tr>
    {% endfor %}

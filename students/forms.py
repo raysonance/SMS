@@ -94,7 +94,7 @@ class StudentSignUpForm(UserCreationForm):
 class StudentModelForm(forms.ModelForm):
     class Meta:
         model = StudentModel
-        exclude = ["user", "created_by", "updated_by", "paid", "email"]
+        exclude = ["user", "created_by", "updated_by", "paid", "email", "active"]
         widgets = {
             "date_of_birth": forms.TextInput(attrs={"type": "date"}),
             "photo": forms.ClearableFileInput(attrs={"class": "form-control"}),

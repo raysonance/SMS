@@ -2,7 +2,6 @@
 {% load notifications_tags %}
 <!DOCTYPE html>
 <html lang="en">
-
 <!--Headers-->
 <head>
     <meta charset="utf-8">
@@ -12,10 +11,10 @@
     <meta name="author" content="Favour Gilead">
     <meta name="keyword" content="">
     <title>{% block title %}{% endblock title %}</title>
-
     {% block css %}
-
     {% compress css %}
+    <!-- project css-->
+    <link href="{% static 'css/project.css' %}" rel="stylesheet" >
   	<!-- Font Awesome -->
   	<link rel="stylesheet" href="{% static 'project/plugins/fontawesome-free/css/all.min.css' %}">
   	<!-- Theme style -->
@@ -30,7 +29,18 @@
     {% block extrahead %}
     {% endblock extrahead %}
 </head>
-
+<!--Preloader-->
+  <div id="preloader">
+    <div class=" grow grow-1 text-info" role="status" >
+      <span class="sr-only">Loading....</span>
+    </div>
+    <div class="loader loader-1" role="status">
+      <span class="sr-only" >Loading....</span>
+    </div>
+    <div class="text-danger grow grow-1" role="status">
+      <span class="sr-only">Loading....</span>
+    </div>
+  </div>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
 
 <div class="wrapper">
@@ -76,7 +86,7 @@
              <!-- /.modal -->
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Dashboard</h1>
+                <h1 class="m-0 text-navy">Dashboard</h1>
               </div><!-- /.col -->
 
               <div class="col-sm-6">
@@ -110,6 +120,10 @@
     </div>
   </footer>
 
+
+
+
+
 </div>
 <!--JS-->
 <!-- jQuery -->
@@ -123,7 +137,6 @@
 <!-- AdminLTE App -->
 <script src="{% static 'project/dist/js/adminlte.min.js' %}"></script>
 
-<script src="{% static 'project/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <!-- Notifications -->
 <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
 <!-- {% register_notify_callbacks callbacks='fill_notification_list, fill_notification_badge' %} -->
@@ -140,7 +153,6 @@
 </script>
 <script>
 $.navigation = $('nav > ul.nav');
-
 $(document).ready(function($){
 
     $.navigation.find('a').each(function(){
@@ -159,7 +171,33 @@ $(document).ready(function($){
       });
     }
   });
+});
+</script>
+<script>
+$(window).on("load", function (){
+  $('#preloader').fadeOut();
+});
+// $(".nav-link").on("click", function () {
+//   if ($(this).attr("href") != '#') {
+//     $('#preloader').fadeIn()
+//   }
+// });
+$("a").on("click", function () {
+  if ($(this).attr("href") != '#' && $(this).attr("data-toggle") != "dropdown") {
+    $('#preloader').fadeIn();
+  }
+});
+
+$(document).ready(function () {
+  $("button").on("click", function () {
+    if ($(this).attr("type") == "submit"){
+      $(this).prop("disabled", true);
+      $(this).html(`<span class="spinner-border spinner-border-sm" aria-disabled="true"></span> Loading...`);
+      $(this).parent().closest('form').submit();
+    }
+});
 })
+
 </script>
 {% block script %}
 {% endblock script %}

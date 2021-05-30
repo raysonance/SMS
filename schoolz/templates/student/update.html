@@ -7,6 +7,7 @@
 
 
 {% block content %}
+{{ block.super }}
 <body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-logo">
@@ -15,14 +16,14 @@
     <!-- /.login-logo -->
     <div class="card">
       <div class="card-body login-card-body">
-        <p class="login-box-msg">{% trans 'Update Student.' %}</p>
+        <p class="login-box-msg text-muted">{% trans 'Update Student.' %}</p>
         <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="StudentUpdateForm" data-class-url={% url 'teachers:load_class' %} data-subclass-url={% url 'students:load_subclass' %}>
           {% csrf_token %}
           {{ form|crispy }}
           <div class="control-group">
             <div class="controls">
-              <button type="submit" class="btn btn-primary my-5">Update</button>
-              <a class="text-red ml-3 ml-md-5" href="{% if user.is_admin %} {% url 'users:dash' %} {% elif user.is_teacher %} {% url 'teachers:dash' %} {% else %} {% url 'students:dash' %} {% endif %}">Dashboard &#8954</a>
+              <button type="submit" class="btn bg-purple my-5">Update</button>
+              <a class="ml-3 ml-md-5" style="color: #fc5f1c" href="{% if user.is_admin %} {% url 'users:dash' %} {% elif user.is_teacher %} {% url 'teachers:dash' %} {% else %} {% url 'students:dash' %} {% endif %}">Dashboard &#8954</a>
             </div>
           </div>
         </form>

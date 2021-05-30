@@ -4,11 +4,15 @@
 {% load static %}
 
 {% block content %}
-<h1 class="display-5"> Delete  Message </h1>
-<form method="post" action="">
-    {% csrf_token %}
-    <p> Are you sure you want to delete {{ message.title }}</p>
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    <button class="btn btn-danger ml-2" type="submit">Confirm</button>
-</form>
+<div class="card">
+  <div class="card-header"><p class="display-4">Delete Message </p></div>
+  <div class="card-body">
+    <form method="post" action="">
+      {% csrf_token %}
+      <p> Are you sure you want to delete <span><i style="color: #005ebf">{{ message.title }}</i> </span></p>
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      <button class="btn btn-danger ml-2" type="submit">Confirm</button>
+    </form>
+  </div>
+</div>
 {% endblock %}

@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
-{% block title %} Teacher Update {% endblock %}
+{% block title %} Update {% endblock %}
 
 {% load i18n %}
 
 
 {% block content %}
+{{ block.super }}
 <body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-logo">
@@ -38,15 +39,15 @@
     <!-- /.login-logo -->
     <div class="card">
       <div class="card-body login-card-body">
-         <p class="login-box-msg">{% trans 'Update.' %}</p>
+         <p class="login-box-msg text-muted">{% trans 'Update.' %}</p>
          <form class="form-horizontal" enctype="multipart/form-data" method="post" action="" id="TeacherRegistrationForm" data-class-url={% url 'teachers:load_class' %} data-subclass-url={% url 'teachers:load_subclass' %}>
            {% csrf_token %}
            {{ form|crispy }}
            <div class="control-group">
              <div class="controls">
                <input type="hidden" name="next" value="{{ request.GET.next }}">
-               <button type="submit" class="btn btn-primary my-5">Update</button>
-               <a class="text-red ml-3 ml-md-5" href="{% if user.is_admin %} {% url 'users:dash' %} {% else %} {% url 'teachers:dash' %} {% endif %}">Dashboard &#8954</a>
+               <button type="submit" class="btn bg-purple my-5">Update</button>
+               <a class="ml-3 ml-md-5" style="color: #fc5f1c" href="{% if user.is_admin %} {% url 'users:dash' %} {% else %} {% url 'teachers:dash' %} {% endif %}">Dashboard &#8954</a>
              </div>
            </div>
          </form>

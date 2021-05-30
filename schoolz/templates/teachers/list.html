@@ -28,15 +28,15 @@
 
   <div class="animated fadeIn">
       <div class="card">
-          <div class="card-header">
-              <h3 class="card-title">Class Teacher Tables </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
+          <div class="card-header" style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%)">
+              <h3 class="card-title text-white">Class Teacher Table </h3> <div class="card-tools text-white"><i class="fa fa-edit"></i></div>
           </div>
         {% with teacher=teachers %}
           {% if teacher %}
           <div class="card-body table-responsive p-0">
             <table class="table table-hover text-nowrap table-striped table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="text-gray-dark">
                         <th>Id</th>
                         <th>Name</th>
                         <th>Class</th>
@@ -52,7 +52,7 @@
                 <tbody>
                   {% with teachers=teacher %}
                     {% for teacher in teachers %}
-                      <tr>
+                      <tr class="text-gray">
                           <td>{{ forloop.counter }}</td>
                           <td>{{ teacher.name }}</td>
                           <td>{{ teacher.class_name.class_name }}</td>
@@ -63,18 +63,18 @@
                         {% endif %}
                           <td>{{ teacher.mobile }}</td>
                           <td>
-                              <a class="btn btn-success" href="{% url 'teachers:profile' teacher.uuid %}">
+                              <a class="btn" style="background-color: #00da5f; color: white" href="{% url 'teachers:profile' teacher.uuid %}">
                                   <i class="fa fa-search-plus"></i>
                               </a>
                           </td>
                             {% if request.user.is_admin and request.user.adminmodel.section == teacher.section %}
                           <td>
-                              <a class="btn btn-info" href="{% url 'teachers:admin_update' teacher.uuid %}?next={{ request.path|urlencode }}">
+                              <a class="btn" style="background-color: #7fc9fb; color: white" href="{% url 'teachers:admin_update' teacher.uuid %}?next={{ request.path|urlencode }}">
                                   <i class="fa fa-edit"></i>
                               </a>
                           </td>
                           <td>
-                              <a class="btn btn-danger" href="{% url 'teachers:delete' teacher.uuid %}?next={{ request.path|urlencode }}">
+                              <a class="btn" style="background-color: #ff0080; color: white" href="{% url 'teachers:delete' teacher.uuid %}?next={{ request.path|urlencode }}">
                                   <i class="fa fa-trash"></i>
                               </a>
                           </td>

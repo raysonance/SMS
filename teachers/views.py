@@ -232,16 +232,16 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
 
 # admin only
 @method_decorator([admin_required], name="dispatch")
-class TeacherDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class TeacherDeleteView(LoginRequiredMixin, DeleteView):
     model = Teacher
     template_name = "teachers/teacher_delete.html"
     login_url = "account_login"
     context_object_name = "teachers"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
-    success_message = "Teacher has been deleted!"
 
     def get_success_url(self):
+        messages.success(self.request, "Teacher has been deleted!")
         # helps it to return directly to the previous page before the form
         nexto = self.request.POST.get("next", "/")
         return nexto
