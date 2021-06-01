@@ -1,18 +1,18 @@
 {% extends 'base/base.html' %}
-{% block title %} Students List {% endblock title %}
+{% block title %} Student List {% endblock title %}
 
 {% block content %}
   <div class="animated fadeIn">
       <div class="card">
-          <div class="card-header">
-            <h3 class="card-title"> Students In Class </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
+          <div class="card-header" style="background-color: #f8ceec; background-image: linear-gradient(315deg, #f8ceec 0%, #a88beb 74%)">
+            <h3 class="card-title text-white"> Students In Class </h3> <div class="card-tools text-white"><i class="fa fa-edit"></i></div>
           </div>
         {% with students=students %}
           {% if students %}
           <div class="card-body table-responsive p-0">
             <table class="table table-hover text-nowrap table-striped table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="text-gray-dark">
                         <th>Id</th>
                         <th>Name</th>
                         <th>Class</th>
@@ -22,13 +22,13 @@
                 </thead>
                 <tbody>
                   {% for students in students %}
-                      <tr>
+                      <tr class="text-gray">
                           <td>{{ forloop.counter }}</td>
                           <td>{{ students.name }}</td>
                           <td>{{ students.class_name.class_name }}</td>
                           <td>{{ students.sub_class.sub_class }}</td>
                           <td>
-                              <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
+                              <a class="btn" style="background-color: #00da5f; color: white" href="{% url 'students:profile' students.uuid %}">
                                   <i class="fa fa-search-plus"></i>
                               </a>
                           </td>

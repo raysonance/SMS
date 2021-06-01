@@ -30,7 +30,7 @@
     <div class="row my-2">
       <div class="col-lg-6 col-12">
         <!-- small box -->
-        <div class="small-box bg-info">
+        <div class="small-box" style="background-color: #f6b0d0; color: #8c68ce">
           <div class="inner">
             <h3>{{ student }}</h3>
             <p>Total Student in Class</p>
@@ -45,7 +45,7 @@
       {% for teachers in teacher %}
       <div class="col-lg-6 col-12">
         <!-- small box -->
-        <div class="small-box bg-success">
+        <div class="small-box" style="background-color: #00ff80; color: #1c7430">
           <div class="inner">
             <h3> Mr {{ teachers.name }}</h3>
             <p>{{ teachers.mobile }}</p>
@@ -62,7 +62,7 @@
   <div class="row">
     <div class="col-lg-6 col-12">
       <!-- small box -->
-      <div class="small-box bg-danger">
+      <div class="small-box"  style="background-color: #f8bb86; color: #fc5f1c">
         <div class="inner">
           <h3>{{ courses }}</h3>
           <p>Total Courses</p>
@@ -75,7 +75,7 @@
     </div>
     <div class="col-lg-6 col-12">
       <!-- small box -->
-      <div class="small-box bg-warning">
+      <div class="small-box" style="background-color: #7fc9fb; color: #005ebf">
         <div class="inner">
           {% for i in sub_class %}
           <h3>{{ i.class_name__class_name }}</h3>
@@ -91,7 +91,7 @@
   </div>
 
 <div class="card">
-  <div class="card-header bg-navy">
+  <div class="card-header"  style="background-color: #f8ceec; background-image: linear-gradient(315deg, #f8ceec 0%, #a88beb 74%)">
     <h3 class="card-title text-white"> <b> Latest Messages </b> </h3>
   </div>
   <div class="card-body bg-white">
@@ -99,19 +99,19 @@
         {% if articles %}
           {% for article in articles %}
             <div class="col-md-12">
-          <div class="card {% if article.private == True %} card-danger {% else %} card-info {% endif %} collapsed-card">
-            <div class="card-header">
-              <h3 class="card-title"> {{ article.title }} <span class="text-white"><small> sent by {{ article.teacher.name }} | {{ article.updated_at }} </small> </span></h3>
+          <div class="card">
+            <div class="card-header" {% if article.private == True %} style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white" {% else %} style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
+              <h3 class="card-title"> {{ article.title }} <span class="text-muted"><small> sent by {{ article.teacher.name }} | {{ article.updated_at }} </small> </span></h3>
 
               <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
-                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                <button type="button" class="btn btn-tool text-white" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
+                <button type="button" class="btn btn-tool text-white" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                <button type="button" class="btn btn-tool text-white" data-card-widget="remove"><i class="fas fa-times"></i></button>
               </div>
               <!-- /.card-tools -->
             </div>
             <!-- /.card-header -->
-            <div class="card-body bg-purple">
+            <div class="card-body" style="background-color: #eff1f4">
               {{ article.message }}
             </div>
             <!-- /.card-body -->

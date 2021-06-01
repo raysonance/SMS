@@ -1,6 +1,6 @@
 {% load static %}
 <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-light-purple elevation-4">
+  <aside class="main-sidebar sidebar-dark-navy elevation-4" style="background-color: #1fd1f9; background-image: linear-gradient(315deg, #1fd1f9 0%, #b621fe 74%)">
     <!-- Brand Logo -->
     <a href="" class="brand-link">
       <img src="{% static 'project/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
@@ -78,13 +78,13 @@
               <li class="nav-item">
                 <a href="{% url 'teachers:list' 'Primary' %}" class="nav-link">
                   <i class="fas fa-list nav-icon"></i>
-                  <p>Primary Teachers</p>
+                  <p>Primary</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{% url 'teachers:list' 'Secondary' %}" class="nav-link">
                   <i class="fas fa-list nav-icon"></i>
-                  <p>Secondary Teachers</p>
+                  <p>Secondary</p>
                 </a>
               </li>
             </ul>
@@ -242,13 +242,13 @@
               <li class="nav-item">
                 <a href="{% url 'teachers:view_admin_message' %}" class="nav-link">
                   <i class="fas fa-envelope-open-text nav-icon"></i>
-                  <p>Private Messages</p>
+                  <p>Private</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{% url 'teachers:view_general_message' %}" class="nav-link">
                   <i class="fas fa-envelope-open-text nav-icon"></i>
-                  <p>General Messages</p>
+                  <p>General</p>
                 </a>
               </li>
             </ul>
@@ -307,13 +307,13 @@
               <li class="nav-item">
                 <a href="{% url 'teachers:list' 'Primary' %}" class="nav-link">
                   <i class="fas fa-list nav-icon"></i>
-                  <p>Primary Teachers</p>
+                  <p>Primary</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{% url 'teachers:list' 'Secondary' %}" class="nav-link">
                   <i class="fas fa-list nav-icon"></i>
-                  <p>Secondary Teachers</p>
+                  <p>Secondary</p>
                 </a>
               </li>
             </ul>
@@ -351,13 +351,13 @@
               <li class="nav-item">
                 <a href="{% url 'students:message' %}" class="nav-link">
                   <i class="fas fa-user-plus nav-icon"></i>
-                  <p>Private Messages</p>
+                  <p>Private</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{% url 'students:general_message' %}" class="nav-link">
                   <i class="fas fa-list nav-icon"></i>
-                  <p>General Messages</p>
+                  <p>General</p>
                 </a>
               </li>
             </ul>
