@@ -28,7 +28,11 @@
             </div>
           {% endif %}
           <div class="card-header">
-            <h3 class="card-title"> Search </h3> <div class="card-tools text-gray"><i class="fa fa-edit"></i></div>
+            <h3 class="card-title"> Search </h3>
+            <div class="card-tools text-gray">
+              <button type="button" class="btn btn-tool text-gray" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
+            </div>
+            <!-- /.card-tools -->
           </div>
         {% with students=students %}
         {% with teachers=teachers %}
