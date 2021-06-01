@@ -1,26 +1,12 @@
 <div class="card">
-    <div class="card-header bg-navy">
+    <div class="card-header" style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white">
       <h3 class="card-title">Comments</h3>
     </div>
-    <div class="card-header table-responsive bg-navy">
-        <table class="table text-nowrap table-bordered">
-            <thead>
-                <tr role="row">
-                    <th>Help</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>swap the session in the form above to view comments of each session</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
     {% if result %}
-    <div class="card-body table-responsive bg-primary p-0">
+    <div class="card-body table-responsive p-0">
         <table class="table table-hover text-nowrap table-striped table-bordered">
             <thead>
-                <tr>
+                <tr class="text-gray-dark">
                     <th>Name</th>
                     <th>Teacher's comment</th>
                     <th>Session </th>
@@ -29,7 +15,7 @@
             <tbody>
               {% for results in result %}
                 {% if results.teachers_comment %}
-                  <tr>
+                  <tr class="text-gray">
                       <td>{{ results.student.name }}</td>
                       <td>{{ results.teachers_comment }}</td>
                       <td>{{ results.session }}</td>

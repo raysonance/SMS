@@ -226,7 +226,7 @@ def send_messages(request):
         "form": form,
     }
 
-    return render(request, "users/teacher_message.html", context)
+    return render(request, "teachers/send_message.html", context)
 
 
 # general messages

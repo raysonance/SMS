@@ -30,24 +30,24 @@
 <div class="row">
 {% for article in articles %}
   <div class="col-md-6">
-    <div class="card {% if article.private == True %} card-danger {% else %} card-success {% endif %} collapsed-card">
-      <div class="card-header">
-        <h3 class="card-title"> {{ article.title }} <span class="text-gray"><small> sent by {{ article.teacher.name }} to {{ article.student.name }} | {{ article.updated_at }} </small> </span></h3>
+    <div class="card">
+      <div class="card-header"  {% if article.private == True %} style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white" {% else %} style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
+        <h3 class="card-title"> {{ article.title }} <span class="text-muted"><small> sent by {{ article.teacher.name }} to {{ article.student.name }} | {{ article.updated_at }} </small> </span></h3>
 
         <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
-          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+          <button type="button" class="btn btn-tool text-white" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
+          <button type="button" class="btn btn-tool text-white" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+          <button type="button" class="btn btn-tool text-white" data-card-widget="remove"><i class="fas fa-times"></i></button>
         </div>
         <!-- /.card-tools -->
       </div>
       <!-- /.card-header -->
-      <div class="card-body bg-navy">
+      <div class="card-body" style="background-color: #eff1f4">
         {{ article.message }}
       </div>
       <!-- /.card-body -->
       {% if request.user.is_teacher %}
-      <div class="card-footer bg-navy">
+      <div class="card-footer" {% if article.private == True %} style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white" {% else %} style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
         <span class="d-flex justify-content-lg-end">
           <span class="mx-3"><a style="color:white" href="{% url 'teachers:message_update' article.slug %}?next={{ request.path|urlencode }}">Edit</a> </span>
           |

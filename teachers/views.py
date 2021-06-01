@@ -44,10 +44,10 @@ def load_class(request):
 
 def show_teachers_comment(request):
     try:
+        student_id = request.GET.get("student")
         session_id = request.GET.get("session")
         student_result = SubjectResult.objects.filter(
-            class_name=request.user.teachermodel.class_name_id,
-            sub_class=request.user.teachermodel.sub_class_id,
+            student=student_id,
             session=session_id,
         ).select_related("student")
 
@@ -260,7 +260,9 @@ def teacher_dashboard(request):
     total_student_count = len(total_student)
     three_message = [
         x
-        for x in TeacherMessages.objects.filter(teacher=request.user.teachermodel)[:3]
+        for x in TeacherMessages.objects.filter(
+            teacher=request.user.teachermodel
+        ).select_related("admin")[:3]
         if x.was_published_recently()
     ]
 
@@ -580,6 +582,8 @@ def send_general_message(request):
 
     return render(request, "teachers/send_general_message.html", context)
 
+
+# todo: merge html of admin send messages and teacher send messages
 
 # for teachers to view messages
 @login_required

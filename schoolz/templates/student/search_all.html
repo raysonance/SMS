@@ -28,7 +28,7 @@
             </div>
           {% endif %}
           <div class="card-header">
-            <h3 class="card-title"> Search </h3> <div class="card-tools"><i class="fa fa-edit"></i></div>
+            <h3 class="card-title"> Search </h3> <div class="card-tools text-gray"><i class="fa fa-edit"></i></div>
           </div>
         {% with students=students %}
         {% with teachers=teachers %}
@@ -36,7 +36,7 @@
           <div class="card-body table-responsive p-0">
             <table class="table table-hover text-nowrap table-striped table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="text-gray-dark">
                         <th>Id</th>
                         <th>Name</th>
                         <th>Status</th>
@@ -48,14 +48,14 @@
                 <tbody>
                 {% if students %}
                   {% for students in students %}
-                      <tr>
+                      <tr class="text-gray">
                           <td>{{ forloop.counter }}</td>
                           <td>{{ students.name }}</td>
                           <td> Student </td>
                           <td>{{ students.class_name.class_name }}</td>
                           <td>{{ students.sub_class.sub_class }}</td>
                           <td>
-                              <a class="btn btn-success" href="{% url 'students:profile' students.uuid %}">
+                              <a class="btn btn-success" style="background-color: #00da5f; color: white" href="{% url 'students:profile' students.uuid %}">
                                   <i class="fa fa-search-plus"></i>
                               </a>
                           </td>
@@ -64,14 +64,14 @@
                 {% endif %}
                   {% if teachers %}
                     {% for teacher in teachers %}
-                      <tr>
+                      <tr class="text-gray">
                           <td>{{ forloop.counter }}</td>
                           <td>{{ teacher.name }}</td>
                           <td> Teacher </td>
                           <td>{{ teacher.class_name.class_name }}</td>
                           <td>{{ teacher.sub_class.sub_class }}</td>
                           <td>
-                              <a class="btn btn-success" href="{% url 'teachers:profile' teacher.uuid %}">
+                              <a class="btn" style="background-color: #00da5f; color: white" href="{% url 'teachers:profile' teacher.uuid %}">
                                   <i class="fa fa-search-plus"></i>
                               </a>
                           </td>

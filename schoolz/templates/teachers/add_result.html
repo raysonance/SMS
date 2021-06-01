@@ -5,13 +5,13 @@
 {% block content %}
 <section class="content">
   <div class="container-fluid">
-    <div id="dash-nav">
+    <div id="dash-nav" class="text-center">
       <div class="btn-group" role="group" aria-label="Basic example">
-          <button data-toggle="tooltip" title="Main admin dashboard" type="button"
-                  class="btn btn-warning disabled" id="button-dashboard">Add Result
+          <button data-toggle="tooltip" title="Add and View Result" type="button"
+                  class="btn disabled text-white" id="button-dashboard" style="background-color: #f8bb86; color: #fc5f1c">Add Result
           </button>
-          <button data-toggle="tooltip" title="Manage existing departments and classes" type="button"
-                  class="btn btn-warning" id="button-comment">Add Comment
+          <button data-toggle="tooltip" title="Add and View comments" type="button"
+                  class="btn text-white" id="button-comment" style="background-color: #f8bb86; color: #fc5f1c">Add Comment
           </button>
       </div>
       <hr>
@@ -22,9 +22,10 @@
             <!-- general form elements -->
             <form method="POST" id="form" action="{% url 'teachers:add_result' %}">
               {% csrf_token %}
-              <div class="card card-primary">
-                <div class="card-header">
-                  <h3 class="card-title">Add Result</h3>
+              <div class="card">
+                <div class="card-header" style="background-color: #f8ceec; background-image: linear-gradient(315deg, #f8ceec 0%, #a88beb 74%)">
+                  <h3 class="card-title text-white result_content">Add Result</h3>
+                  <h3 class="card-title text-white d-none comment_content">Add Comment</h3>
                 </div>
                 <!-- /.card-header -->
 
@@ -53,16 +54,19 @@
                   </div>
                 {% endif %}
 
-
                 <div class="card-body">
-                  <div class="form-group">
-                    <label for="students"> Students </label>
-                    <select class="form-control" name="students" id="students">
-                      {% for student in students %}
-                        <option value="{{ student.pk }}">{{ student.name }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
+                  <!-- add tooltip -->
+                  <span tabindex="0" data-toggle="tooltip" title="Swap the student and session to view the result and comment of each student and for each session">
+                    <div class="form-group">
+                      <label for="students"> Students </label>
+                      <select class="form-control" name="students" id="students">
+                        {% for student in students %}
+                          <option value="{{ student.pk }}">{{ student.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </span>
+                  <!-- /.student -->
 
                   <div class="form-group">
                     <label for="session">Session </label>
@@ -72,8 +76,9 @@
                       {% endfor %}
                     </select>
                   </div>
+                  <!-- /.session -->
 
-                  <div id="result_content" class=''>
+                  <div class='result_content'>
                     <div class="form-group">
                       <label for="subject">Subject </label>
                       <select class="form-control" name="subject" id="subject">
@@ -82,27 +87,32 @@
                         {% endfor %}
                       </select>
                     </div>
-                        <!-- /.card-body -->
-
-                    <div id="fill-result-button" class="card-footer">
-                      <button type="button" class="btn btn-primary" id="fill_result">Fill Result</button>
-                    </div>
                   </div>
+                  <!-- /.subjects -->
 
-                  <div id="comment_content" class='d-none'>
+                  <div class='d-none comment_content'>
                     <div class='form-group'>
                       <label for="comment">Teacher's comment : </label>
                       <textarea class="form-control" placeholder="comment" name="comment" id="comment" required> </textarea>
                     </div>
+                  </div>
 
-                    <div class="card-footer">
-                      <button type="submit" class="btn btn-primary" >Add comment</button>
-                    </div>
-                  </div>
                 </div>
-                  {% comment %} Displaying Students Here {% endcomment %}
-                  <div class="card-footer" id="student_data">
-                  </div>
+                <!-- /.card-body -->
+
+                <div id="fill-result-button" class="card-footer result_content">
+                  <button type="button" class="btn bg-purple" id="fill_result">Fill Result</button>
+                </div>
+                <!-- /.fill-result-button -->
+
+                <div class="card-footer d-none comment_content">
+                  <button type="submit" class="btn bg-purple" >Add comment</button>
+                </div>
+                <!-- /.fill-result-button -->
+
+                {% comment %} Displaying Students Here {% endcomment %}
+                <div class="card-footer" id="student_data">
+                </div>
               </div>
             </form>
           <!-- /.card -->
@@ -117,8 +127,8 @@
 {% block script %}
 <script>
   {# get the content #}
-  let result_content = document.getElementById("result_content");
-  let comment_content = document.getElementById("comment_content");
+  let result_content = document.querySelectorAll(".result_content");
+  let comment_content = document.querySelectorAll(".comment_content");
   let forms = document.getElementById("form")
   {# get the buttons #}
   let dashboard_button = document.getElementById("button-dashboard");
@@ -135,15 +145,11 @@
         }
 
     {# Handle the contents #}
-    if (!comment_content.classList.contains("d-none")) {
-        comment_content.classList.add("d-none");
-        }
+    comment_content.forEach(a => (!a.classList.contains("d-none")) ? a.classList.add("d-none") : null )
     if (forms.action != "{% url 'teachers:add_result' %}") {
         forms.action = "{% url 'teachers:add_result' %}";
         }
-    if (result_content.classList.contains("d-none")) {
-        result_content.classList.remove("d-none");
-        }
+    result_content.forEach(a => (a.classList.contains("d-none")) ? a.classList.remove("d-none") : null )
   });
   {# add events when comment_button is clicked #}
   comment_button.addEventListener("click", function () {
@@ -156,15 +162,10 @@
         }
 
     {# Handle the contents #}
-    if (!result_content.classList.contains("d-none")) {
-        result_content.classList.add("d-none");
-        }
+    result_content.forEach(a => (!a.classList.contains("d-none")) ? a.classList.add("d-none") : null )
 
     forms.action = "{% url 'teachers:teachers_comment' %}";
-
-    if (comment_content.classList.contains("d-none")) {
-        comment_content.classList.remove("d-none");
-        }
+    comment_content.forEach(a => (a.classList.contains("d-none")) ? a.classList.remove("d-none") : null )
   });
 
 </script>
@@ -173,6 +174,9 @@
 
 
 $(document).ready(function () {
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
   let SessionId = $("#session").val();
   let StudentId = $("#students").val();
   $.ajax({
@@ -187,12 +191,31 @@ $(document).ready(function () {
         });
   {# lets a change in session value start an ajax request of loading comments if only in comment page #}
   $("#session").change(function () {
-    var dark = $("#session").val();
+    var student = $("#students").val();
+    var session = $("#session").val();
     if ($("#button-comment").hasClass('disabled')) {
     $.ajax({
       url: "{% url 'teachers:load_comment' %}",
       data: {
-        'session': dark
+        'session': session,
+        'student': student
+      },
+      success: function (data) {
+        $("#add-comments").html(data);
+      }
+    });
+    }
+  });
+    {# lets a change in student value start an ajax request of loading comments if only in comment page #}
+  $("#students").change(function () {
+    var student = $("#students").val();
+    var session = $("#session").val();
+    if ($("#button-comment").hasClass('disabled')) {
+    $.ajax({
+      url: "{% url 'teachers:load_comment' %}",
+      data: {
+        'session': session,
+        'student': student
       },
       success: function (data) {
         $("#add-comments").html(data);
@@ -242,10 +265,12 @@ $("#button-comment").on('click', function(){
   $("#student_data").html("");
   $("#add-comments").html("");
       let SessionId = $("#session").val();
+      let student = $("#students").val();
       $.ajax({
           url: "{% url 'teachers:load_comment' %}",
           data: {
-            "session": SessionId
+            "session": SessionId,
+            "student": student
             },
           success: function (data) {
             $("#add-comments").html(data);
@@ -313,7 +338,7 @@ $("#fill_result").on('click', function(){
   div_data+="</div>";
 
   div_data+="<div class='form-group'>";
-  div_data+="<button id='save_result' class='btn btn-success' type='submit'>Save Result</button>";
+  div_data+="<button id='save_result' class='btn bg-purple' type='submit'>Save Result</button>";
   div_data+="</div>";
   $("#student_data").html(div_data);
 });
