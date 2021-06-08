@@ -16,7 +16,7 @@ from django.views.generic import (
 )
 from notifications.signals import notify
 
-from students.models import StudentModel
+from students.models import Code, StudentModel
 from teachers.models import Class, Section, SubClass, TeacherMessages, TeacherModel
 
 from .decorators import admin_required, superuser_required, user_is_admin
@@ -328,3 +328,38 @@ class DeleteMessage(LoginRequiredMixin, DeleteView):
 
 
 # implement active and non active as a way of deleting
+
+
+def delete_codes(request):
+    codes = Code.objects.all()
+    try:
+        codes.delete()
+    except Exception as err:
+        messages.error(request, f"Cannot delete codes contact the web developer. {err}")
+
+
+@login_required
+@user_passes_test(user_is_admin, login_url="home")
+def create_codes(request):
+    student_number = (
+        StudentModel.objects.filter(section=request.user.adminmodel.section_id).count()
+        + 10
+    )
+    delete_codes(request)
+    try:
+        for i in range(student_number):
+            Code.objects.create(number=i)
+        messages.success(request, "Codes have been generated successfully.")
+        return view_codes(request)
+    except Exception as err:
+        messages.error(
+            request, f"Cannot generate codes contact the web developer. {err}"
+        )
+        return view_codes(request)
+
+
+@login_required
+@user_passes_test(user_is_admin, login_url="home")
+def view_codes(request):
+    codes = Code.objects.all()
+    return render(request, "users/codes.html", {"codes": codes})

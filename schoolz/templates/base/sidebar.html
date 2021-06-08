@@ -48,14 +48,6 @@
                   <p>Student List</p>
                 </a>
               </li>
-              {% comment %}
-              <li class="nav-item">
-                <a href="{% url 'students:search_student' %}" class="nav-link">
-                  <i class="fas fa-search nav-icon"></i>
-                  <p>Student Search</p>
-                </a>
-              </li>
-              {% endcomment %}
             </ul>
           </li>
 
@@ -85,6 +77,31 @@
                 <a href="{% url 'teachers:list' 'Secondary' %}" class="nav-link">
                   <i class="fas fa-list nav-icon"></i>
                   <p>Secondary</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Result
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'users:code' %}" class="nav-link">
+                  <i class="fas fa-user-plus nav-icon"></i>
+                  <p>Generate Codes</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'users:view_codes' %}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+                  <p>View Codes</p>
                 </a>
               </li>
             </ul>
@@ -350,13 +367,13 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{% url 'students:message' %}" class="nav-link">
-                  <i class="fas fa-user-plus nav-icon"></i>
+                  <i class="fas fa-envelope-open-text nav-icon"></i>
                   <p>Private</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{% url 'students:general_message' %}" class="nav-link">
-                  <i class="fas fa-list nav-icon"></i>
+                  <i class="fas fa-envelope-open-text nav-icon"></i>
                   <p>General</p>
                 </a>
               </li>
