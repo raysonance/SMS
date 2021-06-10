@@ -331,7 +331,7 @@ class DeleteMessage(LoginRequiredMixin, DeleteView):
 
 
 def delete_codes(request):
-    codes = Code.objects.all()
+    codes = Code.objects.filter(section=request.user.adminmodel.section_id)
     try:
         codes.delete()
     except Exception as err:
@@ -346,9 +346,10 @@ def create_codes(request):
         + 10
     )
     delete_codes(request)
+    section = Section.objects.get(pk=request.user.adminmodel.section_id)
     try:
         for i in range(student_number):
-            Code.objects.create(number=i)
+            Code.objects.create(number=i, section=section)
         messages.success(request, "Codes have been generated successfully.")
         return view_codes(request)
     except Exception as err:
@@ -361,5 +362,5 @@ def create_codes(request):
 @login_required
 @user_passes_test(user_is_admin, login_url="home")
 def view_codes(request):
-    codes = Code.objects.all()
+    codes = Code.objects.filter(section=request.user.adminmodel.section_id)
     return render(request, "users/codes.html", {"codes": codes})

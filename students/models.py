@@ -133,6 +133,7 @@ class SubjectResult(models.Model):
     total_score = models.IntegerField()
     grade = models.CharField(max_length=3)
     remark = models.CharField(max_length=20)
+    pin = models.BooleanField(default=False)
     teachers_comment = models.CharField(max_length=100, null=True)
     head_teacher_comment = models.CharField(max_length=100, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -144,6 +145,7 @@ class SubjectResult(models.Model):
 
 class Code(models.Model):
     id = models.AutoField(primary_key=True)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, default=1)
     number = models.IntegerField(null=True)
     uuid = models.UUIDField(
         unique=True,

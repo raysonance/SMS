@@ -18,7 +18,7 @@ from teachers.models import Class, Session, SubClass, TeacherModel
 from teachers.views import user_is_teacher
 
 from .forms import StudentAdminSignUpForm, StudentModelForm, StudentSignUpForm
-from .models import StudentMessages, StudentModel, Subject, SubjectResult
+from .models import Code, StudentMessages, StudentModel, Subject, SubjectResult
 
 
 # for loading sub_class according to equivalent Class using jquery
@@ -335,6 +335,34 @@ def student_dashboard(request):
     return render(request, "student/student_dashboard.html", context)
 
 
+def result_pin(request, class_id, session_id):
+    if request.method == "POST":
+        try:
+            pin = request.POST.get("pin")
+            if Code.objects.filter(
+                uuid=pin, section=request.user.studentmodel.section_id
+            ):
+                student_result = SubjectResult.objects.filter(
+                    student=request.user.pk, session=session_id, class_name=class_id
+                )
+                for result in student_result:
+                    result.pin = True
+                    result.save()
+                code = Code.objects.get(uuid=pin)
+                code.delete()
+                messages.success(request, "Pin Correct! Result can now be viewed!")
+                return redirect("students:show_result")
+            else:
+                messages.error(request, "Pin incorrect")
+                return redirect(
+                    "students:pin", class_id=class_id, session_id=session_id
+                )
+        except Exception as err:
+            messages.error(request, f"Failed! {err}")
+            return redirect("students:show_result")
+    return render(request, "student/pin.html")
+
+
 # result checking for students
 @login_required
 @user_passes_test(user_is_student, login_url="home")
@@ -352,39 +380,45 @@ def show_result(request):
             student=request.user.pk, session=session, class_name=class_name
         ).select_related("subject")
         if student_result:
-            first = student_result[0].session.session_name
-            # checks either to be promoted to next session or next class
-            if student_result[0].session != Session.objects.last():
-                promote_session = get_object_or_404(
-                    Session, pk=student_result[0].session.id + 1
-                ).session_name
-            else:
-                promote_session = get_object_or_404(
-                    Class, pk=student_result.class_name.pk + 1
-                ).class_name
-            # calculates the total percentage
-            normal_total, student_total = 0, 0
-            for result in student_result:
-                normal_total += 100
-                student_total += result.total_score
-            percentage = (student_total / normal_total) * 100
-
-            for comments in student_result:
-                if comments.teachers_comment:
-                    comment = comments.teachers_comment
-                    break
+            if student_result[0].pin:
+                first = student_result[0].session.session_name
+                # checks either to be promoted to next session or next class
+                if student_result[0].session != Session.objects.last():
+                    promote_session = get_object_or_404(
+                        Session, pk=student_result[0].session.id + 1
+                    ).session_name
                 else:
-                    comment = "No comment has been inputted for this student."
+                    promote_session = get_object_or_404(
+                        Class, pk=student_result[0].class_name.pk + 1
+                    ).class_name
+                # calculates the total percentage
+                normal_total, student_total = 0, 0
+                for result in student_result:
+                    normal_total += 100
+                    student_total += result.total_score
+                percentage = (student_total / normal_total) * 100
 
-            context = {
-                "student_result": student_result,
-                "first": first,
-                "next": promote_session,
-                "percentage": percentage,
-                "total": student_total,
-                "comment": comment,
-            }
-            return render(request, "student/student_result.html", context)
+                for comments in student_result:
+                    if comments.teachers_comment:
+                        comment = comments.teachers_comment
+                        break
+                    else:
+                        comment = "No comment has been inputted for this student."
+
+                context = {
+                    "student_result": student_result,
+                    "first": first,
+                    "next": promote_session,
+                    "percentage": percentage,
+                    "total": student_total,
+                    "comment": comment,
+                }
+                return render(request, "student/student_result.html", context)
+            else:
+                messages.error(request, "This result has not been paid for.")
+                return redirect(
+                    "students:pin", class_id=class_id, session_id=session_id
+                )
         else:
             # checks only for class and student and not session
             if SubjectResult.objects.filter(
