@@ -12,6 +12,7 @@ from notifications.signals import notify
 # Create your views here.
 from schoolz.users.decorators import (
     admin_required,
+    student_admin,
     teacher_admin,
     teacher_required,
     user_is_teacher,
@@ -23,9 +24,11 @@ from students.models import StudentMessages, StudentModel, Subject, SubjectResul
 from .forms import TeacherModelForm, TeacherSignUpForm, TeacherUpdateForm
 from .models import Class, Section, Session, SubClass, TeacherMessages, TeacherModel
 
-# todo: add protection to new functions
+# todo: protection to ajax functions
+# todo: add function for adminmodel, teachermodel, studentmodel
 
 
+# function for ajax fetching of user subclass
 def load_sub_class(request):
     class_id = request.GET.get("class")
     sub_class = SubClass.objects.filter(class_name=class_id)
@@ -34,6 +37,7 @@ def load_sub_class(request):
     return render(request, "others/subclass_dropdown_list_options.html", context)
 
 
+# function for ajax fetching of user class
 def load_class(request):
     section_id = request.GET.get("section")
     class_name = Class.objects.filter(section=section_id)
@@ -42,6 +46,7 @@ def load_class(request):
     return render(request, "others/class_dropdown_list_option.html", context)
 
 
+# function for ajax fetching of user comment for results
 def show_teachers_comment(request):
     try:
         student_id = request.GET.get("student")
@@ -59,6 +64,7 @@ def show_teachers_comment(request):
         return render(request, "teachers/add_result.html", context)
 
 
+# function for ajax fetching of user result
 def load_student_result(request):
     if request.method == "GET":
         student_id = request.GET.get("students")
@@ -82,19 +88,19 @@ def load_student_result(request):
 class TeacherSignupView(LoginRequiredMixin, CreateView):
     model = Teacher
     login_url = "account_login"
-    form_class = TeacherSignUpForm
-    form2 = TeacherModelForm
+    form_class = TeacherSignUpForm  # for user model
+    form2 = TeacherModelForm  # for teacher model
     template_name = "teachers/signup.html"
 
     def get_form_kwargs(self):
         kwargs = super(TeacherSignupView, self).get_form_kwargs()
-        kwargs.update({"user": self.request.user})
-        kwargs.update({"request": self.request})
+        kwargs.update({"user": self.request.user})  # adds self.request.user to form
+        kwargs.update({"request": self.request})  # adds self.request to form
         return kwargs
 
     def get_context_data(self, **kwargs):
         kwargs["user_type"] = "teachers"
-        kwargs["form2"] = self.form2
+        kwargs["form2"] = self.form2  # to add second form to sign up html page
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
@@ -106,8 +112,11 @@ class TeacherSignupView(LoginRequiredMixin, CreateView):
 
 
 # list for student and admin
+@login_required
+@user_passes_test(student_admin, login_url="home")
 def teacher_list(request, section):
     if section == "Primary":
+        # create Primary first in section!
         get_section = get_object_or_404(Section, pk=1)
         teachers = TeacherModel.objects.filter(section=get_section).select_related(
             "class_name",
@@ -125,6 +134,7 @@ def teacher_list(request, section):
         return render(request, "teachers/list.html", context)
 
 
+# to show the profile of a teacher
 class TeacherProfileView(LoginRequiredMixin, DetailView):
     model = TeacherModel
     login_url = "account_login"
@@ -160,7 +170,7 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-
+        # checks if name is part of what was updated
         if "name" in form.changed_data:
             try:
                 teacher = Teacher.objects.get(pk=self.object.pk)
@@ -187,7 +197,11 @@ class AdminTeacherUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super(AdminTeacherUpdateView, self).get_form_kwargs()
-        kwargs["user"] = self.request.user.adminmodel
+        kwargs[
+            "user"
+        ] = (
+            self.request.user.adminmodel
+        )  # adds self.request.user.adminmodel to the form
         return kwargs
 
     def form_valid(self, form):
@@ -258,6 +272,8 @@ def teacher_dashboard(request):
         id=request.user.teachermodel.sub_class_id,
     ).values("class_name__class_name", "sub_class")
     total_student_count = len(total_student)
+    # contains the three most recent messages and if all are created or updated
+    # more than a 30 day timeframe then the list would be empty
     three_message = [
         x
         for x in TeacherMessages.objects.filter(
@@ -284,6 +300,7 @@ def teacher_dashboard(request):
 @user_passes_test(user_is_teacher, login_url="home")
 def add_result(request):
     if request.method == "POST":
+        # get posted data
         student_id = request.POST.get("students")
         subject_id = request.POST.get("subject")
         session_id = request.POST.get("session")
@@ -296,6 +313,7 @@ def add_result(request):
         grade = request.POST.get("grade")
         remark = request.POST.get("remark")
 
+        # get the model itself
         if student_id and subject_id and session_id:
             student_obj = get_object_or_404(StudentModel, pk=student_id)
             subject_obj = get_object_or_404(Subject, id=subject_id)
@@ -305,11 +323,11 @@ def add_result(request):
             return redirect("teachers:add_result")
 
         try:
-            # Check if Students Result Already Exists or not
+            # Check if Result Already Exists
             check_exist = SubjectResult.objects.filter(
                 subject=subject_obj, student=student_obj, session=session_obj
             ).exists()
-            if check_exist:
+            if check_exist:  # update
                 result = SubjectResult.objects.get(
                     subject=subject_obj, student=student_obj, session=session_obj
                 )
@@ -384,7 +402,9 @@ def teachers_comment(request):
                 for subjects in student_result:
                     if subjects.teachers_comment:
                         subjects.teachers_comment = teacher_comment
-                        subjects.save(update_fields=["teachers_comment"])
+                        subjects.save(
+                            update_fields=["teachers_comment"]
+                        )  # way of saving a field to a saved model
                         messages.success(request, "Comment updated successfully!")
                         return redirect("teachers:add_result")
 
@@ -496,8 +516,10 @@ def promote_student_process(request):
         if student_result:
             student.class_name = class_name
             student.sub_class = sub_class
-            student.paid = False
-            student.active = False
+            student.paid = False  # sets student paid field to false
+            student.active = (
+                False  # sets active to false, student will not appear in promotion page
+            )
             student.save()
             messages.success(request, "Student promoted successfully!")
             return redirect("teachers:promote")
@@ -528,6 +550,7 @@ def send_messages(request):
             student_message.student = student
             student_message.private = True
             student_message.save()
+            # notify student of incoming message
             notify.send(
                 sender=request.user,
                 recipient=student.user,
@@ -583,8 +606,6 @@ def send_general_message(request):
     return render(request, "teachers/send_general_message.html", context)
 
 
-# todo: merge html of admin send messages and teacher send messages
-
 # for teachers to view messages
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
@@ -610,7 +631,7 @@ def view_admin_messages(request):
     return render(request, "users/view_message.html", context)
 
 
-# view admin messagesfor teachers
+# view admin messages for teachers
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def view_general_messages(request):

@@ -31,7 +31,7 @@
     <div class="row">
       <div class="col-lg-3 col-12">
         <!-- small box -->
-        <div class="small-box" style="background-color: #f6b0d0; color: #8c68ce">
+        <div class="small-box bg-gradient-purple">
           <div class="inner">
             <h3>{{ student }}</h3>
             <p>Student in {{ request.user.adminmodel.section }}</p>
@@ -44,7 +44,7 @@
       </div>
       <div class="col-lg-3 col-12">
         <!-- small box -->
-        <div class="small-box" style="background-color: #00ff80; color: #1c7430">
+        <div class="small-box bg-gradient-success">
           <div class="inner">
             <h3>{{ teacher }}</h3>
             <p>Class Teacher in {{ request.user.adminmodel.section }} </p>
@@ -57,7 +57,7 @@
       </div>
       <div class="col-lg-3 col-12">
         <!-- small box -->
-        <div class="small-box" style="background-color: #f8bb86; color: #fc5f1c">
+        <div class="small-box bg-gradient-warning">
           <div class="inner">
             <h3>{{ other_students }}</h3>
             <p>Student in {{ spectre }}</p>
@@ -87,11 +87,11 @@
         <!-- DONUT CHART -->
         <div class="card">
           <div class="card-header text-white" style="background-color: #f6b0d0;">
-            <h3 class="card-title"> Paid {{ request.user.adminmodel.section }} Student Chart</h3>
+            <h3 class="card-title text-purple"> Paid {{ request.user.adminmodel.section }} Student Chart</h3>
             <div class="card-tools">
-              <button type="button" class="btn btn-tool text-white" data-card-widget="collapse"><i class="fas fa-minus"></i>
+              <button type="button" class="btn btn-tool text-purple" data-card-widget="collapse"><i class="fas fa-minus"></i>
               </button>
-              <button type="button" class="btn btn-tool text-white" data-card-widget="remove"><i class="fas fa-times"></i></button>
+              <button type="button" class="btn btn-tool text-purple" data-card-widget="remove"><i class="fas fa-times"></i></button>
             </div>
           </div>
           <div class="card-body">
@@ -104,12 +104,12 @@
       <div class="col-lg-6 col-12">
         <!-- DONUT CHART -->
         <div class="card">
-          <div class="card-header text-white" style="background-color: #f8bb86">
+          <div class="card-header text-info" style="background-color: #7fc9fb;">
             <h3 class="card-title">Paid {{ spectre }} Student Chart</h3>
             <div class="card-tools">
-              <button type="button" class="btn btn-tool text-white" data-card-widget="collapse"><i class="fas fa-minus"></i>
+              <button type="button" class="btn btn-tool text-info" data-card-widget="collapse"><i class="fas fa-minus"></i>
               </button>
-              <button type="button" class="btn btn-tool text-white" data-card-widget="remove"><i class="fas fa-times"></i></button>
+              <button type="button" class="btn btn-tool text-info" data-card-widget="remove"><i class="fas fa-times"></i></button>
             </div>
           </div>
           <div class="card-body">
@@ -141,7 +141,7 @@
         datasets: [
           {
             data: [{{ paid_students }}, {{ unpaid }}],
-            backgroundColor : ['#7fc9fb', '#fc5f1c'],
+            backgroundColor : ['#7fc9fb', '#dc3545'],
           }
         ]
       }
@@ -169,7 +169,7 @@
         datasets: [
           {
             data: [{{ paid_other }}, {{ unpaid_other }}],
-            backgroundColor : ['#7fc9fb', '#fc5f1c'],
+            backgroundColor : ['#7fc9fb', '#dc3545'],
           }
         ]
       }

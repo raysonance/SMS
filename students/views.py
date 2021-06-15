@@ -20,8 +20,10 @@ from teachers.views import user_is_teacher
 from .forms import StudentAdminSignUpForm, StudentModelForm, StudentSignUpForm
 from .models import Code, StudentMessages, StudentModel, Subject, SubjectResult
 
+# todo: add function for adminmodel, teachermodel, studentmodel
 
-# for loading sub_class according to equivalent Class using jquery
+
+# for loading sub_class according to equivalent Class using ajax
 def load_sub_class(request):
     class_id = request.GET.get("class")
     sub_class = SubClass.objects.filter(class_name=class_id).order_by("sub_class")
@@ -30,6 +32,7 @@ def load_sub_class(request):
     return render(request, "others/subclass_dropdown_list_options.html", context)
 
 
+# function for ajax changing of user payment field
 def payment(request):
     if request.method == "POST":
         name = request.POST.get("name")
@@ -51,6 +54,8 @@ def payment(request):
         except Exception as err:
             messages.error(request, f"{err}")
             return render(request, "others/message.html")
+    else:
+        return render(request, "403.html")
 
 
 # signup of students for teachers
@@ -63,8 +68,8 @@ class StudentSignupView(LoginRequiredMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(StudentSignupView, self).get_form_kwargs()
-        kwargs.update({"user": self.request.user})
-        kwargs.update({"request": self.request})
+        kwargs.update({"user": self.request.user})  # adds self.request.user to form
+        kwargs.update({"request": self.request})  # adds self.request to form
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -96,7 +101,7 @@ class StudentAdminSignupView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs["user_type"] = "students"
-        kwargs["forms"] = self.form2
+        kwargs["forms"] = self.form2  # to add second form to sign up html page
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
@@ -120,7 +125,7 @@ class StudentProfileView(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         # a vey useful feature that reduces number of queries from 22 to 6
         # i have added the foreign keys i would use in the html to be
-        # preloaded so they wouldnt to called continually
+        # preloaded so they wouldn't to called continually
         # instead they would be cached
         student = Student.objects.all().select_related(
             "studentmodel__class_name",
@@ -167,6 +172,7 @@ class StudentUpdateView(LoginRequiredMixin, UpdateView):
             # set paid field to false if  class is changed
             if "class_name" in form.changed_data:
                 self.object.paid = False
+            # set active to false if class or sub_class is changed, student wont appear in promotion page
             if "class_name" or "sub_class" in form.changed_data:
                 self.object.active = False
 
@@ -255,7 +261,9 @@ def student_teacher_list(request):
     return render(request, "student/student_list.html", context)
 
 
+# function to make students active
 @login_required
+@user_passes_test(user_is_teacher, login_url="home")
 def active(request, uuid_key):
     try:
         student = get_object_or_404(StudentModel, uuid=uuid_key)
@@ -318,7 +326,8 @@ def student_dashboard(request):
     sub_class = SubClass.objects.filter(id=sub_class).values(
         "class_name__class_name", "sub_class"
     )
-
+    # contains the three most recent messages and if all are created or updated
+    # more than a 30 day timeframe then the list would be empty
     three_message = [
         x
         for x in StudentMessages.objects.filter(student=request.user.studentmodel)[:3]
@@ -335,6 +344,7 @@ def student_dashboard(request):
     return render(request, "student/student_dashboard.html", context)
 
 
+# for pin checking in result
 def result_pin(request, class_id, session_id):
     if request.method == "POST":
         try:
@@ -398,6 +408,7 @@ def show_result(request):
                     student_total += result.total_score
                 percentage = (student_total / normal_total) * 100
 
+                # checks for teacher comment in all filtered subject results
                 for comments in student_result:
                     if comments.teachers_comment:
                         comment = comments.teachers_comment

@@ -27,7 +27,6 @@ User = get_user_model()
 
 
 # todo: make head teacher comment field
-# todo: make a javascript spinner when page is loading or smth
 
 
 def load_students(request):
@@ -274,9 +273,6 @@ def view_messages(request):
     context = {"message": message}
 
     return render(request, "users/view_message.html", context)
-
-
-# next is to add a message for students result update
 
 
 # for teachers to update messages
