@@ -159,12 +159,19 @@ class AdminSignUpView(LoginRequiredMixin, CreateView):
 
 
 class AdminDetailView(LoginRequiredMixin, DetailView):
-    model = AdminModel
+    model = Admin
     login_url = "account_login"
     context_object_name = "admin"
     template_name = "users/admin_profile.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid_pk"
+
+    def get_queryset(self):
+        # a very useful feature that reduces number of queries from 22 to 6
+        admin = Admin.objects.all().select_related(
+            "adminmodel__section",
+        )
+        return admin
 
 
 # admin list of student

@@ -136,7 +136,7 @@ def teacher_list(request, section):
 
 # to show the profile of a teacher
 class TeacherProfileView(LoginRequiredMixin, DetailView):
-    model = TeacherModel
+    model = Teacher
     login_url = "account_login"
     context_object_name = "teacher"
     template_name = "teachers/teacherprofile.html"
@@ -145,9 +145,9 @@ class TeacherProfileView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         # a very useful feature that reduces number of queries from 22 to 6
-        teacher = TeacherModel.objects.all().select_related(
-            "class_name",
-            "sub_class",
+        teacher = Teacher.objects.all().select_related(
+            "teachermodel__class_name",
+            "teachermodel__sub_class",
         )
         return teacher
 

@@ -35,7 +35,7 @@ class StudentModel(models.Model):
     fathers_name = models.CharField("Father's Name", max_length=100)
     mothers_name = models.CharField("Mother's Name", max_length=100)
     date_of_birth = models.DateField("Birth Date", null=True, blank=True)
-    email = models.EmailField("Email Address")
+    email = models.EmailField("Email Address", blank=True)
     address = models.TextField(blank=True)
     emergency_mobile_number = models.CharField("Mobile Number", max_length=11)
     created_by = models.ForeignKey(

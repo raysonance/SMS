@@ -5,7 +5,7 @@
   <div class="card">
     <div class="card-header">
       <div class="row">
-        <img style="height:200px; width:200px; border-radius:50%; margin:auto" src="{{ teacher.get_photo_url }}" alt="Photo">
+        <img style="height:200px; width:200px; border-radius:50%; margin:auto" src="{{ teacher.teachermodel.get_photo_url }}" alt="Photo">
       </div>
     </div>
     <div class="card-body">
@@ -17,19 +17,22 @@
         <div class="row">
           <div class="mx-auto">
             <div style="font-size:24px; margin-left: 30px">
-              <p>Name                    : <span class="mx-4">{{ teacher.name }}</span></p>
-              <p>Class                   : <span class="mx-4">{{ teacher.class_name }}</span></p>
-              <p>Sub-class               : <span class="mx-4">{{ teacher.sub_class.sub_class }}</span></p>
-              <p>Mobile No               : <span class="mx-4">{{ teacher.mobile }}</span></p>
-              <p>Joining Date            : <span class="mx-4">{{ teacher.joining_date }}</span></p>
-              <p>Email                   : <span class="mx-4">{{ teacher.email }}</span></p>
-              {% if user.teachermodel == teacher %}
-              <p>Address                 : <span class="mx-4">{{ teacher.address }}</span></p>
-              <p>Date of Birth           : <span class="mx-4">{{ teacher.date_of_birth }}</span></p>
+              {% if user == teacher or user.is_admin %}
+              <p>Username                : <span class="mx-4">{{ teacher.username }}</span></p>
+              {% endif %}
+              <p>Name                    : <span class="mx-4">{{ teacher.teachermodel.name }}</span></p>
+              <p>Class                   : <span class="mx-4">{{ teacher.teachermodel.class_name }}</span></p>
+              <p>Sub-class               : <span class="mx-4">{{ teacher.teachermodel.sub_class.sub_class }}</span></p>
+              <p>Mobile No               : <span class="mx-4">{{ teacher.teachermodel.mobile }}</span></p>
+              <p>Joining Date            : <span class="mx-4">{{ teacher.teachermodel.joining_date }}</span></p>
+              <p>Email                   : <span class="mx-4">{{ teacher.teachermodel.email }}</span></p>
+              {% if user == teacher %}
+              <p>Address                 : <span class="mx-4">{{ teacher.teachermodel.address }}</span></p>
+              <p>Date of Birth           : <span class="mx-4">{{ teacher.teachermodel.date_of_birth }}</span></p>
               {% endif %}
               {% if user.is_admin %}
-              <p>Address                 : <span class="mx-4">{{ teacher.address }}</span></p>
-              <p>Date of Birth           : <span class="mx-4">{{ teacher.date_of_birth }}</span></p>
+              <p>Address                 : <span class="mx-4">{{ teacher.teachermodel.address }}</span></p>
+              <p>Date of Birth           : <span class="mx-4">{{ teacher.teachermodel.date_of_birth }}</span></p>
               {% endif %}
             </div>
           </div>

@@ -31,7 +31,7 @@ class User(AbstractUser):
     #: First and last name do not cover name patterns around the globe
     username = CharField(_("Username"), blank=True, max_length=255, unique=True)
     name = CharField(_("Name of User"), blank=True, max_length=255)
-    email = models.EmailField(_("email address"), blank=False, unique=True)
+    email = models.EmailField(_("email address"), blank=True, unique=True)
     uuid = models.UUIDField(
         unique=True,
         default=uuid.uuid4,
