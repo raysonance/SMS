@@ -1,7 +1,7 @@
 # import logging
 
 from .base import *  # noqa
-from .base import env
+from .base import STATIC_URL, env
 
 # import sentry_sdk
 # from sentry_sdk.integrations.django import DjangoIntegration
@@ -138,7 +138,7 @@ COMPRESS_FILTERS = {
     ],
     "js": ["compressor.filters.jsmin.JSMinFilter"],
 }
-
+COMPRESS_OFFLINE_CONTEXT = [{"THEME": "plain", "STATIC_URL": STATIC_URL}]
 # LOGGING
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
