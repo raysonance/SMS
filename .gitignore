@@ -53,10 +53,6 @@ coverage.xml
 # Django stuff:
 staticfiles/
 
-# too stupid
-schoolz/static/project/plugins
-schoolz/static/project/plugins/*
-
 # Sphinx documentation
 docs/_build/
 
