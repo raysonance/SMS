@@ -147,7 +147,7 @@ COMPRESS_FILTERS = {
 
 LOGGING = {
     "version": 1,
-    "disable_existing_loggers": True,
+    "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
@@ -166,7 +166,7 @@ LOGGING = {
         "django.db.backends": {
             "level": "ERROR",
             "handlers": ["console"],
-            "propagate": False,
+            "propagate": True,
         },
         # Errors logged by the SDK itself
         # "sentry_sdk": {"level": "ERROR", "handlers": ["console"], "propagate": False},
