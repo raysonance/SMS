@@ -121,9 +121,8 @@
   </div>
 </div>
 {% endblock %}
-{% block javascript %}
-
-  <script src="https://cdnjs.cloudfare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"> </script>
+{% block script %}
+  <script src="{% static 'project/plugins/chart.js/Chart.min.js' %}"></script>
   <script>
   $(function () {
         //- DONUT CHART -
@@ -155,4 +154,4 @@
     });
   });
   </script>
-{% endblock javascript %}
+{% endblock script %}
