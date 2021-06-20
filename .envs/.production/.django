@@ -15,15 +15,15 @@ DJANGO_SECURE_SSL_REDIRECT=False
 # ------------------------------------------------------------------------------
 DJANGO_SERVER_EMAIL=
 
-MAILJET_API_KEY=
-MAILJET_SECRET_KEY=
+MAILJET_API_KEY=8b41650f1cf05062bd2bae326a658b65
+MAILJET_SECRET_KEY=a6c4b19d49596c78a668439340bab81f
 
 
-# AWS
+# B2
 # ------------------------------------------------------------------------------
-DJANGO_AWS_ACCESS_KEY_ID=
-DJANGO_AWS_SECRET_ACCESS_KEY=
-DJANGO_AWS_STORAGE_BUCKET_NAME=
+DJANGO_B2_ACCESS_KEY_ID=babb97e013142e7b76a20b15
+DJANGO_B2_SECRET_ACCESS_KEY=K000160aCGAOwZZvWM5Q/TBMsFoVZ6c
+DJANGO_B2_STORAGE_BUCKET_NAME=Schoolz
 
 # django-allauth
 # ------------------------------------------------------------------------------
