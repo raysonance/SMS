@@ -1,6 +1,6 @@
 # General
 # ------------------------------------------------------------------------------
-# DJANGO_READ_DOT_ENV_FILE=True
+DJANGO_READ_DOT_ENV_FILE=True
 DJANGO_SETTINGS_MODULE=config.settings.production
 DJANGO_SECRET_KEY=s39rwRgCT7XvhzlGTOykHm36CFeMHwyoY5VUKYNhC9zlpA24KDnyc1QBlKmMS2Js
 DJANGO_ADMIN_URL=cNZYRPAuu2qHuqXixeVeWIZ3MnYABtEX/
