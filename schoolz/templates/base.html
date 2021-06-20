@@ -14,20 +14,19 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
 
-    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}">
+    <link rel="icon" href="{% static 'result/logo.jfif' %}">
 
     {% block css %}
 
     <!-- Latest compiled and minified Bootstrap CSS -->
     <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
-
+     <!-- Theme style -->
+    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/admin-lte/3.1.0/adminlte.min.css">
     <!-- Your stuff: Third-party CSS libraries go here -->
     {% compress css %}
     <!-- This file stores project-specific CSS -->
 
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
-    <!-- <link href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">-->
-    <link href="{% static 'project/dist/css/adminlte.min.css' %}" rel="stylesheet" >
 
     {% endcompress %}
     {% endblock %}
@@ -62,13 +61,17 @@
       <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
       <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
 
+      <!-- AdminLTE App -->
+      <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/admin-lte/3.1.0/adminlte.min.js">
+      <!-- Bootstrap 4 -->
+      <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.min.js">
       <!-- Your stuff: Third-party javascript libraries go here -->
 
       <!-- place project specific Javascript in this file -->
       {% compress js %}
         <script src="{% static 'project/plugins/jquery/jquery.min.js' %}"></script>
-        <script src="{% static 'project/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static 'project/dist/js/adminlte.min.js' %}"></script>
+<!--        <script src="{% static 'project/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>-->
+<!--        <script src="{% static 'project/dist/js/adminlte.min.js' %}"></script>-->
       {% endcompress %}
 
       <script>
