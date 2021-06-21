@@ -110,7 +110,7 @@ class AdminModel(models.Model):
     )
     name = models.CharField("Full Name", max_length=150)
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
-    photo = models.ImageField(upload_to="adminfile/")
+    photo = models.ImageField(upload_to="adminfile/", null=True, blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
     mobile = models.CharField(max_length=11, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
