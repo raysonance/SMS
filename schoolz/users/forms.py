@@ -55,7 +55,7 @@ class AdminSignUpForm(UserCreationForm):
         max_length=150, widget=form.TextInput(attrs={"class": "form-control"})
     )
     photo = form.ImageField(
-        required=True, widget=form.ClearableFileInput(attrs={"class": "form-control"})
+        widget=form.ClearableFileInput(attrs={"class": "form-control"})
     )
     date_of_birth = form.DateField(
         required=True, widget=form.TextInput(attrs={"type": "date"})
