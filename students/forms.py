@@ -32,7 +32,7 @@ class StudentSignUpForm(UserCreationForm):
         max_length=150, widget=forms.TextInput(attrs={"class": "form-control"})
     )
     photo = forms.ImageField(
-        widget=forms.ClearableFileInput(attrs={"class": "form-control"})
+        required=False, widget=forms.ClearableFileInput(attrs={"class": "form-control"})
     )
     fathers_name = forms.CharField(
         max_length=150, widget=forms.TextInput(attrs={"class": "form-control"})
