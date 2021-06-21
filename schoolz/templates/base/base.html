@@ -152,8 +152,6 @@
 
   <!-- Notifications -->
 <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
-<!-- {% register_notify_callbacks callbacks='fill_notification_list, fill_notification_badge' %} -->
-
 {% block script %}
 {% endblock script %}
 {% endcompress %}
@@ -195,16 +193,6 @@ $(document).ready(function($){
 $(window).on("load", function (){
   $('#preloader').fadeOut();
 });
-// $(".nav-link").on("click", function () {
-//   if ($(this).attr("href") != '#') {
-//     $('#preloader').fadeIn()
-//   }
-// });
-// $("a").on("click", function () {
-//   if ($(this).attr("href") != '#' && $(this).attr("data-toggle") != "dropdown") {
-//     $('#preloader').fadeIn();
-//   }
-// });
 
 $(document).ready(function () {
   $("button").on("click", function () {
