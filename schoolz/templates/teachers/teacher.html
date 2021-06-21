@@ -121,8 +121,11 @@
   </div>
 </div>
 {% endblock %}
+
 {% block script %}
   <script src="{% static 'project/plugins/chart.js/Chart.min.js' %}"></script>
+{% endblock script %}
+{% block writescript %}
   <script>
   $(function () {
         //- DONUT CHART -
@@ -154,4 +157,4 @@
     });
   });
   </script>
-{% endblock script %}
+{% endblock writescript %}

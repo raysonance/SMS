@@ -125,6 +125,9 @@
 
 {% block script %}
   <script src="{% static 'project/plugins/chart.js/Chart.min.js' %}"></script>
+{% endblock script %}
+
+{% block writescript %}
   <script>
   $(document).ready(function () {
 
@@ -187,4 +190,4 @@
     });
   });
   </script>
-{% endblock script %}
+{% endblock writescript %}
