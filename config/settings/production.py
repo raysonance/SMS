@@ -65,7 +65,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 # ------------------------------------------------------------------------------
 # https://django-storages.readthedocs.io/en/latest/#installation
 INSTALLED_APPS += ["storages"]  # noqa F405
-DEFAULT_FILE_STORAGE = "django_b2.storage.B2Storage"
+
 B2_APP_KEY_ID = env("DJANGO_B2_ACCESS_KEY_ID")
 B2_APP_KEY = env("DJANGO_B2_SECRET_ACCESS_KEY")
 B2_BUCKET_NAME = env("DJANGO_B2_STORAGE_BUCKET_NAME")
@@ -76,7 +76,7 @@ B2_LOCAL_MEDIA = "ML"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # MEDIA
 # ------------------------------------------------------------------------------
-DEFAULT_FILE_STORAGE = "schoolz.utils.storages.MediaRootS3Boto3Storage"
+DEFAULT_FILE_STORAGE = "django_b2.storage.B2Storage"
 # MEDIA_URL = f"https://{aws_s3_domain}/media/"
 
 # TEMPLATES
