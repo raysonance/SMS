@@ -14,7 +14,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{ request.user.adminmodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ request.user.adminmodel.get_photo_url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="{% url 'users:dash' %}" class="d-block">Dashboard</a>
@@ -280,7 +280,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{ request.user.studentmodel.photo.url }}" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ request.user.studentmodel.get_photo_url }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="{% url 'students:dash' %}" class="d-block">Dashboard</a>
