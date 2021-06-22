@@ -80,7 +80,11 @@ class TeacherModel(models.Model):
 
     @property
     def get_photo_url(self):
-        return f"{settings.MEDIA_URL}{self.photo}"
+        try:
+            if self.photo.url:
+                return f"{self.photo.url}"
+        except Exception:
+            return f"{settings.MEDIA_URL}{self.photo}"
 
     def get_absolute_url(self):
         return reverse("users:dash", args=None)

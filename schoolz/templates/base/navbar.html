@@ -56,13 +56,13 @@
       {% if request.user.is_teacher %}
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-            	<img src="{{ request.user.teachermodel.photo.url }}" class="user-image img-fluid img-circle elevation-2" alt="teacher">
+            	<img src="{{ request.user.teachermodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="teacher">
               <span class="d-none d-md-inline">{{ request.user.teachermodel.name }}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <!-- User image -->
           <li class="user-header bg-primary">
-            	<img src="{{ request.user.teachermodel.photo.url }}" class="user-image img-fluid img-circle elevation-2" alt="teacher">
+            	<img src="{{ request.user.teachermodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="teacher">
             <p>
             		{{ request.user.teachermodel.name }}
             </p>
