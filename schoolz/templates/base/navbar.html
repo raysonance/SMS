@@ -69,10 +69,7 @@
           </li>
           <!-- Menu Body -->
           <li class="user-body">
-            <div class="row"><!--
-              <div class="col-4 text-center">
-                <a href="{% url 'account_email' %}">Modify Email</a>
-              </div> -->
+            <div class="row">
               <div class="col-4 text-center">
                 <a href="{% url 'teachers:update' request.user.uuid %}">Update Profile</a>
               </div>
@@ -108,10 +105,7 @@
             </p>
           </li>
           <li class="user-body">
-            <div class="row"> <!--
-              <div class="col-4 text-center">
-                <a href="{% url 'account_email' %}">Modify Email</a>
-              </div> -->
+            <div class="row">
               <div class="col-4 text-left">
                 <a href="{% url 'users:admin_update' request.user.uuid %}">Update Profile</a>
               </div>

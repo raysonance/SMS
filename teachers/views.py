@@ -179,6 +179,8 @@ class TeacherUpdateView(LoginRequiredMixin, UpdateView):
             except Exception as err:
                 messages.error(self.request, f"{err}")
                 return super().form_invalid(form)
+        form.save()
+        return super().form_valid(form)
 
     def get_success_url(self):
         messages.success(self.request, "Updated!")

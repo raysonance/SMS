@@ -199,6 +199,7 @@ class AdminUpdateView(LoginRequiredMixin, UpdateView):
     fields = ["name", "photo", "date_of_birth", "mobile", "email"]
 
     def get_success_url(self):
+        messages.success(self.request, "Updated!")
         return reverse_lazy("users:dash")
 
 
