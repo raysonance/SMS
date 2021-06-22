@@ -96,13 +96,13 @@
       {% elif request.user.is_admin %}
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-            	<img src="{{ request.user.adminmodel.get_photo_url}}" class="user-image img-fluid img-circle elevation-2" alt="admin">
+            	<img src="{{ request.user.adminmodel.url}}" class="user-image img-fluid img-circle elevation-2" alt="admin">
                  <span class="d-none d-md-inline">{{ request.user.adminmodel.name }}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <!-- User image -->
           <li class="user-header bg-primary">
-            	<img src="{{ request.user.adminmodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="admin">
+            	<img src="{{ request.user.adminmodel.url }}" class="user-image img-fluid img-circle elevation-2" alt="admin">
             <p>
             		{{ request.user.adminmodel.name }}
             </p>
@@ -135,13 +135,13 @@
       {% else %}
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-            	<img src="{{ request.user.studentmodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="student">
+            	<img src="{{ request.user.studentmodel.url }}" class="user-image img-fluid img-circle elevation-2" alt="student">
                 <span class="d-none d-md-inline">{{ request.user.studentmodel.name }}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <!-- User image -->
           <li class="user-header bg-primary">
-            	<img src="{{ request.user.studentmodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="student">
+            	<img src="{{ request.user.studentmodel.url }}" class="user-image img-fluid img-circle elevation-2" alt="student">
             <p>
             		{{ request.user.studentmodel.name }}
             </p>

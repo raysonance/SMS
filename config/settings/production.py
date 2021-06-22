@@ -78,7 +78,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # ------------------------------------------------------------------------------
 DEFAULT_FILE_STORAGE = "django_b2.storage.B2Storage"
 # DEFAULT_FILE_STORAGE = "schoolz.utils.storages.MediaRootS3Boto3Storage"
-# MEDIA_URL = f"https://{aws_s3_domain}/media/"
+MEDIA_URL = "https://f000.backblazeb2.com/file/schoolz/"
 
 # TEMPLATES
 # ------------------------------------------------------------------------------
