@@ -25,7 +25,6 @@
   </head>
 
   <body>
-
     <!-- Header Section Start -->
     <header id="home" class="hero-area">
       <div class="overlay">
@@ -59,28 +58,23 @@
               {% if request.user.is_authenticated %}
               {% if user.is_teacher %}
               <li class="nav-item">
-              <a class="btn btn-singin" style="margin-left:1em; margin-bottom:1em;" href="{% url 'teachers:dash' %}" type="button">{{ user.username }} Dashboard</a>
+              <a class="btn btn-singin mx-4 my-4" style="margin-left:1em; margin-bottom:1em;" href="{% url 'teachers:dash' %}" type="button">{{ user.username }} Dashboard</a>
               </li>
                 {% elif request.user.is_admin %}
                 <li class="nav-item">
-                  <a class="btn btn-singin" style="margin-left:1em; margin-bottom:1em;" href="{% url 'users:dash' %}" type="button">{{ user.username }} Dashboard</a>
+                  <a class="btn btn-singin mx-4 my-4" style="margin-left:1em; margin-bottom:1em;" href="{% url 'users:dash' %}" type="button">{{ user.username }} Dashboard</a>
                 </li>
               {% elif request.user.is_student %}
                 <li class="nav-item">
-                  <a class="btn btn-singin" style="margin-left:1em; margin-bottom:1em;" href="{% url 'students:dash' %}" type="button">{{ user.username }} Dashboard</a>
+                  <a class="btn btn-singin mx-4 my-4" style="margin-left:1em; margin-bottom:1em;" href="{% url 'students:dash' %}" type="button">{{ user.username }} Dashboard</a>
                 </li>
-                  {% endif %}
-          </div>
-
+              {% endif %}
               {% else %}
               <li class="nav-item">
-    <li class="dropdown"><button class="btn btn-primary dropdown-toggle" style="margin-left:1em; margin-bottom:1em;" data-toggle="dropdown" aria-expanded="false" type="button">Sign Up</button>
-      <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="{% url 'account_login' %}"> Teacher Sign-up </a><a class="dropdown-item" role="presentation" href="{% url 'account_login' %}">Student Sign-up</a></div></li>
-      <li class="nav-item">
-      <li class="dropdown"><button class="btn btn-primary dropdown-toggle" style="margin-bottom:1em; margin-left:1em;" data-toggle="dropdown" aria-expanded="false" type="button">Sign In</button>
-        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="{% url 'account_login' %}">Teacher Log-in</a><a class="dropdown-item" role="presentation" href="{% url 'account_logout' %}">Student Log-in</a></div></li>
-      {% endif %}
-                <!-- <a class="btn btn-singin" href="#">Dashboard</a> -->
+              <li class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" style="margin-bottom:1em; margin-left:1em;" data-toggle="dropdown" aria-expanded="false" type="button">Sign In</button>
+              <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="{% url 'account_login' %}">Teacher Log-in</a><a class="dropdown-item" role="presentation" href="{% url 'account_logout' %}">Student Log-in</a></div></li>
+              {% endif %}
               </li>
             </ul>
           </div>
@@ -122,7 +116,7 @@
                 <i class="lni-cog"></i>
               </div>
               <h4>Quality Education</h4>
-              <p>One of the most powerful tools for empowewring individuals and communities is making certain that any individual who wants to recieve a quality education can do so.</p>
+              <p>One of the most powerful tools for empowering individuals and communities is making certain that any individual who wants to recieve a quality education can do so.</p>
             </div>
           </div>
           <!-- End Col -->
@@ -296,10 +290,8 @@
                 </a>
               </div>
               <div class="blog-item-text">
-                <h3><a href="single-post.html">Elizabeth school is going for an Excursion</a></h3>
-                <p>We are organizing an excursion for the primary six students. Each student is expected to contribute the sum of fifty thousand for the excursion.
-                Click the header for more info.</p>
-                <a href="" class="read-more">10 Min read</a>
+                <h3><a href="single-post.html">Excursion</a></h3>
+                <p>Excursion to Silverbird galleries. Viewing the concept of Virtual Reality.</p>
               </div>
               <div class="author">
                 <span class="name"><i class="lni-user"></i><a href="#">Posted by Admin</a></span>
@@ -319,17 +311,34 @@
                 </a>
               </div>
               <div class="blog-item-text">
-                <h3><a href="single-post.html">Shark Fighting</a></h3>
-                <p> Students will fight sharks for wealth and glory.</p>
-                <a href="" class="read-more">5 Min read</a>
+                <h3><a href="single-post.html">Culture</a></h3>
+                <p> Cultural day. Showing the beauty of culture.</p>
               </div>
               <div class="author">
                 <span class="name"><i class="lni-user"></i><a href="#">Posted by Admin</a></span>
                 <span class="date float-right"><i class="lni-calendar"></i><a href="#">10 April, 2020</a></span>
               </div>
             </div>
-            <!-- Blog Item Wrapper Ends-->
           </div>
+            <!-- Blog Item Wrapper Ends-->
+            <!-- Start Col -->
+          <div class="col-lg-4 col-md-6 col-xs-12 blog-item">
+            <!-- Blog Item Starts -->
+            <div class="blog-item-wrapper">
+              <div class="blog-item-img">
+                <a href="single-post.html">
+                  <img src="{% static 'landing/img/blog/02.jpg' %}" class="img-fluid" alt="">
+                </a>
+              </div>
+              <div class="blog-item-text">
+                <h3><a href="single-post.html">Ping Pong Duel</a></h3>
+                <p> Students will play ping pong for wealth and glory.</p>
+              </div>
+              <div class="author">
+                <span class="name"><i class="lni-user"></i><a href="#">Posted by Admin</a></span>
+                <span class="date float-right"><i class="lni-calendar"></i><a href="#">10 April, 2020</a></span>
+              </div>
+            </div>
           </div>
           <!-- End Col -->
 
