@@ -12,21 +12,21 @@
     <meta name="author" content="Favour Gilead">
     <meta name="keyword" content="">
     <title>{% block title %}{% endblock title %}</title>
+<!--    	<link rel="stylesheet" href="{% static 'project/plugins/fontawesome-free/css/all.min.css' %}">-->
+<!--  	<link href="{% static 'project/dist/css/adminlte.min.css' %}" rel="stylesheet" >-->
+<!--  	<link rel="stylesheet" href="{% static 'project/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">-->
   	<!-- Font Awesome -->
-  <!--  	<link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/font-awesome/5.15.3/all.min.css">-->
-<!--     &lt;!&ndash; Theme style &ndash;&gt;-->
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/admin-lte/3.1.0/adminlte.min.css">-->
-<!--    &lt;!&ndash; Overlay &ndash;&gt;-->
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/font-awesome/5.15.3/all.min.css" crossorigin="anonymous">
+     <!-- Theme style -->
+    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/admin-lte/3.1.0/adminlte.min.css" crossorigin="anonymous">
+    <!-- Overlay -->
+    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.css" crossorigin="anonymous">
     {% block css %}
 
   	<!-- Google Font: Source Sans Pro -->
   	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     {% compress css %}
     <link href="{% static 'css/project.css' %}" rel="stylesheet" >
-  	<link rel="stylesheet" href="{% static 'project/plugins/fontawesome-free/css/all.min.css' %}">
-  	<link href="{% static 'project/dist/css/adminlte.min.css' %}" rel="stylesheet" >
-  	<link rel="stylesheet" href="{% static 'project/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
     {% endcompress %}
     {% endblock %}
 

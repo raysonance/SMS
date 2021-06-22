@@ -18,13 +18,14 @@
     {% block css %}
 
     <!-- Latest compiled and minified Bootstrap CSS -->
-    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
 
+<!--    <link  rel="stylesheet" href="{% static 'project/dist/css/adminlte.min.css' %}" >-->
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+  `<link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/admin-lte/3.1.0/adminlte.min.css" crossorigin="anonymous">
     <!-- Your stuff: Third-party CSS libraries go here -->
 
     {% compress css %}
     <link rel="stylesheet" href="{% static 'css/project.css' %}">
-    <link  rel="stylesheet" href="{% static 'project/dist/css/adminlte.min.css' %}" >
     {% endcompress %}
     {% endblock %}
 
