@@ -4,7 +4,7 @@
 <html lang="en">
 <!--Headers-->
 <head>
-    <link rel="shortcut icon" href="#">
+    <link rel="icon" href="{% static 'result/logo.jfif' %}">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,26 +12,26 @@
     <meta name="author" content="Favour Gilead">
     <meta name="keyword" content="">
     <title>{% block title %}{% endblock title %}</title>
-<!--    	<link rel="stylesheet" href="{% static 'project/plugins/fontawesome-free/css/all.min.css' %}">-->
-<!--  	<link href="{% static 'project/dist/css/adminlte.min.css' %}" rel="stylesheet" >-->
-<!--  	<link rel="stylesheet" href="{% static 'project/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">-->
+  {% block css %}
   	<!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/font-awesome/5.15.3/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous"/>
      <!-- Theme style -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css" integrity="sha512-rVZC4rf0Piwtw/LsgwXxKXzWq3L0P6atiQKBNuXYRbg2FoRbSTIY0k2DxuJcs7dk4e/ShtMzglHKBOJxW8EQyQ==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css" integrity="sha512-rVZC4rf0Piwtw/LsgwXxKXzWq3L0P6atiQKBNuXYRbg2FoRbSTIY0k2DxuJcs7dk4e/ShtMzglHKBOJxW8EQyQ==" crossorigin="anonymous" />
     <!-- Overlay -->
-    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.css" crossorigin="anonymous">
-    {% block css %}
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.11.0/css/OverlayScrollbars.min.css" integrity="sha512-r3SEni1cvqYXgduedV5vwfdZmyz5CvJ4tVpkSPL2bdB7wXaywYq4NbD2otyyNDAdhmizJyuFFMWL2SZZx2PHsw==" crossorigin="anonymous" />
   	<!-- Google Font: Source Sans Pro -->
   	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     {% compress css %}
     <link href="{% static 'css/project.css' %}" rel="stylesheet" >
+    {% block staticcss %}
+    {% endblock staticcss %}
     {% endcompress %}
-    {% endblock %}
+    {% block extracss %}
+    {% endblock extracss %}
+  {% endblock %}
 
-    {% block extrahead %}
-    {% endblock extrahead %}
+  {% block extrahead %}
+  {% endblock extrahead %}
 </head>
 <!--Preloader-->
 <div id="preloader">
@@ -130,20 +130,18 @@
 
 </div>
 <!--JS-->
-<!-- jQuery -->
-<!-- AdminLTE App -->
  {% block javascript %}
-<!--<link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/admin-lte/3.1.0/adminlte.min.js">-->
-<!--&lt;!&ndash; Overlay &ndash;&gt;-->
-<!--<link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/overlayscrollbars/1.13.1/js/OverlayScrollbars.js">-->
-<!--&lt;!&ndash; Bootstrap 4 &ndash;&gt;-->
-<!--<link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.min.js">-->
+  <!-- jQuery -->
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <!-- AdminLTE App -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/adminlte.min.js" integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA==" crossorigin="anonymous"></script>
+  <!-- Overlay -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.11.0/js/jquery.overlayScrollbars.min.js" integrity="sha512-n4syXEZjyGDc4EaI5qqt0e3NcFI8oziewhAYhoUQoTOOzuEFCy1G617NE1rZGOx0HcNtyiiZegeuLAPUquOHjA==" crossorigin="anonymous"></script>
+  <!-- Bootstrap 4 -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha512-c4wThPPCMmu4xsVufJHokogA9X4ka58cy9cEYf5t147wSw0Zo43fwdTy/IC0k1oLxXcUlPvWZMnD8be61swW7g==" crossorigin="anonymous"></script>
+
  {% compress js %}
-<script src="{% static 'project/plugins/jquery/jquery.min.js' %}"></script>
-<script src="{% static 'project/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'project/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
-<script src="{% static 'project/dist/js/adminlte.min.js' %}"></script>
-<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+    <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
 {% block script %}
 {% endblock script %}
 {% endcompress %}
