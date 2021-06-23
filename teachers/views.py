@@ -82,6 +82,7 @@ def load_student_result(request):
         context = {"student_result": student_result, "student": student.name}
 
         if student_result:
+
             return render(request, "others/student_result.html", context)
         else:
             return render(request, "others/student_result.html", context)
