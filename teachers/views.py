@@ -51,9 +51,9 @@ def show_teachers_comment(request):
     try:
         student_id = request.GET.get("student")
         session_id = request.GET.get("session")
+        class_id = request.user.teachermodel.class_name_id
         student_result = SubjectResult.objects.filter(
-            student=student_id,
-            session=session_id,
+            student=student_id, session=session_id, class_name=class_id
         ).select_related("student")
 
         context = {"result": student_result}
@@ -69,11 +69,15 @@ def load_student_result(request):
     if request.method == "GET":
         student_id = request.GET.get("students")
         session_id = request.GET.get("session")
+        class_id = request.user.teachermodel.class_name_id
 
         student = get_object_or_404(StudentModel, pk=student_id)
         session = get_object_or_404(Session, id=session_id)
+        klass = get_object_or_404(Class, pk=class_id)
 
-        student_result = SubjectResult.objects.filter(student=student, session=session)
+        student_result = SubjectResult.objects.filter(
+            student=student, session=session, class_name=klass
+        )
 
         context = {"student_result": student_result, "student": student.name}
 
