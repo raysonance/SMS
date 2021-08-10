@@ -39,7 +39,14 @@ class User(AbstractUser):
     )
 
     def get_absolute_url(self):
-        return reverse("users:detail", kwargs={"username": self.username})
+        if self.request.user.is_teacher:
+            return reverse("teachers:dash")
+        elif self.request.user.is_student:
+            return reverse("students:dash")
+        elif self.request.user.is_admin:
+            return reverse("users:dash")
+        else:
+            return reverse("home")
 
 
 class FavourManager(BaseUserManager):
