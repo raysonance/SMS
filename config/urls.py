@@ -12,7 +12,7 @@ urlpatterns = [
     path(
         "",
         TemplateView.as_view(
-            template_name="home/landing.html", extra_context={"section": "home"}
+            template_name="home/home.html", extra_context={"section": "home"}
         ),
         name="home",
     ),
