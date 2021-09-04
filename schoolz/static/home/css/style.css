@@ -352,7 +352,7 @@ img {
 ============================ */
 
 #call-to-action1 {
-    background: url(../img/gallery1.jpg);
+    background: url(../img/back1.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -531,7 +531,7 @@ img {
 ============================ */
 
 #tuition {
-    background-image: url(../img/bggreen.png);
+    background-image: url(../img/wheat.jpg);
     background-position: center bottom;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1252,6 +1252,7 @@ section {
 }
 .alert.alert-success {
     color: #fff;
+    background-color: chartreuse !important;
 }
 /* Breadcrumbs */
 

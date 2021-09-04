@@ -1,3 +1,4 @@
+import datetime
 import random
 import string
 import uuid
@@ -7,6 +8,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.db.models import CharField
 from django.urls import reverse
+from django.utils import text, timezone
 from django.utils.translation import gettext_lazy as _
 
 from teachers.models import Section
@@ -176,3 +178,30 @@ class Student(User):
                 username = self.name + "-" + rand_slug()
             self.username = username
         return super().save(*args, **kwargs)
+
+
+class AdminMessages(models.Model):
+    id = models.AutoField(primary_key=True)
+    admin = models.ForeignKey("users.AdminModel", on_delete=models.CASCADE)
+    sender_name = models.CharField(max_length=50)
+    sender_email = models.CharField(max_length=50)
+    title = models.CharField(max_length=50)
+    message = models.TextField()
+    slug = models.SlugField(blank=True, max_length=255, unique=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name_plural = "Admin Messages"
+
+    def __str__(self):
+        return f"{self.title}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = text.slugify(rand_slug() + "-" + self.title)
+        super().save(*args, **kwargs)
+
+    def was_published_recently(self):
+        return self.updated_at >= timezone.now() - datetime.timedelta(days=30)

@@ -30,19 +30,17 @@ jQuery(document).ready(function($) {
             };
 
             //Ajax post data to server
-            $.post('php/sendmail.php', post_data, function(response) {
-                if (response.type === 'error') { //load json data from server and output message     
-                    var output = '<div class="error">' + response.text + '</div>';
-                } else {
-                    var output = '<div class="success">' + response.text + '</div>';
-                    //reset values in all input fields
-                    $("#contact_form input, #contact_form textarea").val('');
-
+            $.ajax({
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': $("input[name='csrfmiddlewaretoken']").val(),
+                },
+                url: "users/parent/",
+                data: post_data,
+                success: function (data) {
+                    $("#messages").html(data);
                 }
-				$('html, body').animate({scrollTop: $("#contact_form").offset().top-100}, 2000);
-			
-                $("#contact_results").hide().html(output).slideDown();
-            }, 'json');
+            });
         }
     });
 

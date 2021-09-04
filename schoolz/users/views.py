@@ -21,7 +21,7 @@ from teachers.models import Class, Section, SubClass, TeacherMessages, TeacherMo
 
 from .decorators import admin_required, superuser_required, user_is_admin
 from .forms import AdminSignUpForm, TeacherMessageForm
-from .models import Admin, AdminModel
+from .models import Admin, AdminModel, AdminMessages
 
 User = get_user_model()
 
@@ -368,3 +368,37 @@ def create_codes(request):
 def view_codes(request):
     codes = Code.objects.filter(section=request.user.adminmodel.section_id)
     return render(request, "users/codes.html", {"codes": codes})
+
+
+# general messages
+def send_admin_message(request):
+    admins = AdminModel.objects.all()
+    if request.method == "POST":
+        user_name = request.POST.get("user_name")
+        user_email = request.POST.get("user_email")
+        subject = request.POST.get("subject")
+        message = request.POST.get("msg")
+        for admin in admins:
+            Admin = get_object_or_404(AdminModel, pk=admin.pk)
+            try:
+                admin_message = AdminMessages(
+                    admin=Admin,
+                    sender_name=user_name,
+                    sender_email=user_email,
+                    title=subject,
+                    message=message
+                )
+                admin_message.save()
+                notify.send(
+                    sender=Admin.user,
+                    recipient=Admin.user,
+                    verb="new message!",
+                    target=Admin.user,
+                )
+            except Exception as err:
+                messages.error(request, f"{err}")
+                return render(request, "others/message.html")
+        messages.success(request, "Sent!")
+        return render(request, "others/message.html")
+    else:
+        return render(request, "403.html")

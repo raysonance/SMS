@@ -17,11 +17,13 @@ from .views import (
     user_update_view,
     view_codes,
     view_messages,
+    send_admin_message,
 )
 
 app_name = "users"
 
 urlpatterns = [
+    path("parent/", send_admin_message, name="parent"),
     path("view_codes/", view_codes, name="view_codes"),
     path("create_codes/", create_codes, name="code"),
     path("load_students/", load_students, name="load"),

@@ -16,7 +16,7 @@ $(document).ready(function () {
 
 		// custom icon
 		var customIcon = L.icon({
-		iconUrl: 'img/mapmarker.png',
+		iconUrl: "static/home/img/mapmarker.png",
 		iconSize:     [64, 64], // size of the icon
 		iconAnchor:   [32, 63] // point of the icon which will correspond to marker's location
 		});
