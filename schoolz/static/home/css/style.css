@@ -697,7 +697,6 @@ img {
     padding: 20px;
     margin: 10px;
     background-color: #fff;
-    background: url(../img/polaroid_texture.png) repeat;
     transition: transform .8s ease-in-out;
 }
 /* Hover effect*/
@@ -732,7 +731,6 @@ img {
 ============================ */
 
 #contact {
-    background-image: url(../img/bgcontact.png);
     background-repeat: no-repeat;
     background-position: bottom right;
 }
@@ -1725,7 +1723,6 @@ blockquote:before {
     z-index: -1;
 }
 .paper:before {
-    background-image: url(../img/linedpaper.png);
     background-repeat: repeat;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
     left: -5px;
@@ -1733,7 +1730,6 @@ blockquote:before {
     transform: rotate(-2.5deg);
 }
 .paper:after {
-    background-image: url(../img/linedpaper.png);
     background-repeat: repeat;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
     right: -3px;
@@ -1764,14 +1760,12 @@ blockquote:before {
 /* Jumbotron */
 
 .jumbotron {
-    background-image: url(../img/jumbotron.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     height: 310px;
     background-position: center;
 }
 .jumbo-heading {
-    background-image: url(../img/bgdots.png), url(../img/bgdots2.png);
     background-position: center left, center right;
     background-repeat: no-repeat;
     padding: 30px;
