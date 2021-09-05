@@ -10,30 +10,24 @@
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
       <meta name="author" content="Favour Gilead">
       <!-- Page title -->
-      <title>Little Ones</title>
-      <!-- Bootstrap Core CSS -->
-      <link href="{% static 'home/css/bootstrap.css' %}" rel="stylesheet">
-      <!-- Icon fonts -->
-      <link rel="stylesheet" href="{% static 'home/css/LineIcons.css' %}">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" integrity="sha512-i8+QythOYyQke6XbStjt9T4yQHhhM+9Y9yTY1fOxoDQwsQpKMEpIoSQZ8mVomtnVCf9PBvoQDnKl06gGOOD19Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-      <link href="{% static 'home/css/bootstrap-glyphicons.css' %}" rel="stylesheet">
-      <!-- Google fonts -->
+      <title>Kintergon</title>
       <link href="https://fonts.googleapis.com/css?family=Baloo|Lato:400,700,900" rel="stylesheet">
-      <!-- Style CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" integrity="sha512-i8+QythOYyQke6XbStjt9T4yQHhhM+9Y9yTY1fOxoDQwsQpKMEpIoSQZ8mVomtnVCf9PBvoQDnKl06gGOOD19Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link href="{% static 'home/css/bootstrap.css' %}" rel="stylesheet">
+      {% compress css %}
+      <link rel="stylesheet" href="{% static 'home/css/LineIcons.css' %}">
+      <link href="{% static 'home/css/bootstrap-glyphicons.css' %}" rel="stylesheet">
       <link href="{% static 'home/css/style.css' %}" rel="stylesheet">
-      <!-- Plugins CSS -->
       <link rel="stylesheet" href="{% static 'home/css/plugins.css' %}">
-      <!-- Color Style CSS -->
       <link href="{% static 'home/css/maincolors.css' %}" rel="stylesheet">
-	   <!-- LayerSlider stylesheet -->
       <link rel="stylesheet" href="{% static 'home/css/layerslider.css' %}">
+      <link rel="stylesheet" id="switcher-css" href="{% static 'home/css/switcher.css' %}" />
+      {% endcompress %}
       <!-- Favicons-->
       <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
       <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
       <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-	  <!-- Switcher Only -->
-      <link rel="stylesheet" id="switcher-css" href="{% static 'home/css/switcher.css' %}" />
-      <!-- END Switcher Styles -->
+
    </head>
    <body id="page-top" data-spy="scroll" data-target=".navbar-custom">
       <!-- Preloader  --> 
@@ -1095,17 +1089,15 @@
       <script src="{% static 'home/js/jquery.min.js' %}"></script>
       <script src="{% static 'home/js/bootstrap.min.js' %}"></script>
       <!-- Main Js -->
+       {% compress js %}
       <script src="{% static 'home/js/main.js' %}"></script>
-      <!-- Open maps -->
       <script src="{% static 'home/js/map.js' %}"></script>
-      <!-- Contact -->
       <script src="{% static 'home/js/contact.js' %}"></script>
-      <!--Other Plugins -->
       <script src="{% static 'home/js/plugins.js' %}"></script>
-      <!-- Prefix free CSS -->
       <script src="{% static 'home/js/prefixfree.js' %}"></script>
-      <!-- LayerSlider script files -->
       <script src="{% static 'home/js/layerslider.kreaturamedia.jquery.js' %}"></script>
+      <script src="{% static 'home/js/dmss.js' %}"></script>
+       {% endcompress %}
       <script>
 // Initialize tooltip component
 $(function () {
@@ -1122,6 +1114,6 @@ $(function () {
 <!-- UI jQuery (For Module #5 and #6) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js" type="text/javascript"></script>
 <!-- All Scripts & Plugins -->
-<script src="{% static 'home/js/dmss.js' %}"></script>
+
    </body>
 </html>
