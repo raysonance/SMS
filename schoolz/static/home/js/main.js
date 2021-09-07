@@ -138,31 +138,9 @@ $(document).ready(function() {
 	  if ($(window).width() > 991) {
 		var skr0llr = skrollr.init({
 			forceHeight: false,
-			mobileCheck: function() {
-				//hack - forces mobile version to be off
-				return false;
-			}
+
 		});	
 	  }
-
-	  // disable skrollr if the window is resized below 991px wide
-	  $(window).on('resize', function () {
-		if ($(window).width() <= 991) {
-		  skrollr.init().destroy(); 
-		}
-	  });
-	   // enable skrollr if the window is resized above 991px wide
-	  $(window).on('resize', function () {
-		if ($(window).width() > 991) {
-		  	var skr0llr = skrollr.init({
-			forceHeight: false,
-			mobileCheck: function() {
-				//hack - forces mobile version to be off
-				return false;
-			}
-		});	
-		}
-	  });
 	});	
 
 	
