@@ -102,7 +102,13 @@ $(document).ready(function() {
         dots: true,
         loop:true,
 		margin: 50,
-        autoplay: true,     
+        autoplay: true,
+        nav: true,
+        navText: [
+          "<i class='fa fa-arrow-left'></i>",
+          "<i class='fa fa-arrow-right'></i>"
+
+        ],    
         responsive: {
             1: {
                 items: 1,
@@ -119,6 +125,12 @@ $(document).ready(function() {
         loop:true,
 		dots: true,
         autoplay: false,
+        nav: true,
+        navText: [
+          "<i class='fa fa-arrow-left'></i>",
+          "<i class='fa fa-arrow-right'></i>"
+
+        ],
         responsive: {
             1: {
                 items: 1,
