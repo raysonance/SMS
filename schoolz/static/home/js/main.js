@@ -1,15 +1,8 @@
-/*
-Template Name: Little Ones
-Author: Ingrid Kuhn
-Author URI: themeforest/user/ingridk
-Version: 1.0
-*/
 
 "use strict";
 $(document).ready(function() {
 
     //Smooth Scroll 
-	
     $('.page-scroll a').on('click', function(event) {
         var $anchor = $(this);
         $('html, body').stop().animate({
@@ -17,7 +10,7 @@ $(document).ready(function() {
         }, 2500, 'easeInOutExpo');
         event.preventDefault();
     });
-		
+
 
     //	Back Top Link
 
