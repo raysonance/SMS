@@ -37,7 +37,7 @@
             <p>Student in {{ request.user.adminmodel.section }}</p>
           </div>
           <div class="icon">
-            <i class="ion ion-stats-bars"></i>
+            <i class="fas fa-user-graduate fa-lg"></i>
           </div>
           <a href="{% url 'users:show_list' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
@@ -48,9 +48,10 @@
           <div class="inner">
             <h3>{{ teacher }}</h3>
             <p>Class Teacher in {{ request.user.adminmodel.section }} </p>
+
           </div>
           <div class="icon">
-            <i class="ion ion-stats-bars"></i>
+            <i class="fas fa-chalkboard-teacher fa-lg"></i>
           </div>
           <a href="{% url 'teachers:list' request.user.adminmodel.section.sections %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
@@ -63,7 +64,7 @@
             <p>Student in {{ spectre }}</p>
           </div>
           <div class="icon">
-            <i class="ion ion-stats-bars"></i>
+            <i class="fas fa-user-graduate fa-lg"></i>
           </div>
           <p class="small-box-footer"> <i class="fa fa-puzzle-piece"></i></p>
         </div>
@@ -76,7 +77,7 @@
             <p>Class Teacher in {{ spectre }}</p>
           </div>
           <div class="icon">
-            <i class="ion ion-stats-bars"></i>
+            <i class="fas fa-chalkboard-teacher fa-lg"></i>
           </div>
           <a href="{% url 'teachers:list' spectre %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
