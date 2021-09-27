@@ -2,13 +2,13 @@
 
 {% block title %} Sign in {% endblock title %}
 
-{% load i18n account crispy_forms_tags %}
+{% load i18n account crispy_forms_tags static %}
 
 {% block inner %}
 
 {% block content %}
 
-<body class="hold-transition login-page">
+<body class="hold-transition login-page" >
 
 <div class="login-box">
 
@@ -19,6 +19,9 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
+      <div class="img-circle img-fluid bg-purple" style="width:70px; margin:auto; margin-bottom:10px; padding:10px;">
+        <span style="font-size: 2.5em; color:#89CFF0; " class="fas fa-graduation-cap"></span>
+      </div>
       <p class="login-box-msg text-gray">Sign in to start your session</p>
       <form class="login" method="POST" action="{% url 'account_login' %}">
         {% if messages %}
@@ -49,7 +52,7 @@
         {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <a class="button secondaryAction" href="{# {% url 'account_reset_password' %} #} #">{% trans "Forgot Password?" %}</a>
+        <a class="button secondaryAction text-danger text-bold" href="{# {% url 'account_reset_password' %} #} #">{% trans "Forgot Password?" %}</a>
         <button class="primaryAction btn ml-3 bg-purple" type="submit">{% trans "Sign In" %}</button>
       </form>
     </div>

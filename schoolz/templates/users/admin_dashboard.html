@@ -36,8 +36,8 @@
             <h3>{{ student }}</h3>
             <p>Student in {{ request.user.adminmodel.section }}</p>
           </div>
-          <div class="icon">
-            <i class="fas fa-user-graduate fa-lg"></i>
+          <div class="icon" style="display:block;">
+            <i class="fas fa-user-graduate"></i>
           </div>
           <a href="{% url 'users:show_list' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
@@ -50,8 +50,8 @@
             <p>Class Teacher in {{ request.user.adminmodel.section }} </p>
 
           </div>
-          <div class="icon">
-            <i class="fas fa-chalkboard-teacher fa-lg"></i>
+          <div class="icon" style="display:block;">
+            <i class="fas fa-chalkboard-teacher"></i>
           </div>
           <a href="{% url 'teachers:list' request.user.adminmodel.section.sections %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
@@ -63,8 +63,8 @@
             <h3>{{ other_students }}</h3>
             <p>Student in {{ spectre }}</p>
           </div>
-          <div class="icon">
-            <i class="fas fa-user-graduate fa-lg"></i>
+          <div class="icon" style="display:block;">
+            <i class="fas fa-user-graduate "></i>
           </div>
           <p class="small-box-footer"> <i class="fa fa-puzzle-piece"></i></p>
         </div>
@@ -76,8 +76,8 @@
             <h3>{{ other_teachers }}</h3>
             <p>Class Teacher in {{ spectre }}</p>
           </div>
-          <div class="icon">
-            <i class="fas fa-chalkboard-teacher fa-lg"></i>
+          <div class="icon" style="display:block;">
+            <i class="fas fa-chalkboard-teacher"></i>
           </div>
           <a href="{% url 'teachers:list' spectre %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
