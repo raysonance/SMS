@@ -504,27 +504,26 @@ def search_all(request):
 @login_required
 @user_passes_test(user_is_student, login_url="home")
 def college_student(request):
-    college_subclass = request.user.studentmodel.sub_class
+    subclass_id = request.user.studentmodel.sub_class_id
+    subclass = SubClass.objects.get(id=subclass_id)
     try:
-        subjects = [subject for subject in Subject.objects.all() if subject.class_name == college_subclass.class_name]
+        subjects = Subject.objects.filter(
+        class_name=subclass.class_name,
+        )
     except Exception as err:
         context_dict = {
             'college_class': None,
         }
         return render(request, template_name='college/student/classroom/student_classroom.html', context=context_dict)
 
-    posts = [post for post in ClassWorkPost.objects.all() if post.subclass == college_subclass]
-    textposts = [textpost for textpost in TextPost.objects.all() if textpost.post.subclass == college_subclass]
-    videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post.subclass == college_subclass]
-    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if
-                     documentpost.post.college_class == college_subclass]
-    imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post.subclass == college_subclass]
-    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if
-                    youtubepost.post.subclass == college_subclass]
-    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if
-                    articlepost.post.subclass == college_subclass]
-    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if
-                      classtestpost.post.subclass == college_subclass]
+    posts = ClassWorkPost.objects.filter(subclass_id=subclass_id)
+    textposts = TextPost.objects.filter(post__subclass_id=subclass_id)
+    videoposts = VideoPost.objects.filter(post__subclass_id=subclass_id)
+    documentposts = DocumentPost.objects.filter(post__subclass_id=subclass_id)
+    imageposts = ImagePost.objects.filter(post__subclass_id=subclass_id)
+    youtubeposts = YouTubePost.objects.filter(post__subclass_id=subclass_id)
+    articleposts = ArticlePost.objects.filter(post__subclass_id=subclass_id)
+    classtestposts = ClassTestPost.objects.filter(post__subclass_id=subclass_id)
 
     posts_display = []
 
@@ -570,7 +569,7 @@ def college_student(request):
                     pass
 
     context_dict = {
-        'college_class': college_subclass,
+        'college_class': subclass,
         'subjects': subjects,
         'posts_display': posts_display,
         'comments_and_replies': comments_and_replies,

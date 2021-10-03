@@ -176,6 +176,9 @@ class ClassWorkPost(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ["date"]
+
 
 class TextPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
