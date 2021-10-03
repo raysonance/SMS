@@ -110,3 +110,28 @@
     opacity: 1;
   }
 }
+
+.box {
+  overflow: hidden;
+}
+
+.box{
+  position: relative;
+  display: inline-block; /* Make the width of box same as image */
+}
+.box .text{
+  position: absolute;
+  z-index: 999;
+  margin: 0 auto;
+  font-size: 2rem;
+  left: 0;
+  right: 0;
+  top: 20%; /* Adjust this value to move the positioned div up and down */
+  text-align: center;
+  width: 60%; /* Set the width of the positioned div */
+  font-weight: 600;
+}
+
+@media (min-width:1200px){
+  .box { margin-bottom: 2rem;}
+}

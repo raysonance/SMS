@@ -1,0 +1,230 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}Student: {{ request.user.name|slice:':20' }} {% endblock title %}
+{% block student-content %}
+<main role="main" class="container-md">
+    <div class="box">
+      <img id="book" src="{% static 'images/books.png' %}" class="img-fluid"
+        alt="Photo of stacked books">
+      <div>
+      <h1 class="text colorbluesapphire text-center">
+            {{ college_class.class_name }}
+      </h1>
+      </div>
+    </div>
+        <br>
+
+        <div id="formerror" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+            <span id="alertmessage">{{ request.session.msg }}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                &times;
+            </button>
+        </div>
+
+        <div class="float-left">
+            <small><strong>&#9737;</strong> - Classtests</small> <br>
+            <small><strong>&starf;</strong> - Assignments</small>
+        </div>
+
+        {# Filter posts dropdown menu #}
+        <div class="input-group-prepend float-right">
+            <label for="subjectfilter"></label>
+            <select class="form-control btn-warning" id="subjectfilter">
+                <option class="subject-options" value="all">All subjects</option>
+                {% if subjects %}
+                    {% for subject in subjects %}
+                        <option class="subject-options" value="{{ subject.subject_name }}">{{ subject.subject_name }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+        <br>
+        <br>
+        <hr>
+
+        <div class="container" id="teacher-feed">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                        {% else %} alert-warning {% endif %}
+                        alert-dismissible fade show" id="formerror" role="alert"
+                         style="display: block;">
+                        <strong class="alertmessage">{{ message }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            &times;
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {# Posts #}
+            {% for post in posts_display %}
+                {% if request.user.studentmodel in post.post.students.all %}
+                    <div class="card posts {{ post.post.subject }}" style="padding-bottom: 0;">
+                        <div class="card-header">
+                            <strong>Subject:</strong> {{ post.post.subject }}
+                            <span style="float: right;">
+                            {% if post.post.is_classtest %}
+                                <h5>&#9737;</h5>
+                            {% elif post.post.is_assignment %}
+                                <h5>&starf;</h5>
+                            {% endif %}
+                                <input type="hidden" value="{{ post.post.pk }}">
+                        </span>
+                        </div>
+                        <div class="card-body" style="padding-bottom: 0;">
+                            <h5 class="card-title">
+                                {{ post.post.title }}
+                            </h5>
+                            {% if post.body %}
+                                <p class="card-text">{{ post.body }}</p>
+                                {% if post.video_url %}
+                                    <video class="post-media" width="320" height="240" controls>
+                                        <source src="{{ post.get_media_url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                {% elif post.document_url %}
+                                    <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
+                                {% elif post.image_url %}
+                                    <a href="{{ post.get_media_url }}" target="_blank">
+                                        <img class="post-media" src="{{ post.get_media_url }}"
+                                             alt="{{ post.post.title }}"/>
+                                    </a>
+                                {% elif post.post.is_classtest %}
+                                    <a class="btn btn-outline-warning"
+                                       href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
+                                        View test
+                                    </a>
+                                {% else %}
+                                    <a class="btn btn-outline-warning"
+                                       href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
+                                {% endif %}
+                            {% elif post.youtube_link %}
+                                <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
+                            {% elif post.article_link %}
+                                <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
+                                    article</a>
+                            {% endif %}
+                            {% if post.post.is_assignment %}
+                                <a class="btn btn-outline-warning"
+                                   href="{% url 'college_student_submit_assignment' pk=post.post.pk %}">Submit Your
+                                    Work</a>
+                            {% endif %}
+                            <small style="display: block; margin-top: 12px; margin-bottom: 15px;">
+                                Posted on: {{ post.post.date }}
+                            </small>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn comment-btn">
+                                <i class="fas fa-comments "></i> COMMENTS
+                            </button>
+                            <br>
+                            <div class="comments-section">
+
+                                <div class="comments">
+                                    {% for comment in comments_and_replies %}
+
+                                        {% if comment.comments.post_pk == post.post.pk %}
+                                            <div class="comment">
+                                                <div class="comment-header">
+                                                    <b>
+                                                        {{ comment.comments.comment.author.name }}
+                                                        {% if comment.comments.comment.is_teacher %}
+                                                            <span class="teacher-tick">&#x2713;</span>
+                                                        {% endif %}
+                                                    </b>
+                                                    on
+                                                    <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
+                                                    {% if comment.comments.comment.author == request.user %}
+                                                        <span class="float-right">
+                                                        <button id="{{ comment.comments.comment.pk }}" type="button"
+                                                                class="btn btn-outline-danger delete-comment-btn">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </span>
+                                                    {% endif %}
+                                                </div>
+                                                {% if comment.comments.comment.marked_as_deleted %}
+                                                    <div class="comment-body">
+                                                        <b>[This comment was deleted by the author.]</b>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="comment-body">{{ comment.comments.comment.comment }}</div>
+                                                {% endif %}
+                                                <button class="btn comment-reply-btn"
+                                                        id="{{ comment.comments.comment.pk }}">
+                                                    <i class="fas fa-comments "></i>
+                                                    <small>REPLY</small>
+                                                </button>
+                                                <hr>
+                                                <div class="replies">
+
+                                                    {% for reply in comment.comments.replies %}
+                                                        <div class="reply">
+                                                        <span class="comment-header">
+                                                            <b>
+                                                                {{ reply.author.name }}
+                                                                {% if reply.is_teacher %}
+                                                                    <span class="teacher-tick">&#x2713;</span>
+                                                                {% endif %}
+                                                            </b>
+                                                            on
+                                                            <span class="comment-time-stamp">{{ reply.date }}</span>
+                                                            {% if reply.author == request.user %}
+                                                                <span class="float-right">
+                                                                    <button id="{{ reply.pk }}" type="button"
+                                                                            class="btn btn-outline-danger delete-reply-btn">
+                                                                        <i class="fas fa-trash-alt"></i>
+                                                                    </button>
+                                                                </span>
+                                                            {% endif %}
+                                                        </span>
+                                                            {% if reply.marked_as_deleted %}
+                                                                <div class="comment-body">
+                                                                    <b>[This comment was deleted by the author.]</b>
+                                                                </div>
+                                                            {% else %}
+                                                                <div class="comment-body">{{ reply.comment|safe }}</div>
+                                                            {% endif %}
+                                                            <button class="btn reply-reply-btn"
+                                                                    id="{{ comment.comments.comment.pk }}">
+                                                                <i class="fas fa-comments "></i> <small>REPLY</small>
+                                                            </button>
+                                                        </div>
+                                                        <hr style="max-width: 150px; margin-right: 85%;">
+                                                    {% endfor %}
+
+                                                </div>
+                                            </div>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                </div>
+
+                                <div class="add-comment">
+                                    <hr>
+                                    <label for="{{ post.pk }}">Add a new comment:</label>
+                                    <textarea class="form-control comment-content" id="{{ post.pk }}"
+                                              rows="3"></textarea>
+                                    <br>
+                                    <button type="submit" class="btn btn-outline-warning add-comment-btn"
+                                            id="{{ post.post.pk }}">COMMENT
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </main>
+
+{% endblock student-content %}
+
+{% block college-student-script %}
+    <script type="text/javascript" src="{% static 'js/student_classroom.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/comments.js' %}"></script>
+{% endblock college-student-script %}

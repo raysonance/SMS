@@ -1,0 +1,117 @@
+{% load static %}
+<!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-light-indigo elevation-4">
+    <!-- Brand Logo -->
+    <a href="" class="brand-link">
+      <img src="{% static 'project/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+           style="opacity: .8">
+      <span class="brand-text font-weight-light">Admin Dashboard</span>
+    </a>
+
+    <!-- Sidebar -->
+    {% if request.user.is_teacher %}
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ user.teachermodel.get_photo_url }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="{% url 'teachers:dash' %}" class="d-block">Dashboard</a>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+         <li class="nav-item " id="home-link">
+            <a href="{% url 'view_tests_submissions' class_pk=request.user.teachermodel.sub_class_id %}" data-toggle="tooltip" title="Submitted Tests" class="nav-link">
+              <i class="nav-icon fas fa-user-graduate"></i>
+              <p>
+                Submitted Tests
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item" id="student-assignments-link">
+            <a href="{% url 'view_assignments_submissions' class_pk=request.user.teachermodel.sub_class_id %}" data-toggle="tooltip" title="Submitted assignments" class="nav-link">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Submitted Assignments
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <!-- /.sidebar-menu -->
+
+    {% else %}
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{{ request.user.studentmodel.get_photo_url }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="{% url 'students:dash' %}" class="d-block">Dashboard</a>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item " id="home-link">
+            <a href="{% url 'college_student' %}" data-toggle="tooltip" title="College home page" class="nav-link">
+              <i class="nav-icon fas fa-user-graduate"></i>
+              <p>
+                Home
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item" id="student-assignments-link">
+            <a href="{% url 'college_student_assignments' %}" data-toggle="tooltip" title="Check assignments" class="nav-link">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Assignments
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item" id="student-reading-materials-link">
+            <a href="{% url 'college_student_reading_materials' %}" data-toggle="tooltip" title="Books and documents" class="nav-link">
+              <i class="nav-icon fas fa-book-open"></i>
+              <p>
+                Reading Materials
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item" id="student-videos-link">
+            <a href="{% url 'college_student_videos' %}" data-toggle="tooltip" title="Videos to watch" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+              <p>
+                Videos
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'college_student_articles' %}" data-toggle="tooltip" title="Articles to read" class="nav-link">
+              <i class="nav-icon fas fa-envelope"></i>
+              <p>
+                Articles
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+      {% endif %}
+    <!-- /.sidebar-menu -->
+    <!-- /.sidebar -->
+  </aside>

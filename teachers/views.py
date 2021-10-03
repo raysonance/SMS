@@ -1,3 +1,8 @@
+import decimal
+
+from django.http.response import JsonResponse
+
+from students.models import Question, StudentChoice, AssignmentSolution, ClassTestSolution, Choice, ArticlePost, ClassTestPost, ClassWorkPost, CommentReply, DocumentPost, ImagePost, PostComment, TextPost, VideoPost, YouTubePost
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,7 +13,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from notifications.signals import notify
-
+from schoolz.users.models import College
 # Create your views here.
 from schoolz.users.decorators import (
     admin_required,
@@ -22,9 +27,8 @@ from students.forms import StudentMessageForm
 from students.models import StudentMessages, StudentModel, Subject, SubjectResult
 
 from .forms import TeacherModelForm, TeacherSignUpForm, TeacherUpdateForm
-from .models import Class, Section, Session, SubClass, TeacherMessages, TeacherModel
+from .models import  Class, Section, Session, SubClass, TeacherMessages, TeacherModel
 
-# todo: protection to ajax functions
 # todo: add function for adminmodel, teachermodel, studentmodel
 
 
@@ -277,7 +281,7 @@ def teacher_dashboard(request):
     ).values("pk", "paid", "class_name__class_name", "sub_class__sub_class")
     sub_class = SubClass.objects.filter(
         id=request.user.teachermodel.sub_class_id,
-    ).values("class_name__class_name", "sub_class")
+    ).values("class_name__class_name", "sub_class", "id")
     total_student_count = len(total_student)
     # contains the three most recent messages and if all are created or updated
     # more than a 30 day timeframe then the list would be empty
@@ -698,3 +702,423 @@ class DeleteMessage(LoginRequiredMixin, DeleteView):
         # helps it to return directly to the previous page before the form
         nexto = self.request.POST.get("next", "/")
         return nexto
+
+#classroom
+
+@login_required
+@user_passes_test(user_is_teacher, login_url="home")
+def college_teacher_classroom(request, pk=None):
+    try:
+        college_subclass = SubClass.objects.get(pk=pk)
+    except Exception as err:
+        context_dict = {
+            'college_class': None,
+        }
+        return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
+
+    try:
+        subjects = [subject for subject in Subject.objects.all() if subject.class_name == college_subclass.class_name]
+        students = [student for student in StudentModel.objects.all() if student.class_name == college_subclass.class_name]
+
+    except Exception as err:
+        context_dict = {
+            'college_class': None,
+        }
+        return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
+
+    posts = [post for post in ClassWorkPost.objects.all() if post.subclass == college_subclass]
+    textposts = [textpost for textpost in TextPost.objects.all() if textpost.post.subclass == college_subclass]
+    videoposts = [videopost for videopost in VideoPost.objects.all() if videopost.post.subclass == college_subclass]
+    documentposts = [documentpost for documentpost in DocumentPost.objects.all() if
+                     documentpost.post.subclass == college_subclass]
+    imageposts = [imagepost for imagepost in ImagePost.objects.all() if imagepost.post.subclass == college_subclass]
+    youtubeposts = [youtubepost for youtubepost in YouTubePost.objects.all() if
+                    youtubepost.post.subclass == college_subclass]
+    articleposts = [articlepost for articlepost in ArticlePost.objects.all() if
+                    articlepost.post.subclass == college_subclass]
+    classtestposts = [classtestpost for classtestpost in ClassTestPost.objects.all() if
+                      classtestpost.post.subclass == college_subclass]
+
+    posts_display = []
+
+    for post in posts:
+        for textpost in textposts:
+            if textpost.post == post:
+                posts_display.insert(0, textpost)
+        for videopost in videoposts:
+            if videopost.post == post:
+                posts_display.insert(0, videopost)
+        for documentpost in documentposts:
+            if documentpost.post == post:
+                posts_display.insert(0, documentpost)
+        for imagepost in imageposts:
+            if imagepost.post == post:
+                posts_display.insert(0, imagepost)
+        for youtubepost in youtubeposts:
+            if youtubepost.post == post:
+                posts_display.insert(0, youtubepost)
+        for articlepost in articleposts:
+            if articlepost.post == post:
+                posts_display.insert(0, articlepost)
+        for classtestpost in classtestposts:
+            if classtestpost.post == post:
+                posts_display.insert(0, classtestpost)
+
+    comments_and_replies = []
+
+    for comment in PostComment.objects.all():
+        for post in posts_display:
+            if comment.post == post.post:
+                try:
+                    replies = CommentReply.objects.filter(postcomment=comment)
+                    comments_and_replies.append({
+                        'comments': {
+                            'post_pk': post.post.pk,
+                            'comment': comment,
+                            'replies': replies,
+                        }
+                    })
+                except Exception as err:
+                    pass
+
+    context_dict = {
+        'college_class': college_subclass,
+        'subjects': subjects,
+        'students': students,
+        'posts_display': posts_display,
+        'comments_and_replies': comments_and_replies,
+    }
+
+    return render(request, template_name='college/teacher/classroom/teacher_classroom.html', context=context_dict)
+
+
+@login_required
+@user_passes_test(user_is_teacher, login_url="home")
+def college_teacher_classroom_add_post(request, pk=None):
+    if request.method == 'POST':
+        college = College.objects.first()
+        college_class_pk = pk
+        try:
+            # Get the data from the form
+            title = request.POST.get('title')
+            subject_pk = request.POST.get('subject')
+            student_pks = request.POST.get('students').split(' ')
+            postype = request.POST.get('postype')
+
+            subclass_post = SubClass.objects.get(pk=college_class_pk)
+
+            if postype == 'regular' or postype == 'assignment':
+                is_assignment = False
+                is_classtest = False
+                if postype == 'assignment':
+                    is_assignment = True
+
+                classworkpost = ClassWorkPost.objects.create(
+                    college=college,
+                    class_name=subclass_post.class_name,
+                    subclass=subclass_post,
+                    subject=Subject.objects.get(pk=subject_pk),
+                    teacher=request.user.teachermodel,
+                    title=title,
+                    is_assignment=is_assignment,
+                    is_classtest=is_classtest,
+                )
+
+                # link students to this post
+                this_class_students = [student for student in StudentModel.objects.all() if
+                                       student.sub_class == subclass_post and student.class_name == subclass_post.class_name]
+
+                if student_pks[0] == 'all':
+                    for student in this_class_students:
+                        classworkpost.students.add(student)
+                else:
+                    for student in this_class_students:
+                        if str(student.pk) in student_pks:
+                            classworkpost.students.add(student)
+
+                post_category = request.POST.get('postcategory')
+
+                if post_category == 'textpost':
+                    textpostbody = request.POST.get('textpostbody')
+                    TextPost.objects.create(
+                        post=classworkpost,
+                        body=textpostbody
+                    )
+                elif post_category == 'videopost':
+                    videopostbody = request.POST.get('videopostbody')
+                    videopostfile = request.FILES['videopostfile']
+                    video_post = VideoPost.objects.create(
+                        post=classworkpost,
+                        body=videopostbody,
+                    )
+                    if not video_post.uploadable(file_tobe_uploaded=videopostfile):
+                        video_post.delete()
+                        classworkpost.delete()
+                        err = 'Your college has passed its total upload space limit. ' \
+                              'You can no longer upload any files. ' \
+                              'Please contact your college administrator regarding this'
+                        messages.error(request, f'{err}')
+                        return redirect(college_teacher_classroom, pk=college_class_pk)
+                    video_post.video_url = videopostfile
+                    video_post.save()
+                    college.used_storage_space = college.used_storage_space + (
+                            decimal.Decimal(video_post.video_url.size) / (1024 * 1024 * 1024))
+                    college.save()
+                elif post_category == 'documentpost':
+                    documentpostbody = request.POST.get('documentpostbody')
+                    documentpostfile = request.FILES['documentpostfile']
+                    document_post = DocumentPost.objects.create(
+                        post=classworkpost,
+                        body=documentpostbody,
+                    )
+                    if not document_post.uploadable(file_tobe_uploaded=documentpostfile):
+                        document_post.delete()
+                        classworkpost.delete()
+                        err = 'Your college has passed its total upload space limit. ' \
+                              'You can no longer upload any files. ' \
+                              'Please contact your college administrator regarding this'
+                        messages.error(request, f'{err}')
+                        return redirect(college_teacher_classroom, pk=college_class_pk)
+                    document_post.document_url = documentpostfile
+                    document_post.save()
+                    college.used_storage_space = college.used_storage_space + (
+                            college.Decimal(document_post.document_url.size) / (1024 * 1024 * 1024))
+                    college.save()
+                elif post_category == 'imagepost':
+                    imagepostbody = request.POST.get('imagepostbody')
+                    imagepostfile = request.FILES['imagepostfile']
+                    image_post = ImagePost.objects.create(
+                        post=classworkpost,
+                        body=imagepostbody,
+                    )
+                    if not image_post.uploadable(file_tobe_uploaded=imagepostfile):
+                        image_post.delete()
+                        classworkpost.delete()
+                        err = 'Your college has passed its total upload space limit. ' \
+                              'You can no longer upload any files. ' \
+                              'Please contact your college administrator regarding this'
+                        messages.error(request, f'{err}')
+                        return redirect(college_teacher_classroom, pk=college_class_pk)
+                    image_post.image_url = imagepostfile
+                    image_post.save()
+                    college.used_storage_space = college.used_storage_space + (
+                            decimal.Decimal(image_post.image_url.size) / (1024 * 1024 * 1024))
+                    college.save()
+                elif post_category == 'youtubepost':
+                    youtube_link = request.POST.get('youtubepostbody')
+                    if youtube_link.count('watch?v=') != 0:
+                        youtube_link = youtube_link.replace('watch?v=', 'embed/')
+                    YouTubePost.objects.create(
+                        post=classworkpost,
+                        youtube_link=youtube_link
+                    )
+                elif post_category == 'articlepost':
+                    article_link = request.POST.get('articlepostbody')
+                    ArticlePost.objects.create(
+                        post=classworkpost,
+                        article_link=article_link
+                    )
+
+            elif postype == 'classtest':
+                is_assignment = False
+                is_classtest = True
+
+                classworkpost = ClassWorkPost.objects.create(
+                    college=college,
+                    class_name=subclass_post.class_name,
+                    subclass=subclass_post,
+                    subject=Subject.objects.get(pk=subject_pk),
+                    teacher=request.user.teachermodel,
+                    title=title,
+                    is_assignment=is_assignment,
+                    is_classtest=is_classtest,
+                )
+
+                # link students to this post
+                this_class_students = [student for student in StudentModel.objects.all() if
+                                       student.sub_class == subclass_post and student.class_name == subclass_post.class_name]
+
+                if student_pks[0] == 'all':
+                    for student in this_class_students:
+                        classworkpost.students.add(student)
+                else:
+                    for student in this_class_students:
+                        if str(student.pk) in student_pks:
+                            classworkpost.students.add(student)
+
+                classtestpostbody = request.POST.get('classtestpostbody')
+
+                classtestpost = ClassTestPost.objects.create(
+                    post=classworkpost,
+                    body=classtestpostbody
+                )
+
+                totalnoofquestions = int(request.POST.get('totalnoofquestions'))
+
+                for i in range(1, (totalnoofquestions + 1)):
+                    question = request.POST.get(f'q{i}')
+
+                    question = Question.objects.create(
+                        class_test_post=classtestpost,
+                        question=question
+                    )
+
+                    option1 = request.POST.get(f'q{i}o1')
+                    option2 = request.POST.get(f'q{i}o2')
+                    option3 = request.POST.get(f'q{i}o3')
+                    option4 = request.POST.get(f'q{i}o4')
+
+                    correct_ans = {
+                        f'q{i}o1': option1,
+                        f'q{i}o2': option2,
+                        f'q{i}o3': option3,
+                        f'q{i}o4': option4
+                    }
+
+                    correct_option = correct_ans[request.POST.get(f'ans{i}')]
+
+                    Choice.objects.create(
+                        question=question,
+                        choice=option1,
+                        is_correct=(True if correct_option == option1 else False)
+                    )
+
+                    Choice.objects.create(
+                        question=question,
+                        choice=option2,
+                        is_correct=(True if correct_option == option2 else False)
+                    )
+
+                    if option3 is not None:
+                        Choice.objects.create(
+                            question=question,
+                            choice=option3,
+                            is_correct=(True if correct_option == option3 else False)
+                        )
+
+                    if option4 is not None:
+                        Choice.objects.create(
+                            question=question,
+                            choice=option4,
+                            is_correct=(True if correct_option == option4 else False)
+                        )
+            return redirect(college_teacher_classroom, pk=college_class_pk)
+        except Exception as err:
+            messages.error(request, f'{err}')
+            return redirect(college_teacher_classroom, pk=college_class_pk)
+
+
+@login_required
+@user_passes_test(user_is_teacher, login_url="home")
+def college_teacher_classroom_view_test(request, pk=None):
+    classtestpost = ClassTestPost.objects.get(pk=pk)
+    questions = [question for question in Question.objects.all() if question.class_test_post == classtestpost]
+    choices = [choice for choice in Choice.objects.all() if choice.question in questions]
+
+    context_dict = {
+        'classtestpost': classtestpost,
+        'questions': questions,
+        'choices': choices,
+    }
+    return render(request, template_name='college/teacher/classroom/teacher_view_test.html', context=context_dict)
+
+
+@login_required
+@user_passes_test(user_is_teacher, login_url="home")
+def view_tests_submissions(request, class_pk=None):
+    college_subclass = SubClass.objects.get(pk=class_pk)
+    classworkposts = ClassWorkPost.objects.filter(class_name=college_subclass.class_name, subclass=college_subclass)
+    classtestposts = [post for post in classworkposts if post.is_classtest]
+    classtestposts = [post for post in ClassTestPost.objects.all() if post.post in classtestposts]
+    classtest_solutions = [post for post in ClassTestSolution.objects.all() if post.classtest in classtestposts]
+
+    context_dict = {
+        'classtest_solutions': classtest_solutions,
+    }
+    return render(request, template_name='college/teacher/classroom/view_tests_submissions.html', context=context_dict)
+
+
+@login_required
+@user_passes_test(user_is_teacher, login_url="home")
+def view_assignments_submissions(request, class_pk=None):
+    college_subclass = SubClass.objects.get(pk=class_pk)
+    classworkposts = ClassWorkPost.objects.filter(class_name=college_subclass.class_name, subclass=college_subclass)
+    assignment_posts = [post for post in classworkposts if post.is_assignment]
+    assignment_solutions = [post for post in AssignmentSolution.objects.all() if post.post in assignment_posts]
+
+    context_dict = {
+        'assignment_solutions': assignment_solutions,
+    }
+    return render(request, template_name='college/teacher/classroom/view_assignments_submissions.html',
+                  context=context_dict)
+
+
+@login_required
+@user_passes_test(user_is_teacher, login_url="home")
+def view_test_performance(request, pk=None):
+    classtestsolution = ClassTestSolution.objects.get(pk=pk)
+    student_choices = [choice for choice in StudentChoice.objects.all() if
+                       choice.classtestsolution == classtestsolution]
+
+    test_items = []
+
+    for choice in student_choices:
+        question = choice.question
+        choices = Choice.objects.filter(question=question)
+        selected_choice = choice.choice
+        test_items.append({
+            'question': question,
+            'choices': choices,
+            'selected_choice': selected_choice,
+        })
+
+    context_dict = {
+        'classtestsolution': classtestsolution,
+        'test_items': test_items,
+    }
+    return render(request, template_name='college/teacher/classroom/view_test_performance.html',
+                  context=context_dict)
+
+
+@login_required
+@user_passes_test(user_is_teacher, login_url="home")
+def college_teacher_classroom_delete_test(request, pk=None):
+    college = College.objects.first()
+    post = None
+    if request.method == 'POST':
+        try:
+            post = ClassWorkPost.objects.get(pk=pk)
+        except Exception as err:
+            return JsonResponse({'process': 'failed', 'msg': f'{err}'})
+
+        try:
+            videopost = VideoPost.objects.get(post=post)
+            if videopost:
+                college.used_storage_space = college.used_storage_space - (
+                        decimal.Decimal(videopost.video_url.size) / (1024 * 1024 * 1024))
+                college.save()
+        except Exception as err:
+            pass
+
+        try:
+            documentpost = DocumentPost.objects.get(post=post)
+            if documentpost:
+                college.used_storage_space = college.used_storage_space - (
+                        decimal.Decimal(documentpost.document_url.size) / (1024 * 1024 * 1024))
+                college.save()
+        except Exception as err:
+            pass
+
+        try:
+            imagepost = ImagePost.objects.get(post=post)
+            if imagepost:
+                college.used_storage_space = college.used_storage_space - (
+                        decimal.Decimal(imagepost.image_url.size) / (1024 * 1024 * 1024))
+                college.save()
+        except Exception as err:
+            pass
+
+        post.delete()
+        return JsonResponse({'process': 'success', 'msg': 'Post successfully deleted'})
+
+    return JsonResponse({'process': 'failed', 'msg': 'GET not supported by this endpoint'})

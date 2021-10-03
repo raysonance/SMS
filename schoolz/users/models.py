@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 import random
 import string
 import uuid
@@ -41,14 +41,7 @@ class User(AbstractUser):
     )
 
     def get_absolute_url(self):
-        if self.request.user.is_teacher:
-            return reverse("teachers:dash")
-        elif self.request.user.is_student:
-            return reverse("students:dash")
-        elif self.request.user.is_admin:
-            return reverse("users:dash")
-        else:
-            return reverse("home")
+        return reverse("users:detail", kwargs={"username": self.username})
 
 
 class FavourManager(BaseUserManager):
@@ -205,3 +198,62 @@ class AdminMessages(models.Model):
 
     def was_published_recently(self):
         return self.updated_at >= timezone.now() - datetime.timedelta(days=30)
+
+class Plan(models.Model):
+    name = models.CharField(max_length=256)
+    allotted_storage_space = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    price_per_month = models.DecimalField(max_digits=6, decimal_places=2)
+    price_per_year = models.DecimalField(max_digits=6, decimal_places=2)
+    upcoming_price_per_month = models.FloatField(null=True, blank=True)
+    upcoming_price_per_year = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class College(models.Model):
+    plan_subscribed = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
+    subscription_start_date = models.DateField(blank=True, null=True)
+    subscription_end_date = models.DateField(blank=True, null=True)
+    college_name = models.CharField(max_length=500)
+    email = models.EmailField(max_length=256, unique=True)
+    phone_no = models.CharField(max_length=13)
+    card_info = models.CharField(max_length=16)
+    signup_date = models.DateTimeField(auto_now_add=True)
+    used_storage_space = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    subscription_active = models.BooleanField(default=True)
+    plan_cancelled_on = models.DateTimeField(blank=True, null=True)
+
+    @property
+    def name(self):
+        return f'{self.college_name}'
+
+    def __str__(self):
+        return self.college_name
+
+    def set_initial_subscription_dates(self):
+        self.subscription_start_date = datetime.now().date()
+        self.subscription_end_date = self.subscription_start_date + timedelta(days=365)
+
+    def days_left(self):
+        delta = self.subscription_end_date - datetime.now().date()
+        return delta.days
+
+    def renew(self, plan, card_info):
+        # Only renew if days left is 15 or less
+        if self.days_left() <= 15 or not self.subscription_active:
+            self.plan_subscribed = plan
+            self.card_info = card_info
+            self.subscription_start_date = datetime.now().date()
+            self.subscription_end_date = self.subscription_start_date + timedelta(days=365 + self.days_left())
+            self.subscription_active = True
+            self.plan_cancelled_on = None
+
+    def plan_upgrade(self, new_plan):
+        self.plan_subscribed = new_plan
+
+    def cancel_plan(self):
+        self.subscription_start_date = None
+        self.subscription_end_date = datetime.now().date()
+        self.subscription_active = False
+        self.plan_cancelled_on = datetime.now()

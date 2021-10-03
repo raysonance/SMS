@@ -1,0 +1,171 @@
+
+{% load notifications_tags static %}
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-dark" style="background-color: #1fd1f9; background-image: linear-gradient(315deg, #1fd1f9 0%, #b621fe 74%)">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{% url 'home' %}" class="nav-link">Home</a>
+      </li>
+    </ul>
+
+    <!-- SEARCH FORM -->
+    <form class="form-inline ml-3" action="{% url 'students:search_all' %}" method="get">
+      <div class="input-group input-group-sm">
+        <input class="form-control form-control-navbar" name="q" type="search" placeholder="Search" aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-navbar" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Notifications Dropdown Menu -->
+      {% notifications_unread as unread_count %}
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" id="Notifs" href="{% url 'notifications:mark_all_as_read' %}">
+          <i class="far fa-bell"></i>
+          <span class="badge badge-warning navbar-badge">{{ unread_count }}</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <span class="dropdown-header">Notifications</span>
+          <div class="dropdown-divider"></div>
+          {% with request.user.notifications.unread as unread %}
+          {% if unread %}
+          {% for notifications in unread %}
+          <a class="dropdown-item">
+            <i class="fas fa-exclamation text-danger mr-2"></i>{{ notifications.verb }}
+            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>{{ notifications.timesince }} ago</p>
+          </a>
+          <div class="dropdown-divider"></div>
+          {% endfor %}
+          <a href="#" class="dropdown-item dropdown-footer">Thank you</a>
+          {% else %}
+          <a class="dropdown-item dropdown-footer">You have no notifications</a>
+          {% endif %}
+          {% endwith %}
+        </div>
+      </li>
+      {% if request.user.is_teacher %}
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+            	<img src="{{ request.user.teachermodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="teacher">
+              <span class="d-none d-md-inline">{{ request.user.teachermodel.name }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <!-- User image -->
+          <li class="user-header bg-primary">
+            	<img src="{{ request.user.teachermodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="teacher">
+            <p>
+            		{{ request.user.teachermodel.name }}
+            </p>
+          </li>
+          <!-- Menu Body -->
+          <li class="user-body">
+            <div class="row">
+              <div class="col-4 text-center">
+                <a href="{% url 'teachers:update' request.user.uuid %}">Update Profile</a>
+              </div>
+              <div class="col-4 text-center">
+              </div>
+              <div class="col-4 text-center">
+                <a href="{# {% url 'account_change_password' %} #} #">Change Password?</a>
+              </div>
+            </div>
+            <!-- /.row -->
+          </li>
+              <!-- Menu Footer-->
+          <li class="user-footer">
+          	<a class="btn btn-default btn-flat" href="{% url 'teachers:profile' request.user.uuid %}"> Profile</a>
+            <button type="button" class="btn btn-danger btn-flat float-right" data-toggle="modal" data-target="#modal-danger">
+                  Logout
+            </button>
+          </li>
+        </ul>
+      </li>
+      {% elif request.user.is_admin %}
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+            	<img src="{{ request.user.adminmodel.get_photo_url}}" class="user-image img-fluid img-circle elevation-2" alt="admin">
+                 <span class="d-none d-md-inline">{{ request.user.adminmodel.name }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <!-- User image -->
+          <li class="user-header bg-primary">
+            	<img src="{{ request.user.adminmodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="admin">
+            <p>
+            		{{ request.user.adminmodel.name }}
+            </p>
+          </li>
+          <li class="user-body">
+            <div class="row">
+              <div class="col-4 text-left">
+                <a href="{% url 'users:admin_update' request.user.uuid %}">Update Profile</a>
+              </div>
+              <div class="col-4 text-center">
+              </div>
+              <div class="col-4 text-right">
+                <a href="{% url 'account_change_password' %}">Change Password?</a>
+              </div>
+            </div>
+            <!-- /.row -->
+          </li>
+              <!-- Menu Footer-->
+          <li class="user-footer">
+          	<a class="btn btn-default btn-flat" href="{% url 'users:admin_detail' request.user.uuid %}">Profile</a>
+            <button type="button" class="btn btn-danger btn-flat float-right" data-toggle="modal" data-target="#modal-danger">
+                  Logout
+            </button>
+          </li>
+        </ul>
+      </li>
+      {% else %}
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+            	<img src="{{ request.user.studentmodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="student">
+                <span class="d-none d-md-inline">{{ request.user.studentmodel.name }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <!-- User image -->
+          <li class="user-header bg-primary">
+            	<img src="{{ request.user.studentmodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="student">
+            <p>
+            		{{ request.user.studentmodel.name }}
+            </p>
+          </li>
+          <li class="user-body">
+            <div class="row">
+              <div class="col-4 text-center">
+                <a href="{% url 'account_change_password' %}">Change Password?</a>
+              </div>
+              <div class="col-4 text-center">
+              </div>
+              <div class="col-4 text-center">
+                <a href="{% url 'students:updates' request.user.uuid %}">Update Profile</a>
+              </div>
+            </div>
+            <!-- /.row -->
+          </li>
+              <!-- Menu Footer-->
+          <li class="user-footer">
+          	<a class="btn btn-default btn-flat" href="{% url 'students:profile' request.user.uuid %}">Profile</a>
+            <button type="button" class="btn btn-danger btn-flat float-right" data-toggle="modal" data-target="#modal-danger">
+                  Logout
+            </button>
+          </li>
+        </ul>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  {% block script %}
+  {% endblock script %}

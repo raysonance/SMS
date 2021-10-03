@@ -1,6 +1,6 @@
-import datetime
 import random
 import string
+from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
@@ -67,10 +67,10 @@ class TeacherModel(models.Model):
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     class_name = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
     sub_class = models.ForeignKey(SubClass, on_delete=models.SET_NULL, null=True)
-    address = models.TextField()
-    mobile = models.CharField(max_length=11, blank=True)
-    email = models.CharField(max_length=255, blank=True)
-    joining_date = models.DateField(blank=True, default=timezone.now)
+    address = models.TextField(null=True, blank=True)
+    mobile = models.CharField(max_length=11, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
+    joining_date = models.DateField(blank=True, null=True, default=timezone.now)
 
     class Meta:
         ordering = ["name"]
@@ -120,4 +120,5 @@ class TeacherMessages(models.Model):
         super().save(*args, **kwargs)
 
     def was_published_recently(self):
-        return self.updated_at >= timezone.now() - datetime.timedelta(days=30)
+        return self.updated_at >= timezone.now() - timedelta(days=30)
+

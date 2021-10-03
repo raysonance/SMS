@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% block title %} Dashboard {% endblock title %}
 
 {% block content %}
@@ -27,6 +28,17 @@
    </div>
  {% endif %}
 
+    <div class="box">
+      <img id="book" src="{% static 'images/books.png' %}" class="img-fluid"
+        alt="Photo of stacked books">
+      <div>
+      <h1 class="text colorbluesapphire text-center">
+            {% for i in sub_class %}
+                {{ i.class_name__class_name }}
+            {% endfor %}
+      </h1>
+      </div>
+    </div>
     <div class="row my-2">
       <div class="col-lg-6 col-12">
         <!-- small box -->
@@ -90,6 +102,8 @@
     </div>
   </div>
 
+<div class="row">
+<div class="col-12 col-lg-8">
 <div class="card">
   <div class="card-header"  style="background-color: #f8ceec; background-image: linear-gradient(315deg, #f8ceec 0%, #a88beb 74%)">
     <h3 class="card-title text-white"> <b> Latest Messages </b> </h3>
@@ -126,5 +140,20 @@
         {% endif %}
       {% endwith %}
   </div>
+</div>
+</div>
+<div class="col-12 col-lg-4">
+  <div class="card" id="class-card" >
+      <img class="card-img-top" src="{% static 'images/learning.png' %}"
+           alt="Card image cap">
+      <div class="card-body">
+          {% for i in sub_class %}
+            <h5 class="card-title text-bold colorbluesapphire">{{ i.class_name__class_name }}</h5>
+            <p class="card-text text-gray" >{{ i.sub_class }}</p>
+            <a href="{% url 'college_student' %}" class="btn bg-purple">Open classroom</a>
+          {% endfor %}
+      </div>
+  </div>
+</div>
 </div>
 {% endblock %}

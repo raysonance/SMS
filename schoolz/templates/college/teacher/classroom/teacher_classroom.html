@@ -1,0 +1,412 @@
+{% extends 'college/college_base.html' %}
+{% load static %}
+{% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
+{% block teacher-content %}
+    <main role="main" class="container-md" id="classroom-main">
+    <div class="box">
+      <img id="book" src="{% static 'images/books.png' %}" class="img-fluid"
+        alt="Photo of stacked books">
+      <div>
+      <h1 class="text colorbluesapphire text-center">
+            {{ college_class.class_name }}
+      </h1>
+      </div>
+    </div>
+        <br>
+
+        <div id="formerror" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+            <span id="alertmessage">{{ request.session.msg }}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                &times;
+            </button>
+        </div>
+
+        {# Button to toggle the add post form modal #}
+        <div class="float-left mob-btns">
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addPostModal">+ Create new
+                post
+            </button>
+        </div>
+
+
+        {# Add post form modal #}
+        <div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <form action="{% url 'college_teacher_classroom_add_post' pk=college_class.pk %}"
+                      enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addPostModalLabel"><b>Create New Post</b></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="form-group">
+                                    <label for="title">Post title:</label>
+                                    <input type="text" class="form-control form-control-sm" id="title" name="title"
+                                           placeholder="Notes for OS lecture" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="subject">Select subject:</label>
+                                    <select class="form-control form-control-sm" id="subject" name="subject" required>
+                                        {% for subject in subjects %}
+                                            <option value="{{ subject.pk }}">{{ subject.subject_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="students">Select students (default is all students):</label>
+                                    <select multiple class="form-control form-control-sm" id="students"
+                                            name="students" required>
+                                        <option value="all" selected>All</option>
+                                        {% for student in students %}
+                                            <option value="{{ student.pk }}">{{ student.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small id="studentsHelp" class="form-text text-muted">
+                                        This post will only be visible to the selected students.
+                                        You can select multiple students by clicking on their names while holding the
+                                        'ctrl' key on the keyboard.
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="postype">Post type:</label>
+                                    <div id="postype">
+                                        <div class="form-check">
+                                            <input class="form-check-input posttype" type="radio" name="postype"
+                                                   id="postype1" value="regular" checked required>
+                                            <label class="form-check-label" for="postype1">
+                                                Regular
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input posttype" type="radio" name="postype"
+                                                   id="postype2" value="assignment">
+                                            <label class="form-check-label" for="postype2">
+                                                Assignment
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input posttype" type="radio" name="postype"
+                                                   id="postype3" value="classtest">
+                                            <label class="form-check-label" for="postype3">
+                                                Classtest
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group postcategory">
+                                    <label for="postcategory">Select post category:</label>
+                                    <select class="form-control form-control-sm" id="postcategory" name="postcategory">
+                                        <option value="textpost" selected>TextPost</option>
+                                        <option value="videopost">VideoPost</option>
+                                        <option value="documentpost">DocumentPost</option>
+                                        <option value="imagepost">ImagePost</option>
+                                        <option value="youtubepost">YoutubePost</option>
+                                        <option value="articlepost">ArticlePost</option>
+                                    </select>
+                                </div>
+                                <div class="form-group textpostbody">
+                                    <label for="textpostbody">Text post description:</label>
+                                    <textarea class="form-control" id="textpostbody" name="textpostbody"
+                                              rows="4"></textarea>
+                                </div>
+                                <div class="videopostbody hidepost">
+                                    <div class="form-group">
+                                        <label for="videopostbody">Video post description:</label>
+                                        <textarea class="form-control" id="videopostbody" name="videopostbody"
+                                                  rows="4"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="custom-file-upload" for="videopostfile">Video file</label>
+                                        <input type="file" class="form-control-file" id="videopostfile"
+                                               name="videopostfile"
+                                               accept="video/mp4, .flv">
+                                    </div>
+                                </div>
+                                <div class="documentpostbody hidepost">
+                                    <div class="form-group">
+                                        <label for="documentpostbody">Document post description:</label>
+                                        <textarea class="form-control" id="documentpostbody" name="documentpostbody"
+                                                  rows="4"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="custom-file-upload" for="documentpostfile">Document file</label>
+                                        <input type="file" class="form-control-file" id="documentpostfile"
+                                               name="documentpostfile"
+                                               accept="application/pdf, .csv, text/plain, .doc, .docx, .rtf, .xls, .ppt, .pptx, .html, .htm">
+                                    </div>
+                                </div>
+                                <div class="imagepostbody hidepost">
+                                    <div class="form-group">
+                                        <label for="imagepostbody">Image post description:</label>
+                                        <textarea class="form-control" id="imagepostbody" name="imagepostbody"
+                                                  rows="4"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="custom-file-upload" for="imagepostfile">Image file</label>
+                                        <input type="file" class="form-control-file" id="imagepostfile"
+                                               name="imagepostfile"
+                                               accept="image/jpeg, image/jpg, image/bmp, image/png, image/gif">
+                                    </div>
+                                </div>
+                                <div class="form-group youtubepostbody hidepost">
+                                    <label for="youtubepostbody">Youtube video URL:</label>
+                                    <input type="text" class="form-control form-control-sm" id="youtubepostbody"
+                                           name="youtubepostbody"
+                                           placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                                </div>
+                                <div class="form-group articlepostbody hidepost">
+                                    <label for="articlepostbody">Article URL:</label>
+                                    <input type="text" class="form-control form-control-sm" id="articlepostbody"
+                                           name="articlepostbody"
+                                           placeholder="https://medium.com/flutter-community/flutter-web-and-wasm-49217497b0ed">
+                                </div>
+                                <div class="classtestpostbody hidepost">
+                                    <div class="form-group">
+                                        <label for="classtestpostbody">Description of classtest:</label>
+                                        <textarea class="form-control classtestpostbodyinput" id="classtestpostbody"
+                                                  name="classtestpostbody"
+                                                  rows="4"></textarea>
+                                    </div>
+                                    <div class="classtestqna" id="classtestqna">
+                                        <div class="form-group">
+                                            <label for="q1">Question 1:</label>
+                                            <input type="text"
+                                                   class="form-control form-control-sm classtestpostbodyinput" name="q1"
+                                                   id="q1" placeholder="What is the capital of India?">
+                                        </div>
+                                        <div class="form-group row opt">
+                                            <label for="q1o1" class="col-1 opt-label">1.</label>
+                                            <input type="text"
+                                                   class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"
+                                                   name="q1o1" id="q1o1" placeholder="Option 1">
+                                        </div>
+                                        <div class="form-group row opt">
+                                            <label for="q1o2" class="col-1 opt-label">2.</label>
+                                            <input type="text"
+                                                   class="form-control form-control-sm col-11 opt-input classtestpostbodyinput"
+                                                   name="q1o2" id="q1o2" placeholder="Option 2">
+                                        </div>
+                                        <button type="button" class="btn btn-secondary" id="addoptionbtn">
+                                            + option
+                                        </button>
+                                        <div class="input-group-prepend float-right">
+                                            <label for="ans1">Answer:&nbsp;</label>
+                                            <select class="form-control btn-secondary classtestpostbodyinput" id="ans1"
+                                                    name="ans1">
+                                                <option value="q1o1">1</option>
+                                                <option value="q1o2">2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <button type="button" class="btn btn-secondary" id="addquestionbtn">
+                                        + question
+                                    </button>
+                                    <input type="hidden" id="totalnoofquestions" name="totalnoofquestions" value="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-warning" value="Create post"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {# Filter posts dropdown menu #}
+        <div class="input-group-prepend float-right">
+            <label for="subjectfilter"></label>
+            <select class="form-control btn-warning" id="subjectfilter">
+                <option class="subject-options" value="all">All subjects</option>
+                {% if subjects %}
+                    {% for subject in subjects %}
+                        <option class="subject-options" value="{{ subject.subject_name }}">{{ subject.subject_name }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+
+        <br>
+        <br>
+        <hr id="teacher-feed-hr">
+
+        <div class="container" id="teacher-feed">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                        {% else %} alert-warning {% endif %}
+                        alert-dismissible fade show" id="formerror" role="alert"
+                         style="display: block;">
+                        <strong class="alertmessage">{{ message }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            &times;
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {# Posts #}
+            {% for post in posts_display %}
+                <div class="card posts {{ post.post.subject }}" style="padding-bottom: 0;">
+                    <div class="card-header">
+                        <strong>Subject:</strong> {{ post.post.subject }}
+                        <span style="float: right;">
+                            {% if post.post.is_classtest %}
+                                <h5 style="display: inline;">&#9737;&nbsp;</h5>
+                            {% elif post.post.is_assignment %}
+                                <h5 style="display: inline;">&starf;&nbsp;</h5>
+                            {% endif %}
+                            {% if post.post.teacher == request.user.teacher %}
+                                <button type="button" class="btn btn-outline-danger post-delete-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            {% endif %}
+                            <input type="hidden" value="{{ post.post.pk }}">
+                        </span>
+                    </div>
+                    <div class="card-body" style="padding-bottom: 0;">
+                        <h5 class="card-title">{{ post.post.title }}</h5>
+                        {% if post.body %}
+                            <p class="card-text">{{ post.body }}</p>
+                            {% if post.video_url %}
+                                <video class="post-media" width="320" height="240" controls>
+                                    <source src="{{ post.get_media_url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% elif post.document_url %}
+                                <a class="btn btn-outline-warning" href={{ post.get_media_url }}>Open document</a>
+                            {% elif post.image_url %}
+                                <a href="{{ post.get_media_url }}" target="_blank">
+                                    <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}"/>
+                                </a>
+                            {% elif post.post.is_classtest %}
+                                <a class="btn btn-outline-warning"
+                                   href="{% url 'college_teacher_classroom_view_test' pk=post.pk %}">View test</a>
+                            {% else %}
+                                <a class="btn btn-outline-warning"
+                                   href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
+                            {% endif %}
+                        {% elif post.youtube_link %}
+                            <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
+                        {% elif post.article_link %}
+                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
+                                article</a>
+                        {% endif %}
+
+                        <small style="display: block; margin-top: 12px; margin-bottom: 15px;">
+                            Posted on: {{ post.post.date }}
+                        </small>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn comment-btn">
+                            <i class="fas fa-comments "></i> COMMENTS
+                        </button>
+                        <br>
+                        <div class="comments-section">
+
+                            <div class="comments">
+                                {% for comment in comments_and_replies %}
+
+                                    {% if comment.comments.post_pk == post.post.pk %}
+                                        <div class="comment">
+                                            <div class="comment-header">
+                                                <b>
+                                                    {{ comment.comments.comment.author.name }}
+                                                    {% if comment.comments.comment.is_teacher %}
+                                                        <span class="teacher-tick">&#x2713;</span>
+                                                    {% endif %}
+                                                </b>
+                                                on
+                                                <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
+                                                {% if comment.comments.comment.author == request.user %}
+                                                    <span class="float-right">
+                                                        <button id="{{ comment.comments.comment.pk }}" type="button" class="btn btn-outline-danger delete-comment-btn">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                            {% if comment.comments.comment.marked_as_deleted %}
+                                                <div class="comment-body">
+                                                    <b>[This comment was deleted by the author.]</b>
+                                                </div>
+                                            {% else %}
+                                                <div class="comment-body">{{ comment.comments.comment.comment }}</div>
+                                            {% endif %}
+                                            <button class="btn comment-reply-btn" id="{{ comment.comments.comment.pk }}">
+                                                <i class="fas fa-comments "></i>
+                                                <small>REPLY</small>
+                                            </button>
+                                            <hr>
+                                            <div class="replies">
+
+                                                {% for reply in comment.comments.replies %}
+                                                    <div class="reply">
+                                                        <span class="comment-header">
+                                                            <b>
+                                                                {{ reply.author.name }}
+                                                                {% if reply.is_teacher %}
+                                                                    <span class="teacher-tick">&#x2713;</span>
+                                                                {% endif %}
+                                                            </b>
+                                                            on
+                                                            <span class="comment-time-stamp">{{ reply.date }}</span>
+                                                            {% if reply.author == request.user %}
+                                                                <span class="float-right">
+                                                                    <button id="{{ reply.pk }}" type="button" class="btn btn-outline-danger delete-reply-btn">
+                                                                        <i class="fas fa-trash-alt"></i>
+                                                                    </button>
+                                                                </span>
+                                                            {% endif %}
+                                                        </span>
+                                                        {% if reply.marked_as_deleted %}
+                                                            <div class="comment-body">
+                                                                <b>[This comment was deleted by the author.]</b>
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="comment-body">{{ reply.comment|safe }}</div>
+                                                        {% endif %}
+                                                        <button class="btn reply-reply-btn"
+                                                                id="{{ comment.comments.comment.pk }}">
+                                                            <i class="fas fa-comments "></i> <small>REPLY</small>
+                                                        </button>
+                                                    </div>
+                                                    <hr style="max-width: 150px; margin-right: 85%;">
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+
+                            <div class="add-comment">
+                                <hr>
+                                <label for="{{ post.pk }}">Add a new comment:</label>
+                                <textarea class="form-control comment-content" id="{{ post.pk }}" rows="3"></textarea>
+                                <br>
+                                <button type="submit" class="btn btn-outline-warning add-comment-btn"
+                                        id="{{ post.post.pk }}">COMMENT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </main>
+{% endblock teacher-content %}
+
+{% block college-teacher-script %}
+    <script type="text/javascript" src="{% static 'js/teacher_create_post.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/comments.js' %}"></script>
+{% endblock college-teacher-script %}

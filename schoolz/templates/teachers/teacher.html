@@ -30,6 +30,18 @@
  {% endif %}
 
 <div class="animated fadeIn my-2">
+  <div class="box">
+    <img id="book" src="{% static 'images/books.png' %}" class="img-fluid"
+      alt="Photo of stacked books">
+    <div>
+    <h1 class="text colorbluesapphire text-center">
+          {% for i in sub_class %}
+              {{ i.class_name__class_name }}
+          {% endfor %}
+    </h1>
+    </div>
+  </div>
+  <br>
     <div class="row">
         <div class="col-12 col-lg-6">
         <!-- small box -->
@@ -62,7 +74,7 @@
     </div>
     <div class="row">
          <!-- DONUT CHART -->
-      <div class="col-12 col-lg-12">
+      <div class="col-12 col-lg-8">
         <div class="card">
           <div class="card-header" style="background-color: #f8bb86; color: #fc5f1c">
             <h3 class="card-title">Paid Students Chart</h3>
@@ -79,6 +91,19 @@
           <!-- /.card-body -->
         </div>
         <!-- /.card -->
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="card" id="class-card" >
+            <img class="card-img-top" src="{% static 'images/learning.png' %}"
+                 alt="Card image cap">
+            <div class="card-body">
+                {% for i in sub_class %}
+                  <h5 class="card-title text-bold colorbluesapphire">{{ i.class_name__class_name }}</h5>
+                  <p class="card-text text-gray" >{{ i.sub_class }}</p>
+                  <a href="{% url 'college_teacher_classroom' i.id %}" class="btn bg-purple">Open classroom</a>
+                {% endfor %}
+            </div>
+        </div>
       </div>
     </div>
 </div>
