@@ -12,10 +12,7 @@ main {
     text-align: center;
 }
 
-.content {
-    position: absolute;
-    padding-top: 15px;
-}
+
 
 .hidden {
     display: none;

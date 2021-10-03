@@ -56,7 +56,7 @@ $(document).ready(function () {
                         '</span>' +
                         `<div class="comment-body">${comment}</div>` +
                         `<button class="btn reply-reply-btn" id="${comment_id}">` +
-                        '<img src="/static/icons/comment_black.svg" alt="comment icon"> <small>REPLY</small>' +
+                        ' <i class="fas fa-comments text-info"></i> <small>REPLY</small>' +
                         '</button>' +
                         '</div>';
                     $(this).parent().siblings().append(newReply);
@@ -106,7 +106,7 @@ $(document).ready(function () {
                         '</span>' +
                         `<div class="comment-body">${comment}</div>` +
                         `<button class="btn reply-reply-btn" id="${comment_id}">` +
-                        '<img src="/static/icons/comment_black.svg" alt="comment icon"> <small>REPLY</small>' +
+                        ' <i class="fas fa-comments text-info"></i> <small>REPLY</small>' +
                         '</button>' +
                         '</div>';
 

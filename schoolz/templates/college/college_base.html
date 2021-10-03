@@ -8,9 +8,12 @@
     <title>{% block title %} {{ request.user.college.college_name }} {% endblock title %}</title>
     <link rel="stylesheet" href="{% static 'css/college_base.css' %}">
     <link href="{% static 'css/project.css' %}" rel="stylesheet" >
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css" integrity="sha512-rVZC4rf0Piwtw/LsgwXxKXzWq3L0P6atiQKBNuXYRbg2FoRbSTIY0k2DxuJcs7dk4e/ShtMzglHKBOJxW8EQyQ==" crossorigin="anonymous" />
+    <link href="{% static 'css/adminlte.min.css' %}" rel="stylesheet" >
+    <link href="{% static 'fontawesome-free/css/all.min.css' %}" rel="stylesheet" >
+    <link href="https://fonts.googleapis.com/css?family=Baloo|Lato:400,700,900" rel="stylesheet">
+    {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css" integrity="sha512-rVZC4rf0Piwtw/LsgwXxKXzWq3L0P6atiQKBNuXYRbg2FoRbSTIY0k2DxuJcs7dk4e/ShtMzglHKBOJxW8EQyQ==" crossorigin="anonymous" /> {% endcomment %}
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous"/>
+    {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous"/> {% endcomment %}
     {% csrf_token %}
     <script type="text/javascript">
         let user = '{{ request.user }}'
@@ -19,94 +22,129 @@
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
-<div class="wrapper">
-	<!--Navbar-->
-	{% include 'college/navbar.html' %}
+  <div class="wrapper">
+  	<!--Navbar-->
+  	{% include 'college/navbar.html' %}
 
     {% include 'college/sidebar.html' %}
 
 
-{# Main content #}
-<div class="content-wrapper">
-  <div class="content-header">
-    <div class="container-fluid">
-      <!-- modal for sign out -->
-      <div class="modal fade" id="modal-danger">
-        <div class="modal-dialog">
-          <div class="modal-content bg-danger">
-            <div class="modal-header">
-              <h4 class="modal-title">Sign Out</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+    {# Main content #}
+    <div class="content-wrapper">
+      <div class="content-header">
+        <div class="container-fluid">
+          <!-- modal for sign out -->
+          <div class="modal fade" id="modal-danger">
+            <div class="modal-dialog">
+              <div class="modal-content bg-danger">
+                <div class="modal-header">
+                  <h4 class="modal-title">Sign Out</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form method="post" action="{% url 'account_logout' %}">
+                  <div class="modal-body">
+                      <p>Are you sure you want to sign out?</p>
+                      {% csrf_token %}
+                        {% if redirect_field_value %}
+                          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                        {% endif %}
+                  </div>
+                  <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                    <button class="btn btn-outline-light" type="submit">Sign out</button>
+                  </div>
+                </form>
+              </div>
+              <!-- /.modal-content -->
             </div>
-            <form method="post" action="{% url 'account_logout' %}">
-              <div class="modal-body">
-                  <p>Are you sure you want to sign out?</p>
-                  {% csrf_token %}
-                    {% if redirect_field_value %}
-                      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-                    {% endif %}
-              </div>
-              <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                <button class="btn btn-outline-light" type="submit">Sign out</button>
-              </div>
-            </form>
+            <!-- /.modal-dialog -->
           </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
+           <!-- /.modal -->
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-navy" style="font-family:Georgia">Classroom</h1>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-6" style="font-family:Georgia">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active" style="font-family:Georgia"><a href="{% if request.user.is_teacher %}{% url 'teachers:dash' %}{% else %}{% url 'students:dash' %}{% endif %}">Dashboard</a></li>
+                <li class="breadcrumb-item active" style="font-family:Georgia">Classroom</li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
       </div>
-       <!-- /.modal -->
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1 class="m-0 text-navy" style="font-family:Georgia">Dashboard</h1>
+
+      <section class="content">
+      	<div class="container-fluid">
+              {% if request.user.is_admin %}
+              {# If the user is a college admin #}
+              {% block admin-content %}
+
+              {% endblock admin-content %}
+
+          {% elif request.user.is_teacher %}
+              {# If the user is a teacher #}
+              {% block teacher-content %}
+
+              {% endblock teacher-content %}
+
+          {% elif request.user.is_student %}
+              {# If the user is a student #}
+              {% block student-content %}
+
+              {% endblock student-content %}
+
+          {% endif %}
         </div>
-        <!-- /.col -->
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-            <li class="breadcrumb-item active" style="font-family:Georgia">Classroom</li>
-          </ol>
-        </div><!-- /.col -->
-      </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
+      </section>
+    </div>
+      <!--Footer-->
+    <footer class="main-footer">
+      <strong>Copyright &copy; <a href="#">Ebere God'sfavour</a>.</strong>
+      All rights reserved.
+      <div class="float-right d-none d-sm-inline-block">
+        <b>Powered</b> by <img src="{% static 'home/img/kintergon.png' %}" style="height:2rem; width 100%" class="img-fluid">
+      </div>
+    </footer>
   </div>
 
-  <section class="content">
-  	<div class="container-fluid">
-          {% if request.user.is_admin %}
-          {# If the user is a college admin #}
-          {% block admin-content %}
-
-          {% endblock admin-content %}
-
-      {% elif request.user.is_teacher %}
-          {# If the user is a teacher #}
-          {% block teacher-content %}
-
-          {% endblock teacher-content %}
-
-      {% elif request.user.is_student %}
-          {# If the user is a student #}
-          {% block student-content %}
-
-          {% endblock student-content %}
-
-      {% endif %}
-    </div>
-  </section>
-
-</div>
 {# Scripts #}
 <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/adminlte.min.js" integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA==" crossorigin="anonymous"></script>
-<script type="text/javascript" src="{% static 'chart/Chart.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/adminlte.min.js' %}"></script>
+{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/adminlte.min.js" integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA==" crossorigin="anonymous"></script> {% endcomment %}
+<script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
 {% block user-chart-js %} {% endblock user-chart-js %}
 
 <script type="text/javascript" src="{% static 'js/college_base.js' %}"></script>
+
+<script>
+$.navigation = $('nav > ul.nav');
+$(document).ready(function($){
+
+    $.navigation.find('a').each(function(){
+
+    var cUrl = String(window.location).split('?')[0];
+
+    if (cUrl.substr(cUrl.length - 1) == '#') {
+      cUrl = cUrl.slice(0,-1);
+    }
+
+    if ($($(this))[0].href==cUrl) {
+      $(this).addClass('active');
+
+      $(this).parents('ul').add(this).each(function(){
+        $(this).parent().addClass('menu-open');
+        $(this).parent().children('a').addClass('active');
+      });
+    }
+  });
+});
+</script>
 
 <noscript>This application requires JavaScript to function. Please enable JavaScript in your browser.</noscript>
 

@@ -938,7 +938,11 @@ def college_classroom_post_comment(request):
         comment = data['comment']
 
         try:
-            is_teacher = True if request.user.teachermodel else False
+            if request.user.teachermodel:
+                is_teacher = True
+            else:
+                is_teacher = True
+
         except Exception as err:
             is_teacher = False
 
@@ -986,7 +990,10 @@ def college_classroom_post_reply(request):
         comment = f'{replied_to} {comment}'
 
         try:
-            is_teacher = True if request.user.teacher else False
+            if request.user.teachermodel:
+                is_teacher = True
+            else:
+                is_teacher = True
         except Exception as err:
             is_teacher = False
 

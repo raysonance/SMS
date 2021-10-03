@@ -90,42 +90,6 @@
           </li>
         </ul>
       </li>
-      {% elif request.user.is_admin %}
-      <li class="nav-item dropdown user-menu">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-            	<img src="{{ request.user.adminmodel.get_photo_url}}" class="user-image img-fluid img-circle elevation-2" alt="admin">
-                 <span class="d-none d-md-inline">{{ request.user.adminmodel.name }}</span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <!-- User image -->
-          <li class="user-header bg-primary">
-            	<img src="{{ request.user.adminmodel.get_photo_url }}" class="user-image img-fluid img-circle elevation-2" alt="admin">
-            <p>
-            		{{ request.user.adminmodel.name }}
-            </p>
-          </li>
-          <li class="user-body">
-            <div class="row">
-              <div class="col-4 text-left">
-                <a href="{% url 'users:admin_update' request.user.uuid %}">Update Profile</a>
-              </div>
-              <div class="col-4 text-center">
-              </div>
-              <div class="col-4 text-right">
-                <a href="{% url 'account_change_password' %}">Change Password?</a>
-              </div>
-            </div>
-            <!-- /.row -->
-          </li>
-              <!-- Menu Footer-->
-          <li class="user-footer">
-          	<a class="btn btn-default btn-flat" href="{% url 'users:admin_detail' request.user.uuid %}">Profile</a>
-            <button type="button" class="btn btn-danger btn-flat float-right" data-toggle="modal" data-target="#modal-danger">
-                  Logout
-            </button>
-          </li>
-        </ul>
-      </li>
       {% else %}
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">

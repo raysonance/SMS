@@ -22,8 +22,8 @@
         </div>
 
         <div class="float-left">
-            <small><strong>&#9737;</strong> - Classtests</small> <br>
-            <small><strong>&starf;</strong> - Assignments</small>
+            <small><i class="fas fa-star text-danger"></i> - Class tests</small> <br>
+            <small><i class="fas fa-moon text-danger"></i> - Assignments</small>
         </div>
 
         {# Filter posts dropdown menu #}
@@ -60,63 +60,67 @@
             {# Posts #}
             {% for post in posts_display %}
                 {% if request.user.studentmodel in post.post.students.all %}
-                    <div class="card posts {{ post.post.subject }}" style="padding-bottom: 0;">
-                        <div class="card-header">
-                            <strong>Subject:</strong> {{ post.post.subject }}
-                            <span style="float: right;">
+                    <div class="card posts {{ post.post.subject }}">
+                      <div class="card-header"{% if post.video_url or post.document_url or post.image_url %}style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white"{% elif post.post.is_classtest or post.post.is_assignment %}style="background-color: red;"{% else %}style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
+                        <h3 class="card-title"> {{ post.post.title }} <span class="text-muted"> </span></h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool text-white">
                             {% if post.post.is_classtest %}
-                                <h5>&#9737;</h5>
+                                <i class="fas fa-star text-white"></i>
                             {% elif post.post.is_assignment %}
-                                <h5>&starf;</h5>
-                            {% endif %}
-                                <input type="hidden" value="{{ post.post.pk }}">
-                        </span>
+                                <i class="fas fa-moon text-white"></i>
+                            {% endif %}</i>
+                            </button>
+                          <button type="button" class="btn btn-tool text-white" data-card-widget="remove"><i class="fas fa-times"></i></button>
                         </div>
-                        <div class="card-body" style="padding-bottom: 0;">
-                            <h5 class="card-title">
-                                {{ post.post.title }}
-                            </h5>
-                            {% if post.body %}
-                                <p class="card-text">{{ post.body }}</p>
-                                {% if post.video_url %}
-                                    <video class="post-media" width="320" height="240" controls>
-                                        <source src="{{ post.get_media_url }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                {% elif post.document_url %}
-                                    <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
-                                {% elif post.image_url %}
-                                    <a href="{{ post.get_media_url }}" target="_blank">
-                                        <img class="post-media" src="{{ post.get_media_url }}"
-                                             alt="{{ post.post.title }}"/>
-                                    </a>
-                                {% elif post.post.is_classtest %}
-                                    <a class="btn btn-outline-warning"
-                                       href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
-                                        View test
-                                    </a>
-                                {% else %}
-                                    <a class="btn btn-outline-warning"
-                                       href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
-                                {% endif %}
-                            {% elif post.youtube_link %}
-                                <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
-                            {% elif post.article_link %}
-                                <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
-                                    article</a>
-                            {% endif %}
-                            {% if post.post.is_assignment %}
+                        <!-- /.card-tools -->
+                      </div>
+                      <!-- /.card-header -->
+                      <div class="card-body">
+                        {% if post.body %}
+                            <p class="text-gray" style="font-family:Georgia"><strong>Subject:</strong> {{ post.post.subject }}</p>
+                            <p class="card-text">{{ post.body }}</p>
+                            {% if post.video_url %}
+                                <video class="post-media seperate" width="320" height="240" controls>
+                                    <source src="{{ post.get_media_url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% elif post.document_url %}
+                                <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
+                            {% elif post.image_url %}
+                                <a href="{{ post.get_media_url }}" class="seperate" target="_blank">
+                                    <img class="post-media" src="{{ post.get_media_url }}"
+                                         alt="{{ post.post.title }}"/>
+                                </a>
+                            {% elif post.post.is_classtest %}
                                 <a class="btn btn-outline-warning"
-                                   href="{% url 'college_student_submit_assignment' pk=post.post.pk %}">Submit Your
-                                    Work</a>
+                                   href="{% url 'college_student_classroom_give_test' pk=post.pk %}">
+                                    View test
+                                </a>
+                            {% else %}
+                                <a class="btn btn-outline-warning"
+                                   href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
                             {% endif %}
-                            <small style="display: block; margin-top: 12px; margin-bottom: 15px;">
-                                Posted on: {{ post.post.date }}
-                            </small>
-                        </div>
-                        <div class="card-footer">
+                        {% elif post.youtube_link %}
+                            <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
+                        {% elif post.article_link %}
+                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
+                                article</a>
+                        {% endif %}
+                        {% if post.post.is_assignment %}
+                            <a class="btn btn-outline-warning" id="submit-work"
+                               href="{% url 'college_student_submit_assignment' pk=post.post.pk %}">Submit Your
+                                Work</a>
+                        {% endif %}
+                        <small class="text-gray" style="display: block; margin-top: 12px; margin-bottom: 15px;">
+                            Posted on: {{ post.post.date }}
+                        </small>
+                      </div>
+                      <!-- /.card-body -->
+                      <div class="card-footer">
                             <button class="btn comment-btn">
-                                <i class="fas fa-comments "></i> COMMENTS
+                                <i class="fas fa-comments text-info"></i> COMMENTS
                             </button>
                             <br>
                             <div class="comments-section">
@@ -128,9 +132,9 @@
                                             <div class="comment">
                                                 <div class="comment-header">
                                                     <b>
-                                                        {{ comment.comments.comment.author.name }}
+                                                        <span style="font-family:Georgia">{{ comment.comments.comment.author.name }}</span>
                                                         {% if comment.comments.comment.is_teacher %}
-                                                            <span class="teacher-tick">&#x2713;</span>
+                                                            <i class="fas fa-check-circle text-info teacher-tick"></i>
                                                         {% endif %}
                                                     </b>
                                                     on
@@ -153,7 +157,7 @@
                                                 {% endif %}
                                                 <button class="btn comment-reply-btn"
                                                         id="{{ comment.comments.comment.pk }}">
-                                                    <i class="fas fa-comments "></i>
+                                                    <i class="fas fa-comments text-info"></i>
                                                     <small>REPLY</small>
                                                 </button>
                                                 <hr>
@@ -163,9 +167,9 @@
                                                         <div class="reply">
                                                         <span class="comment-header">
                                                             <b>
-                                                                {{ reply.author.name }}
+                                                                <span style="font-family:Georgia">{{ reply.author.name }}</span>
                                                                 {% if reply.is_teacher %}
-                                                                    <span class="teacher-tick">&#x2713;</span>
+                                                                    <i class="fas fa-check-circle text-info teacher-tick"></i>
                                                                 {% endif %}
                                                             </b>
                                                             on
@@ -188,7 +192,7 @@
                                                             {% endif %}
                                                             <button class="btn reply-reply-btn"
                                                                     id="{{ comment.comments.comment.pk }}">
-                                                                <i class="fas fa-comments "></i> <small>REPLY</small>
+                                                                <i class="fas fa-comments text-info"></i> <small>REPLY</small>
                                                             </button>
                                                         </div>
                                                         <hr style="max-width: 150px; margin-right: 85%;">
@@ -227,4 +231,10 @@
 {% block college-student-script %}
     <script type="text/javascript" src="{% static 'js/student_classroom.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/comments.js' %}"></script>
+    <script type="text/javascript" >
+    $(document).ready(function($){
+        $(".seperate").siblings("#submit-work").addClass('work')
+    })
+     
+    </script>
 {% endblock college-student-script %}

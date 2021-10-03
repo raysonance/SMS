@@ -135,3 +135,9 @@
 @media (min-width:1200px){
   .box { margin-bottom: 2rem;}
 }
+
+.work {
+  display:block !important;
+  margin-top: 2rem;
+  width: 10rem !important;
+}
