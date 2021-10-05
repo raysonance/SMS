@@ -17,15 +17,15 @@
         <br><br>
         <br><br>
 
-        <div class="card posts {{ textpost.post.subject }}">
+        <div class="card posts {{ texttextpost.post.subject }}">
             <div class="card-header">
-                <strong>Subject:</strong> {{ textpost.post.subject }}
+                <strong>Subject:</strong> {{ texttextpost.post.subject }}
             </div>
             <div class="card-body" style="padding-bottom: 0;">
-                <h5 class="card-title">{{ textpost.post.title }}</h5>
+                <h5 class="card-title">{{ texttextpost.post.title }}</h5>
                 <p class="card-text">{{ textpost.body }}</p>
                 <small style="display: block;margin-top: 15px;">
-                    Posted on: {{ textpost.post.date }}
+                    Posted on: {{ texttextpost.post.date }}
                 </small>
             </div>
         </div>
@@ -35,21 +35,32 @@
 {% block student-content %}
     <main role="main" class="container-md">
         <div class="float-left">
-            <button type="button" class="btn btn-warning" onclick="window.history.back();">
-                < Go back
+            <button type="button" class="btn btn-warning text-white" onclick="window.history.back();">
+                <i class="fas fa-arrow-left text-white"></i> Go back
             </button>
         </div>
         <br><br>
         <br><br>
 
         <div class="card posts {{ textpost.post.subject }}">
-            <div class="card-header">
-                <strong>Subject:</strong> {{ textpost.post.subject }}
-            </div>
-            <div class="card-body" style="padding-bottom: 0;">
-                <h5 class="card-title">{{ textpost.post.title }}</h5>
-                <p class="card-text">{{ textpost.body }}</p>
-                <small style="display: block;margin-top: 15px;">
+                      <div class="card-header"{% if post.video_url or post.document_url or post.image_url %}style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white"{% elif textpost.post.is_classtest or textpost.post.is_assignment %}style="background-color: red;"{% else %}style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
+                        <h3 class="card-title text-white" style="word-spacing: 3rem !important;"> {{ textpost.post.title | capfirst }} <span class="text-muted"> </span></h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool text-white">
+                            {% if textpost.post.is_classtest %}
+                                <i class="fas fa-star text-white"></i>
+                            {% elif textpost.post.is_assignment %}
+                                <i class="fas fa-moon text-white"></i>
+                            {% endif %}</i>
+                            </button>
+                          <button type="button" class="btn btn-tool text-white" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                        </div>
+                        <!-- /.card-tools -->
+                      </div>
+            <div class="card-body">
+                <p class="text-gray" style="font-family:Georgia"><strong>Subject:</strong> {{ textpost.post.subject | capfirst }}</p>
+                <p class="card-text">{{ textpost.body | capfirst }}</p>
+                <small style="display:block; margin-top: 15px;" class="text-gray">
                     Posted on: {{ textpost.post.date }}
                 </small>
             </div>

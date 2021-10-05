@@ -14,6 +14,7 @@
         </div>
         <br>
 
+
         {# Filter posts dropdown menu #}
         <div class="input-group-prepend float-right">
             <label for="subjectfilter"></label>
@@ -21,15 +22,13 @@
                 <option class="subject-options" value="all">All subjects</option>
                 {% if subjects %}
                     {% for subject in subjects %}
-                        <option class="subject-options" value="{{ subject.name }}">{{ subject.name }}</option>
+                        <option class="subject-options" value="{{ subject.subject_name }}">{{ subject.subject_name }}</option>
                     {% endfor %}
                 {% endif %}
             </select>
         </div>
         <br>
         <br>
-        <hr>
-
         <div class="container" id="teacher-feed">
 
             {# Posts #}
@@ -37,7 +36,7 @@
                 {% if request.user.studentmodel in post.post.students.all %}
                     <div class="card posts {{ post.post.subject }}">
                       <div class="card-header"{% if post.video_url or post.document_url or post.image_url %}style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white"{% elif post.post.is_classtest or post.post.is_assignment %}style="background-color: red;"{% else %}style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
-                        <h3 class="card-title"> {{ post.post.title }} <span class="text-muted"> </span></h3>
+                        <h3 class="card-title text-white"> {{ post.post.title | capfirst }} <span class="text-muted"> </span></h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool text-white">
@@ -45,7 +44,7 @@
                                 <i class="fas fa-star text-white"></i>
                             {% elif post.post.is_assignment %}
                                 <i class="fas fa-moon text-white"></i>
-                            {% endif %}</i>
+                            {% endif %}
                             </button>
                           <button type="button" class="btn btn-tool text-white" data-card-widget="remove"><i class="fas fa-times"></i></button>
                         </div>
@@ -53,8 +52,8 @@
                       </div>
                     <div class="card-body">
                         {% if post.body %}
-                            <p class="text-gray" style="font-family:Georgia"><strong>Subject:</strong> {{ post.post.subject }}</p>
-                            <p class="card-text">{{ post.body }}</p>
+                            <p class="text-gray" style="font-family:Georgia"><strong>Subject:</strong> {{ post.post.subject | capfirst }}</p>
+                            <p class="card-text">{{ post.body | capfirst }}</p>
                             {% if post.video_url %}
                                 <video class="post-media seperate" width="320" height="240" controls>
                                     <source src="{{ post.get_media_url }}" type="video/mp4">
@@ -72,7 +71,7 @@
                                    href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
                             {% endif %}
                         {% elif post.youtube_link %}
-                            <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
+                            <iframe class="post-media seperate" src="{{ post.youtube_link }}" allowfullscreen></iframe>
                         {% elif post.article_link %}
                             <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
                                 article</a>
