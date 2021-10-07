@@ -21,6 +21,7 @@
             </button>
         </div>
 
+
         {# Button to toggle the add post form modal #}
         <div class="float-left mob-btns">
             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addPostModal">+ Create new
@@ -46,12 +47,12 @@
                             <div class="container-fluid">
                                 <div class="form-group">
                                     <label for="title">Post title:</label>
-                                    <input type="text" class="form-control form-control-sm" id="title" name="title"
+                                    <input type="text" class="form-control" id="title" name="title"
                                            placeholder="Notes for OS lecture" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="subject">Select subject:</label>
-                                    <select class="form-control form-control-sm" id="subject" name="subject" required>
+                                    <select class="form-control" id="subject" name="subject" required>
                                         {% for subject in subjects %}
                                             <option value="{{ subject.pk }}">{{ subject.subject_name }}</option>
                                         {% endfor %}
@@ -59,7 +60,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="students">Select students (default is all students):</label>
-                                    <select multiple class="form-control form-control-sm" id="students"
+                                    <select multiple class="form-control" id="students"
                                             name="students" required>
                                         <option value="all" selected>All</option>
                                         {% for student in students %}
@@ -93,25 +94,25 @@
                                             <input class="form-check-input posttype" type="radio" name="postype"
                                                    id="postype3" value="classtest">
                                             <label class="form-check-label" for="postype3">
-                                                Classtest
+                                                Class Test
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group postcategory">
                                     <label for="postcategory">Select post category:</label>
-                                    <select class="form-control form-control-sm" id="postcategory" name="postcategory">
-                                        <option value="textpost" selected>TextPost</option>
-                                        <option value="videopost">VideoPost</option>
-                                        <option value="documentpost">DocumentPost</option>
-                                        <option value="imagepost">ImagePost</option>
-                                        <option value="youtubepost">YoutubePost</option>
-                                        <option value="articlepost">ArticlePost</option>
+                                    <select class="form-control" id="postcategory" name="postcategory">
+                                        <option value="textpost" selected>Text Post</option>
+                                        <option value="videopost">Video Post</option>
+                                        <option value="documentpost">Document Post</option>
+                                        <option value="imagepost">Image Post</option>
+                                        <option value="youtubepost">Youtube Post</option>
+                                        <option value="articlepost">Article Post</option>
                                     </select>
                                 </div>
                                 <div class="form-group textpostbody">
                                     <label for="textpostbody">Text post description:</label>
-                                    <textarea class="form-control" id="textpostbody" name="textpostbody"
+                                    <textarea class="form-control textarea" id="textpostbody" name="textpostbody"
                                               rows="4"></textarea>
                                 </div>
                                 <div class="videopostbody hidepost">
@@ -238,6 +239,9 @@
         <hr id="teacher-feed-hr">
 
         <div class="container" id="teacher-feed">
+
+            <p style="font-size:0.8rem"><i class="fas fa-star text-danger" ></i> - Class tests</p>
+            <p style="font-size:0.8rem"><i class="fas fa-moon text-danger" ></i> - Assignments</p>
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
@@ -254,83 +258,90 @@
 
             {# Posts #}
             {% for post in posts_display %}
-                <div class="card posts {{ post.post.subject }}" style="padding-bottom: 0;">
-                    <div class="card-header">
-                        <strong>Subject:</strong> {{ post.post.subject }}
-                        <span style="float: right;">
-                            {% if post.post.is_classtest %}
-                                <h5 style="display: inline;">&#9737;&nbsp;</h5>
-                            {% elif post.post.is_assignment %}
-                                <h5 style="display: inline;">&starf;&nbsp;</h5>
-                            {% endif %}
-                            {% if post.post.teacher == request.user.teacher %}
-                                <button type="button" class="btn btn-outline-danger post-delete-btn">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            {% endif %}
-                            <input type="hidden" value="{{ post.post.pk }}">
-                        </span>
-                    </div>
-                    <div class="card-body" style="padding-bottom: 0;">
-                        <h5 class="card-title">{{ post.post.title }}</h5>
-                        {% if post.body %}
-                            <p class="card-text">{{ post.body }}</p>
-                            {% if post.video_url %}
-                                <video class="post-media" width="320" height="240" controls>
-                                    <source src="{{ post.get_media_url }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            {% elif post.document_url %}
-                                <a class="btn btn-outline-warning" href={{ post.get_media_url }}>Open document</a>
-                            {% elif post.image_url %}
-                                <a href="{{ post.get_media_url }}" target="_blank">
-                                    <img class="post-media" src="{{ post.get_media_url }}" alt="{{ post.post.title }}"/>
-                                </a>
-                            {% elif post.post.is_classtest %}
-                                <a class="btn btn-outline-warning"
-                                   href="{% url 'college_teacher_classroom_view_test' pk=post.pk %}">View test</a>
-                            {% else %}
-                                <a class="btn btn-outline-warning"
-                                   href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
-                            {% endif %}
-                        {% elif post.youtube_link %}
-                            <iframe class="post-media" src="{{ post.youtube_link }}" allowfullscreen></iframe>
-                        {% elif post.article_link %}
-                            <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
-                                article</a>
+                <div class="card posts {{ post.post.subject }}">
+                    <div class="card-header"{% if post.video_url or post.document_url or post.image_url %}style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white"{% elif post.post.is_classtest or post.post.is_assignment %}style="background-color: red;"{% else %}style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
+                      <h3 class="card-title text-white"> {{ post.post.title | capfirst }} <span class="text-muted"> </span></h3>
+                      <div class="card-tools">
+                          <button type="button" class="btn btn-tool text-white">
+                          {% if post.post.is_classtest %}
+                              <i class="fas fa-star text-white"></i>
+                          {% elif post.post.is_assignment %}
+                              <i class="fas fa-moon text-white"></i>
+                          {% endif %}
+                          </button>
+                          {% if post.post.teacher == request.user.teachermodel %}
+                            <button type="button" class="btn btn-tool btn-outline-warning text-white post-delete-btn">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         {% endif %}
+                        <input type="hidden" value="{{ post.post.pk }}">
 
-                        <small style="display: block; margin-top: 12px; margin-bottom: 15px;">
-                            Posted on: {{ post.post.date }}
-                        </small>
+                      </div>
+                      <!-- /.card-tools -->
                     </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                      {% if post.body %}
+                          <p class="text-gray" style="font-family:Georgia"><strong>Subject:</strong> {{ post.post.subject | capfirst }}</p>
+                          <p class="card-text">{{ post.body | capfirst }}</p>
+                          {% if post.video_url %}
+                              <video class="post-media seperate" width="320" height="240" controls>
+                                  <source src="{{ post.get_media_url }}" type="video/mp4">
+                                  Your browser does not support the video tag.
+                              </video>
+                          {% elif post.document_url %}
+                              <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
+                          {% elif post.image_url %}
+                              <a href="{{ post.get_media_url }}" class="seperate" target="_blank">
+                                  <img class="post-media" src="{{ post.get_media_url }}"
+                                       alt="{{ post.post.title }}"/>
+                              </a>
+                          {% elif post.post.is_classtest %}
+                              <a class="btn btn-outline-warning"
+                                 href="{% url 'college_teacher_classroom_view_test' pk=post.pk %}">
+                                  View test
+                              </a>
+                          {% else %}
+                              <a class="btn btn-outline-warning"
+                                 href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
+                          {% endif %}
+                      {% elif post.youtube_link %}
+                          <iframe class="post-media seperate" src="{{ post.youtube_link }}" allowfullscreen></iframe>
+                      {% elif post.article_link %}
+                          <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
+                              article</a>
+                      {% endif %}
+                      <small class="text-gray" style="display: block; margin-top: 12px; margin-bottom: 15px;">
+                          Posted on: {{ post.post.date }}
+                      </small>
+                    </div>
+                    <!-- /.card-body -->
                     <div class="card-footer">
                         <button class="btn comment-btn">
-                            <i class="fas fa-comments "></i> COMMENTS
+                            <i class="fas fa-comments text-info"></i> COMMENTS
                         </button>
                         <br>
                         <div class="comments-section">
-
                             <div class="comments">
                                 {% for comment in comments_and_replies %}
-
                                     {% if comment.comments.post_pk == post.post.pk %}
                                         <div class="comment">
                                             <div class="comment-header">
                                                 <b>
-                                                    {{ comment.comments.comment.author.name }}
+                                                    <span style="font-family:Georgia">{{ comment.comments.comment.author.name }}</span>
                                                     {% if comment.comments.comment.is_teacher %}
-                                                        <span class="teacher-tick">&#x2713;</span>
+                                                        <i class="fas fa-check-circle text-info teacher-tick"></i>
                                                     {% endif %}
                                                 </b>
                                                 on
                                                 <span class="comment-time-stamp">{{ comment.comments.comment.date }}</span>
                                                 {% if comment.comments.comment.author == request.user %}
                                                     <span class="float-right">
-                                                        <button id="{{ comment.comments.comment.pk }}" type="button" class="btn btn-outline-danger delete-comment-btn">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
-                                                    </span>
+                                                    <button id="{{ comment.comments.comment.pk }}" type="button"
+                                                            class="btn btn-outline-danger delete-comment-btn">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </span>
                                                 {% endif %}
                                             </div>
                                             {% if comment.comments.comment.marked_as_deleted %}
@@ -340,32 +351,33 @@
                                             {% else %}
                                                 <div class="comment-body">{{ comment.comments.comment.comment }}</div>
                                             {% endif %}
-                                            <button class="btn comment-reply-btn" id="{{ comment.comments.comment.pk }}">
-                                                <i class="fas fa-comments "></i>
+                                            <button class="btn comment-reply-btn"
+                                                    id="{{ comment.comments.comment.pk }}">
+                                                <i class="fas fa-comments text-info"></i>
                                                 <small>REPLY</small>
                                             </button>
                                             <hr>
                                             <div class="replies">
-
                                                 {% for reply in comment.comments.replies %}
                                                     <div class="reply">
-                                                        <span class="comment-header">
-                                                            <b>
-                                                                {{ reply.author.name }}
-                                                                {% if reply.is_teacher %}
-                                                                    <span class="teacher-tick">&#x2713;</span>
-                                                                {% endif %}
-                                                            </b>
-                                                            on
-                                                            <span class="comment-time-stamp">{{ reply.date }}</span>
-                                                            {% if reply.author == request.user %}
-                                                                <span class="float-right">
-                                                                    <button id="{{ reply.pk }}" type="button" class="btn btn-outline-danger delete-reply-btn">
-                                                                        <i class="fas fa-trash-alt"></i>
-                                                                    </button>
-                                                                </span>
+                                                    <span class="comment-header">
+                                                        <b>
+                                                            <span style="font-family:Georgia">{{ reply.author.name }}</span>
+                                                            {% if reply.is_teacher %}
+                                                                <i class="fas fa-check-circle text-info teacher-tick"></i>
                                                             {% endif %}
-                                                        </span>
+                                                        </b>
+                                                        on
+                                                        <span class="comment-time-stamp">{{ reply.date }}</span>
+                                                        {% if reply.author == request.user %}
+                                                            <span class="float-right">
+                                                                <button id="{{ reply.pk }}" type="button"
+                                                                        class="btn btn-outline-danger delete-reply-btn">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </span>
+                                                        {% endif %}
+                                                    </span>
                                                         {% if reply.marked_as_deleted %}
                                                             <div class="comment-body">
                                                                 <b>[This comment was deleted by the author.]</b>
@@ -375,23 +387,21 @@
                                                         {% endif %}
                                                         <button class="btn reply-reply-btn"
                                                                 id="{{ comment.comments.comment.pk }}">
-                                                            <i class="fas fa-comments "></i> <small>REPLY</small>
+                                                            <i class="fas fa-comments text-info"></i> <small>REPLY</small>
                                                         </button>
                                                     </div>
                                                     <hr style="max-width: 150px; margin-right: 85%;">
                                                 {% endfor %}
-
                                             </div>
                                         </div>
                                     {% endif %}
                                 {% endfor %}
-
                             </div>
-
                             <div class="add-comment">
                                 <hr>
                                 <label for="{{ post.pk }}">Add a new comment:</label>
-                                <textarea class="form-control comment-content" id="{{ post.pk }}" rows="3"></textarea>
+                                <textarea class="form-control comment-content" id="{{ post.pk }}"
+                                          rows="3"></textarea>
                                 <br>
                                 <button type="submit" class="btn btn-outline-warning add-comment-btn"
                                         id="{{ post.post.pk }}">COMMENT

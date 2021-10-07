@@ -7,8 +7,30 @@ from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
-from students.views import *
-from teachers.views import *
+
+from students.views import (
+    college_classroom_post_comment,
+    college_classroom_post_reply,
+    college_student,
+    college_student_articles,
+    college_student_assignments,
+    college_student_classroom_give_test,
+    college_student_classroom_view_post,
+    college_student_reading_materials,
+    college_student_submit_assignment,
+    college_student_videos,
+    college_teacher_student_account,
+    delete_comment_or_reply,
+)
+from teachers.views import (
+    college_teacher_classroom,
+    college_teacher_classroom_add_post,
+    college_teacher_classroom_delete_test,
+    college_teacher_classroom_view_test,
+    view_assignments_submissions,
+    view_test_performance,
+    view_tests_submissions,
+)
 
 urlpatterns = [
     path(
@@ -19,7 +41,9 @@ urlpatterns = [
         name="home",
     ),
     path(
-        "profile/", TemplateView.as_view(template_name="home/profile.html"), name="profile"
+        "profile/",
+        TemplateView.as_view(template_name="home/profile.html"),
+        name="profile",
     ),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
@@ -32,25 +56,97 @@ urlpatterns = [
     url(
         "^inbox/notifications/", include(notifications.urls, namespace="notifications")
     ),
-    path('college/teacher/classroom/<int:pk>', college_teacher_classroom, name='college_teacher_classroom'),
-    path('college/teacher/classroom/<int:pk>/add_post', college_teacher_classroom_add_post, name='college_teacher_classroom_add_post'),
-    path('college/teacher/classroom/view_test/<int:pk>', college_teacher_classroom_view_test, name='college_teacher_classroom_view_test'),
-    path('college/teacher/classroom/delete_test/<int:pk>', college_teacher_classroom_delete_test, name='college_teacher_classroom_delete_test'),
-    path('college/teacher/classroom/view_tests_submissions/<int:class_pk>', view_tests_submissions, name='view_tests_submissions'),
-    path('college/teacher/classroom/view_assignments_submissions/<int:class_pk>', view_assignments_submissions, name='view_assignments_submissions'),
-    path('college/teacher/classroom/view_test_performance/<int:pk>', view_test_performance, name='view_test_performance'),
-    path('college/student', college_student, name='college_student'),
-    path('college/student/classroom/college_student_assignments', college_student_assignments, name='college_student_assignments'),
-    path('college/student/classroom/college_student_submit_assignment/<int:pk>', college_student_submit_assignment, name='college_student_submit_assignment'),
-    path('college/student/classroom/college_student_reading_materials', college_student_reading_materials, name='college_student_reading_materials'),
-    path('college/student/classroom/college_student_videos', college_student_videos, name='college_student_videos'),
-    path('college/student/classroom/college_student_articles', college_student_articles, name='college_student_articles'),
-    path('college/student/classroom/give_test/<int:pk>', college_student_classroom_give_test, name='college_student_classroom_give_test'),
-    path('college/classroom/view_post/<int:pk>', college_student_classroom_view_post, name='college_student_classroom_view_post'),
-    path('college/classroom/comment', college_classroom_post_comment, name='college_classroom_post_comment'),
-    path('college/classroom/reply', college_classroom_post_reply, name='college_classroom_post_reply'),
-    path('college/classroom/delete_comment_or_reply/<int:pk>', delete_comment_or_reply, name='delete_comment_or_reply'),
-    path('college/student/college_teacher_student_account', college_teacher_student_account, name='college_teacher_student_account'),
+    path(
+        "college/teacher/classroom/",
+        college_teacher_classroom,
+        name="college_teacher_classroom",
+    ),
+    path(
+        "college/teacher/classroom/<int:pk>/add_post",
+        college_teacher_classroom_add_post,
+        name="college_teacher_classroom_add_post",
+    ),
+    path(
+        "college/teacher/classroom/view_test/<int:pk>",
+        college_teacher_classroom_view_test,
+        name="college_teacher_classroom_view_test",
+    ),
+    path(
+        "college/teacher/classroom/delete_test/<int:pk>",
+        college_teacher_classroom_delete_test,
+        name="college_teacher_classroom_delete_test",
+    ),
+    path(
+        "college/teacher/classroom/view_tests_submissions/<int:class_pk>",
+        view_tests_submissions,
+        name="view_tests_submissions",
+    ),
+    path(
+        "college/teacher/classroom/view_assignments_submissions/<int:class_pk>",
+        view_assignments_submissions,
+        name="view_assignments_submissions",
+    ),
+    path(
+        "college/teacher/classroom/view_test_performance/<int:pk>",
+        view_test_performance,
+        name="view_test_performance",
+    ),
+    path("college/student", college_student, name="college_student"),
+    path(
+        "college/student/classroom/college_student_assignments",
+        college_student_assignments,
+        name="college_student_assignments",
+    ),
+    path(
+        "college/student/classroom/college_student_submit_assignment/<int:pk>",
+        college_student_submit_assignment,
+        name="college_student_submit_assignment",
+    ),
+    path(
+        "college/student/classroom/college_student_reading_materials",
+        college_student_reading_materials,
+        name="college_student_reading_materials",
+    ),
+    path(
+        "college/student/classroom/college_student_videos",
+        college_student_videos,
+        name="college_student_videos",
+    ),
+    path(
+        "college/student/classroom/college_student_articles",
+        college_student_articles,
+        name="college_student_articles",
+    ),
+    path(
+        "college/student/classroom/give_test/<int:pk>",
+        college_student_classroom_give_test,
+        name="college_student_classroom_give_test",
+    ),
+    path(
+        "college/classroom/view_post/<int:pk>",
+        college_student_classroom_view_post,
+        name="college_student_classroom_view_post",
+    ),
+    path(
+        "college/classroom/comment",
+        college_classroom_post_comment,
+        name="college_classroom_post_comment",
+    ),
+    path(
+        "college/classroom/reply",
+        college_classroom_post_reply,
+        name="college_classroom_post_reply",
+    ),
+    path(
+        "college/classroom/delete_comment_or_reply/<int:pk>",
+        delete_comment_or_reply,
+        name="delete_comment_or_reply",
+    ),
+    path(
+        "college/student/college_teacher_student_account",
+        college_teacher_student_account,
+        name="college_teacher_student_account",
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS

@@ -15,8 +15,6 @@ main {
     text-align: center;
 }
 
-
-
 .hidden {
     display: none;
 }
@@ -115,7 +113,9 @@ input[type="file"] {
 .comment-body {
     font-size: small !important;
 }
-
+.comment-btn {
+    font-weight: 500;
+}
 .replies {
     margin-left: 30px;
 }

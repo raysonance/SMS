@@ -26,6 +26,14 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+          <li class="nav-item " id="home-link">
+            <a href="{% url 'college_teacher_classroom' %}" data-toggle="tooltip" title="College home page" class="nav-link">
+              <i class="nav-icon fas fa-user-graduate"></i>
+              <p>
+                Classroom
+              </p>
+            </a>
+          </li>
          <li class="nav-item " id="home-link">
             <a href="{% url 'view_tests_submissions' class_pk=request.user.teachermodel.sub_class_id %}" data-toggle="tooltip" title="Submitted Tests" class="nav-link">
               <i class="nav-icon fas fa-user-graduate"></i>
@@ -69,7 +77,7 @@
             <a href="{% url 'college_student' %}" data-toggle="tooltip" title="College home page" class="nav-link">
               <i class="nav-icon fas fa-user-graduate"></i>
               <p>
-                Home
+                Classroom
               </p>
             </a>
           </li>

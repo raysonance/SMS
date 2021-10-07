@@ -18,9 +18,14 @@
         <br><br>
 
     <div class="table-responsive-md">
-            <input type="text" class="search-box" id="assignments-list-search" placeholder="Search..">
-            <table class="table table-bordered" id="assignments-table">
-                <thead class="thead-dark bgcolorbluesapphire">
+        <!-- SEARCH FORM -->
+        <form class="form-inline my-2" >
+          <div class="form-group">
+            <input class="form-control" id="assignments-list-search" name="q" type="search" placeholder="Search" aria-label="Search">
+          </div>
+        </form>
+            <table class="table table-hover text-nowrap table-striped table-bordered" id="assignments-table">
+                <thead class="thead-dark">
                 <tr>
                     <th scope="col">Student Name</th>
                     <th class="name-col" scope="col">Post Title</th>
@@ -31,17 +36,18 @@
                 </thead>
                 <tbody>
                 {% for assignment_solution in assignment_solutions %}
-                    <tr>
-                        <td>{{ assignment_solution.student.name }}</td>
-                        <td>{{ assignment_solution.post.title }}</td>
+                    <tr class="text-gray">
+                        <td>{{ assignment_solution.student.name | capfirst }}</td>
+                        <td>{{ assignment_solution.post.title | capfirst }}</td>
                         <td>{{ assignment_solution.date }}</td>
                         <td>
-                            <a class="file-download" href="{{ assignment_solution.get_media_url }}" download>DOWNLOAD</a>
+                            <a class="btn file-download" style="background-color: #1fd1f9; color: white" href="{{ assignment_solution.get_media_url }}" download>
+                                   DOWNLOAD
+                            </a>
                         </td>
                         <td>
-                            <a class="mail-reply"
-                            href="mailto:{{ assignment_solution.student.email }}?subject=Regarding Assignment: [{{ assignment_solution.post.title }}&body=Dear {{ assignment_solution.student.name }}],">
-                                REPLY
+                            <a class="btn mail-reply" style="background-color: #b621fe; color: white" href="mailto:{{ assignment_solution.student.email }}?subject=Regarding Assignment: [{{ assignment_solution.post.title }}&body=Dear {{ assignment_solution.student.name }}],">
+                                   REPLY
                             </a>
                         </td>
                     </tr>

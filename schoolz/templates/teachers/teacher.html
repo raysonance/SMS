@@ -100,7 +100,7 @@
                 {% for i in sub_class %}
                   <h5 class="card-title text-bold colorbluesapphire">{{ i.class_name__class_name }}</h5>
                   <p class="card-text text-gray" >{{ i.sub_class }}</p>
-                  <a href="{% url 'college_teacher_classroom' i.id %}" class="btn bg-purple">Open classroom</a>
+                  <a href="{% url 'college_teacher_classroom' %}" class="btn bg-purple">Open classroom</a>
                 {% endfor %}
             </div>
         </div>

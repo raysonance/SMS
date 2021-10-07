@@ -279,8 +279,9 @@ $('#addquestionbtn').on('click', function () {
 
 // For deleting a post
 $('.post-delete-btn').on('click', function () {
-    let post_id = $(this).siblings().val()
+    let post_id = $(this).siblings('input').val();
     let url = `/college/teacher/classroom/delete_test/${post_id}`;
+    console.log(post_id);
 
     fetch(url, {
         method: 'POST',
@@ -324,4 +325,3 @@ $('#subjectfilter').on('change', function () {
 
 
 // For comments feature
-
