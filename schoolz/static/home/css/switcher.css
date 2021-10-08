@@ -4,11 +4,11 @@
 	border:1px solid #dedede;
 	padding:40px;
 }
-.demo_changer{ 
-    z-index: 99999; 
+.demo_changer{
+    z-index: 99999;
     position: fixed;
     left: -301px;
-    top: 80px; 
+    top: 80px;
 	font-family: 'lato',sans-serif;
     font-weight: 400 !important;
 }
@@ -226,7 +226,7 @@ a.evo-hist{margin-left:6px}
 .demo_changer{
     display: none;
 }
-} 
+}
 .demo_changer .btn {
 	    max-width: 200px;
     text-align: center;

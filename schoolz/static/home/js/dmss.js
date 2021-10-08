@@ -3,9 +3,9 @@
 	* Styleswitch stylesheet switcher built on jQuery
 	* Under an Attribution, Share Alike License
 	* By Kelvin Luck ( http://www.kelvinluck.com/ )
-	* Thanks for permission! 
+	* Thanks for permission!
 	**/
-	
+
 		$(document).ready(function() {
 			$('.styleswitch').click(function()
 			{
@@ -15,17 +15,17 @@
 			var c = readCookie('style');
 			if (c) switchStylestyle(c);
 		});
-	
+
 		function switchStylestyle(styleName)
 		{
-			$('link[rel*=style][title]').each(function(i) 
+			$('link[rel*=style][title]').each(function(i)
 			{
 				this.disabled = true;
 				if (this.getAttribute('title') == styleName) this.disabled = false;
 			});
 			createCookie('style', styleName, 365);
 		}
-	
+
 	function createCookie(name,value,days)
 	{
 		if (days)
@@ -60,22 +60,19 @@
 		if($('.demo_changer').hasClass("active")){
 			$('.demo_changer').animate({"left":"-300px"},function(){
 				$('.demo_changer').toggleClass("active");
-			});						
+			});
 		}else{
 			$('.demo_changer').animate({"left":"0px"},function(){
 				$('.demo_changer').toggleClass("active");
-			});			
-		} 
+			});
+		}
 	});
-	
+
 	// Selector (MODULE #4)
-	function selectpicker () { 
+	function selectpicker () {
 	$(window).on('load', function () {
 		$('.selectpicker').selectpicker({
 			'selectedText': 'cat'
 		});
 	});
 	};
-
-
-	

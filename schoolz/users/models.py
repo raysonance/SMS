@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta
 import random
 import string
 import uuid
+from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -199,9 +199,12 @@ class AdminMessages(models.Model):
     def was_published_recently(self):
         return self.updated_at >= timezone.now() - datetime.timedelta(days=30)
 
+
 class Plan(models.Model):
     name = models.CharField(max_length=256)
-    allotted_storage_space = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    allotted_storage_space = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0
+    )
     price_per_month = models.DecimalField(max_digits=6, decimal_places=2)
     price_per_year = models.DecimalField(max_digits=6, decimal_places=2)
     upcoming_price_per_month = models.FloatField(null=True, blank=True)
@@ -212,7 +215,9 @@ class Plan(models.Model):
 
 
 class College(models.Model):
-    plan_subscribed = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
+    plan_subscribed = models.ForeignKey(
+        Plan, on_delete=models.SET_NULL, null=True, blank=True
+    )
     subscription_start_date = models.DateField(blank=True, null=True)
     subscription_end_date = models.DateField(blank=True, null=True)
     college_name = models.CharField(max_length=500)
@@ -226,7 +231,7 @@ class College(models.Model):
 
     @property
     def name(self):
-        return f'{self.college_name}'
+        return f"{self.college_name}"
 
     def __str__(self):
         return self.college_name
@@ -245,7 +250,9 @@ class College(models.Model):
             self.plan_subscribed = plan
             self.card_info = card_info
             self.subscription_start_date = datetime.now().date()
-            self.subscription_end_date = self.subscription_start_date + timedelta(days=365 + self.days_left())
+            self.subscription_end_date = self.subscription_start_date + timedelta(
+                days=365 + self.days_left()
+            )
             self.subscription_active = True
             self.plan_cancelled_on = None
 

@@ -4,18 +4,18 @@ jQuery(document).ready(function($) {
 
         var proceed = true;
         //simple validation at client's end
-        //loop through each field and we simply change border color to red for invalid fields		
+        //loop through each field and we simply change border color to red for invalid fields
         $("#contact_form input[required], #contact_form textarea[required]").each(function() {
             $(this).css('background-color', '');
-            if (!$.trim($(this).val())) { //if this field is empty 
-                $(this).css('background-color', '#ffbbbb'); //change border color to   
+            if (!$.trim($(this).val())) { //if this field is empty
+                $(this).css('background-color', '#ffbbbb'); //change border color to
                 proceed = false; //set do not proceed flag
             }
             //check invalid email
             var email_reg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
             if ($(this).attr("type") === "email" && !email_reg.test($.trim($(this).val()))) {
-                $(this).css('background-color', '#ffbbbb'); //change border color to  
-                proceed = false; //set do not proceed flag				
+                $(this).css('background-color', '#ffbbbb'); //change border color to
+                proceed = false; //set do not proceed flag
             }
         });
 

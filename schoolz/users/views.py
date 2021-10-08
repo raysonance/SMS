@@ -21,7 +21,7 @@ from teachers.models import Class, Section, SubClass, TeacherMessages, TeacherMo
 
 from .decorators import admin_required, superuser_required, user_is_admin
 from .forms import AdminSignUpForm, TeacherMessageForm
-from .models import Admin, AdminModel, AdminMessages
+from .models import Admin, AdminMessages, AdminModel
 
 User = get_user_model()
 
@@ -386,7 +386,7 @@ def send_admin_message(request):
                     sender_name=user_name,
                     sender_email=user_email,
                     title=subject,
-                    message=message
+                    message=message,
                 )
                 admin_message.save()
                 notify.send(

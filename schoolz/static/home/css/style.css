@@ -170,7 +170,7 @@ img {
     display: inline-block;
     animation: bouncedelay 1.4s infinite ease-in-out;
     /* Prevent first frame from flickering when animation starts */
-    
+
     animation-fill-mode: both;
 }
 .spinner .bounce1 {
@@ -1876,7 +1876,7 @@ button.list-group-item:hover {
 
 @media (min-width: 1900px) {
     /* Slider */
-    
+
     #layerslider {
         height: 900px!important;
     }
@@ -1899,7 +1899,7 @@ button.list-group-item:hover {
 
 @media (max-width: 1300px) {
     /* Slider */
-    
+
     .header-text {
         padding: 30px !important;
         text-align: center;
@@ -1916,12 +1916,12 @@ button.list-group-item:hover {
 /************ max width 991px *************/
 
 @media (max-width: 991px) {
-	
+
 	/* backgrounds on small screens */
      #call-to-action1,#call-to-action2{background-attachment:scroll!important;}
-	
+
     /* Slider */
-    
+
     #layerslider {
         height: 470px!important;
         padding-top: 45px;
@@ -1939,7 +1939,7 @@ button.list-group-item:hover {
         margin-top: -20px!important;
     }
     /* Headers */
-    
+
     h1 {
         font-size: 46px !important;
         line-height: 52px;
@@ -1960,19 +1960,19 @@ button.list-group-item:hover {
         font-size: 18px;
     }
     /* Responsive margin*/
-    
+
     .res-margin,
     .margin1 {
         margin-top: 30px;
     }
     /*navbar */
-    
+
     .nav>li {
         text-align: center;
         font-size: 20px;
     }
     /* navbar collapse at 991px */
-    
+
     .navbar-custom li:after {
         display: none;
     }
@@ -2036,12 +2036,12 @@ button.list-group-item:hover {
         padding-bottom: 0px;
     }
     /* Space between sections */
-    
+
     .section-heading {
         margin-bottom: 30px;
     }
     /* miscelaneous */
-    
+
     .sidebar {
         border: 0px;
     }
@@ -2078,7 +2078,7 @@ button.list-group-item:hover {
 
 @media (max-width: 767px) {
     /* Slider */
-    
+
     #layerslider {
         height: 350px!important;
     }
@@ -2102,12 +2102,12 @@ button.list-group-item:hover {
         margin-top: 0px!important;
     }
     /* jumbotron */
-    
+
     .jumbotron {
         height: 200px;
     }
     /* Miscelaneous */
-    
+
     .navbar-nav .open .dropdown-menu>li>a {
         line-height: 50px;
     }
@@ -2153,12 +2153,12 @@ button.list-group-item:hover {
 
 @media (max-width: 640px) {
     /* navbar */
-    
+
     .navbar-collapse {
         max-height: 230px !important;
     }
     /* Slider */
-    
+
     #layerslider {
         height: 320px!important;
     }
@@ -2171,17 +2171,17 @@ button.list-group-item:hover {
         padding: 20px;
     }
     /* navbar */
-    
+
     .navbar-brand img {
         max-width: 200px;
     }
     /* jumbotron */
-    
+
     .jumbotron {
         height: 170px;
     }
     /* slider */
-    
+
     #layerslider {
         height: 230px!important;
     }
@@ -2194,7 +2194,7 @@ button.list-group-item:hover {
         display: none;
     }
     /* Headers */
-    
+
     h1 {
         font-size: 36px !important;
         line-height: 40px !important;
@@ -2217,7 +2217,7 @@ button.list-group-item:hover {
         font-size: 18px;
     }
     /* Miscellaneous */
-    
+
     .panel-title a {
         text-align: center;
         padding: 15px;
@@ -2346,12 +2346,12 @@ button.list-group-item:hover {
 
 @media (max-width: 340px) {
     /* slider */
-    
+
     #layerslider {
         height: 190px!important;
     }
     /* Miscellaneous */
-    
+
     .navbar-brand img {
         max-width: 180px;
     }

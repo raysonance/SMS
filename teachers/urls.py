@@ -9,10 +9,6 @@ from .views import (
     TeacherUpdateView,
     UpdateMessage,
     add_result,
-    college_teacher_classroom,
-    college_teacher_classroom_add_post,
-    college_teacher_classroom_delete_test,
-    college_teacher_classroom_view_test,
     load_class,
     load_student_result,
     load_sub_class,
@@ -26,11 +22,8 @@ from .views import (
     teacher_list,
     teachers_comment,
     view_admin_messages,
-    view_assignments_submissions,
     view_general_messages,
     view_messages,
-    view_test_performance,
-    view_tests_submissions,
 )
 
 app_name = "teachers"
@@ -67,5 +60,4 @@ urlpatterns = [
     path("teachers_comment/", teachers_comment, name="teachers_comment"),
     path("load_comment", show_teachers_comment, name="load_comment"),
     path("load_student_result", load_student_result, name="load_student_result"),
-
 ]

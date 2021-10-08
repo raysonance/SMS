@@ -9,50 +9,47 @@
 {% endblock title %}
 {% block teacher-content %}
     <main role="main" class="container-md">
-        <div class="float-left">
-            <button type="button" class="btn btn-warning" onclick="window.history.back();">
+            <button type="button" class="btn btn-warning my-3" onclick="window.history.back();">
                 < Go back
             </button>
-        </div>
-        <br><br>
-        <br><br>
+            <p><i class="fas fa-star text-success"></i> - Correct answer</p>
+            <p><i class="fas fa-times-circle text-danger"></i> - Student's choice</p>
+            <p class="my-4"><i class="fas fa-check text-success"></i> - Student's choice is correct</p>
 
         <div class="card">
-            <div class="float-right">
-                <p>&#x272A; - Correct answer</p>
-                <p>&#x2297; - Student's choice</p>
-                <p>&#x2714; - Student's choice is correct</p>
+            <div class="card-header ">
+                <h3 class="card-title text-bold">
+                Test results for {{ classtestsolution.student.name }} of {{ classtestsolution.student.class_name }}
+                </h3>
+                <p><small class="float-right text-muted">Submitted on: {{ classtestsolution.date }}</small></p>
+
             </div>
-            <h5 class="card-header">
-                Test results for {{ classtestsolution.student.name }} of {{ classtestsolution.student.college_class.name }}
-                <small class="float-right">Submitted on: {{ classtestsolution.date }}</small>
-            </h5>
 
             <div class="card-body">
-                <h6>
-                    <b>Topic: {{ classtestsolution.classtest.post.title }}</b>
-                    <b class="float-right" style="border: 1px solid var(--blue-sapphire); border-radius: 5px; padding: 6px 12px;">
+                <p>
+                    <b class="my-2" style="font-size: large">Topic: {{ classtestsolution.classtest.post.title }}</b><br><br>
+                    <b  style="border: 1px solid var(--blue-sapphire); border-radius: 5px; padding: 6px 12px;">
                         Score obtained: {{ classtestsolution.score }}/{{ classtestsolution.total_marks }}
                     </b>
-                </h6>
+                </p>
             <br>
                 {% for item in test_items %}
-                    <h5 class="card-title">Q.{{ forloop.counter }} {{ item.question }}</h5>
+                    <p class="card-title my-1 text-bold">Q{{ forloop.counter }}. <span class="ml-1"> {{ item.question }} </span> </p>
                     {% for key, value in item.items %}
                         {% if key == 'choices' %}
-                            <ol>
+                        <div style="clear:both">
                                 {% for choice in value %}
                                     {% if choice.is_correct and choice == item.selected_choice %}
-                                        <li class="font-weight-bold text-success">{{ choice.choice }} &#x2714;</li>
+                                        <p class="font-weight-bold text-success"><span class="mr-1 text-bold">{{ forloop.counter }}. </span> {{ choice.choice }} <span class="ml-1">  <i class="fas fa-check text-success"></i></span></p>
                                     {% elif choice.is_correct %}
-                                        <li class="font-weight-bold text-success">{{ choice.choice }} &#x272A;</li>
+                                        <p class="font-weight-bold text-success"><span class="mr-1 text-bold">{{ forloop.counter }}. </span>{{ choice.choice }} <span class="ml-1">  <i class="fas fa-star text-success"></i></span></p>
                                     {% elif choice == item.selected_choice %}
-                                        <li class="font-weight-bold text-danger">{{ choice.choice }} &#x2297;</li>
+                                        <p class="font-weight-bold text-danger"><span class="mr-1 text-bold">{{ forloop.counter }}. </span>{{ choice.choice }} <span class="ml-1"> <i class="fas fa-times-circle text-danger"></i></span></p>
                                     {% else %}
-                                        <li>{{ choice.choice }}</li>
+                                        <p><span class="mr-1 text-bold"> {{ forloop.counter }}. </span> {{ choice.choice }} </p>
                                     {% endif %}
                                 {% endfor %}
-                            </ol>
+                        </div>
                         {% elif key == 'selected_choice' %}
                         {% endif %}
                     {% endfor %}

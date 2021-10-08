@@ -121,4 +121,3 @@ class TeacherMessages(models.Model):
 
     def was_published_recently(self):
         return self.updated_at >= timezone.now() - timedelta(days=30)
-

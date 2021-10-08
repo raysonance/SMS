@@ -1,6 +1,25 @@
 from django.contrib import admin
 
-from .models import ArticlePost, AssignmentSolution, Choice, ClassTestPost, ClassWorkPost, CommentReply, DocumentPost, ImagePost, PostComment, Question, StudentChoice, StudentMessages, StudentModel, Subject, SubjectResult, TextPost, VideoPost, YouTubePost
+from .models import (
+    ArticlePost,
+    AssignmentSolution,
+    Choice,
+    ClassTestPost,
+    ClassWorkPost,
+    CommentReply,
+    DocumentPost,
+    ImagePost,
+    PostComment,
+    Question,
+    StudentChoice,
+    StudentMessages,
+    StudentModel,
+    Subject,
+    SubjectResult,
+    TextPost,
+    VideoPost,
+    YouTubePost,
+)
 
 # Register your models here.
 

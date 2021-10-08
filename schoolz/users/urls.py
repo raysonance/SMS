@@ -9,6 +9,7 @@ from .views import (
     admin_dashboard,
     create_codes,
     load_students,
+    send_admin_message,
     send_general_message,
     send_messages,
     show_list,
@@ -17,7 +18,6 @@ from .views import (
     user_update_view,
     view_codes,
     view_messages,
-    send_admin_message,
 )
 
 app_name = "users"

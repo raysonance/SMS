@@ -15,17 +15,14 @@
             <div class="test-body">
                 <div class="card posts">
                     <div class="card-body">
-                        <h5 class="card-title">
-                            {{ forloop.counter }}. {{ question.question }}
-                        </h5>
+                        <div class="card-title">
+                            <p class="my-1 text-bold">Q{{ forloop.counter }}. <span class="ml-1"> {{ question.question }} </span> </p>
+                        </div>
                         {% for choice in choices %}
                             {% if choice.question == question %}
                                 <p class="card-text">
-                                	&diams;
-                                    {{ choice.choice }}
-                                    {% if choice.is_correct %}
-                                        &check;
-                                    {% endif %}
+                                     <p class="font-weight-bold {% if choice.is_correct %} text-success {% endif %}"><span class="mr-1 text-bold"><i class="fas fa-dice-d20"></i>. </span> {{ choice.choice }} {% if choice.is_correct %} <span class="ml-1">
+                                     <i class="fas fa-check text-success"></i></span>  {% endif %} </p>
                                 </p>
                             {% endif %}
                         {% endfor %}
@@ -35,4 +32,3 @@
         {% endfor %}
     </main>
 {% endblock teacher-content %}
-

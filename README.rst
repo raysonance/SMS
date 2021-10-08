@@ -11,10 +11,10 @@ Behold My Awesome Project!
      :alt: Black code style
 
 
-Description 
+Description
 --------
 
-This is a school website project. It can be used by admin to add teachers, send messages to teachers,  add students, view the number of students that have paid in school. It can be used by teachers to add students, edit student profile, add results and comments, send messages to students, look up students profile, view paid students in class. It can be used by students to view messages,  download and print results. All three users can search for other users. 
+This is a school website project. It can be used by admin to add teachers, send messages to teachers,  add students, view the number of students that have paid in school. It can be used by teachers to add students, edit student profile, add results and comments, send messages to students, look up students profile, view paid students in class. It can be used by students to view messages,  download and print results. All three users can search for other users.
 
 
 Settings
@@ -30,7 +30,7 @@ Basic Commands
 Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
 
-* Three types of users exist that can be created. The admin, teacher and student. The final one is the director but this cannot be created normally but is created only at the start of the project as a superuser. 
+* Three types of users exist that can be created. The admin, teacher and student. The final one is the director but this cannot be created normally but is created only at the start of the project as a superuser.
 
 * To create an **superuser account**, use this command::
 

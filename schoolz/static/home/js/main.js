@@ -2,7 +2,7 @@
 "use strict";
 $(document).ready(function() {
 
-    //Smooth Scroll 
+    //Smooth Scroll
     $('.page-scroll a').on('click', function(event) {
         var $anchor = $(this);
         $('html, body').stop().animate({
@@ -26,7 +26,7 @@ $(document).ready(function() {
     });
 
     //Owl-carousels
-   
+
 	$("#blog-slider").owlCarousel({
         dots: true,
         loop:true,
@@ -101,7 +101,7 @@ $(document).ready(function() {
           "<i class='fa fa-arrow-left'></i>",
           "<i class='fa fa-arrow-right'></i>"
 
-        ],    
+        ],
         responsive: {
             1: {
                 items: 1,
@@ -130,10 +130,10 @@ $(document).ready(function() {
             },
 			767: {
                 items: 2,
-            },		
+            },
         }
     });
-	  
+
 	   //Load Skrollr
 
 	   //Load Skrollr
@@ -144,15 +144,15 @@ $(document).ready(function() {
 		var skr0llr = skrollr.init({
 			forceHeight: false,
 
-		});	
+		});
 	  }
-	});	
+	});
 
-	
+
 
 	//Dropdown nav on Hover
 
-    if ( $(window).width() > 991) {  
+    if ( $(window).width() > 991) {
 	 var dropmenu = $('.dropdown-menu');
 		$('.dropdown').hover(function() {
 		  $(this).find( dropmenu ).stop(true, true).delay(100).fadeIn(500);
@@ -161,26 +161,26 @@ $(document).ready(function() {
 		});
 	}
 
-  		
+
 }); // end document ready
 
 
 //On Click  function
 	$(document).on('click',function(){
-		
+
 		//Navbar toggle
 		$('.navbar .collapse').collapse('hide');
-		
-	})	
+
+	})
 
 // Window load function
 
 $(window).load(function() {
 
-    // Page Preloader 	
+    // Page Preloader
 
     $("#preloader").slideUp("slow");
-	
+
     // Pretty Photo
 
     $("a[data-gal^='prettyPhoto']").prettyPhoto({
@@ -194,8 +194,8 @@ $(window).load(function() {
         counter_separator_label: '/',
         theme: 'light_square',
         /* light_rounded / dark_rounded / light_square / dark_square / facebook */
-    });	
-			
+    });
+
     //Isotope Nav Filter
 
     $('.category a').on('click', function() {
@@ -213,8 +213,8 @@ $(window).load(function() {
         });
         return false;
     });
-		
-    //Isotope 
+
+    //Isotope
 
     var $container = $('#lightbox');
     $container.isotope({

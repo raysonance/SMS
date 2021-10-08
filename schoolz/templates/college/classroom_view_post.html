@@ -19,7 +19,7 @@
 
         <div class="card posts {{ textpost.post.subject }}">
             <div class="card-header"{% if post.video_url or post.document_url or post.image_url %}style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white"{% elif textpost.post.is_classtest or textpost.post.is_assignment %}style="background-color: red;"{% else %}style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
-              <h3 class="card-title text-white" style="word-spacing: 3rem !important;"> {{ textpost.post.title | capfirst }} <span class="text-muted"> </span></h3>
+              <h3 class="card-title text-white"> {{ textpost.post.title | capfirst }} <span class="text-muted"> </span></h3>
               <div class="card-tools">
                   <button type="button" class="btn btn-tool text-white">
                   {% if textpost.post.is_classtest %}
