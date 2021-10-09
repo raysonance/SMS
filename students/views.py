@@ -700,8 +700,8 @@ def college_student_assignments(request):
 
 @login_required
 @user_passes_test(user_is_student, login_url="home")
-def college_student_submit_assignment(request, pk=None):
-    post = ClassWorkPost.objects.get(pk=pk)
+def college_student_submit_assignment(request, slug_pk):
+    post = ClassWorkPost.objects.get(slug=slug_pk)
     college = College.objects.first()
     assignment_solution = None
     try:
@@ -1005,7 +1005,7 @@ def college_student_articles(request):
 
 @login_required
 @user_passes_test(user_is_student, login_url="home")
-def college_student_classroom_give_test(request, pk=None):
+def college_student_classroom_give_test(request, slug_pk):
     if request.method == "POST":
         # This request is for submitting a classtest
         data = json.loads(request.body)
@@ -1045,7 +1045,7 @@ def college_student_classroom_give_test(request, pk=None):
         except Exception as err:
             return JsonResponse({"process": "failed", "msg": f"{err}"})
 
-    classtestpost = ClassTestPost.objects.get(pk=pk)
+    classtestpost = ClassTestPost.objects.get(post__slug=slug_pk)
 
     questions = [
         question
@@ -1086,8 +1086,8 @@ def college_teacher_student_account(request):
 
 @login_required
 @user_passes_test(teacher_student, login_url="home")
-def college_student_classroom_view_post(request, pk=None):
-    textpost = TextPost.objects.get(pk=pk)
+def college_student_classroom_view_post(request, slug_pk):
+    textpost = TextPost.objects.get(post__slug=slug_pk)
 
     context_dict = {
         "textpost": textpost,

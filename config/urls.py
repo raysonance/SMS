@@ -67,12 +67,12 @@ urlpatterns = [
         name="college_teacher_classroom_add_post",
     ),
     path(
-        "college/teacher/classroom/view_test/<int:pk>",
+        "college/teacher/classroom/view_test/<slug:slug_pk>/",
         college_teacher_classroom_view_test,
         name="college_teacher_classroom_view_test",
     ),
     path(
-        "college/teacher/classroom/delete_test/<int:pk>",
+        "college/teacher/classroom/delete_test/<slug:slug_pk>/",
         college_teacher_classroom_delete_test,
         name="college_teacher_classroom_delete_test",
     ),
@@ -87,7 +87,7 @@ urlpatterns = [
         name="view_assignments_submissions",
     ),
     path(
-        "college/teacher/classroom/view_test_performance/<int:pk>",
+        "college/teacher/classroom/view_test_performance/<slug:slug_pk>",
         view_test_performance,
         name="view_test_performance",
     ),
@@ -98,7 +98,7 @@ urlpatterns = [
         name="college_student_assignments",
     ),
     path(
-        "college/student/classroom/college_student_submit_assignment/<int:pk>",
+        "college/student/classroom/college_student_submit_assignment/<slug:slug_pk>/",
         college_student_submit_assignment,
         name="college_student_submit_assignment",
     ),
@@ -118,12 +118,12 @@ urlpatterns = [
         name="college_student_articles",
     ),
     path(
-        "college/student/classroom/give_test/<int:pk>",
+        "college/student/classroom/give_test/<slug:slug_pk>/",
         college_student_classroom_give_test,
         name="college_student_classroom_give_test",
     ),
     path(
-        "college/classroom/view_post/<int:pk>",
+        "college/classroom/view_post/<slug:slug_pk>/",
         college_student_classroom_view_post,
         name="college_student_classroom_view_post",
     ),

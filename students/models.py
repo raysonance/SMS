@@ -170,6 +170,7 @@ class ClassWorkPost(models.Model):
     teacher = models.ForeignKey(TeacherModel, on_delete=models.CASCADE)
     students = models.ManyToManyField(StudentModel, blank=True)
     title = models.CharField(max_length=256)
+    slug = models.SlugField(blank=True, max_length=255, unique=True)
     is_assignment = models.BooleanField(default=False)
     is_classtest = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -177,16 +178,27 @@ class ClassWorkPost(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = text.slugify(rand_slug() + "-" + self.title)
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ["date"]
 
 
 class TextPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
+    # slug = models.SlugField(blank=True, max_length=255, unique=True)
     body = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return self.post.title
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = text.slugify(rand_slug() + "-" + self.post.title)
+    #     super().save(*args, **kwargs)
 
 
 def video_directory_path(instance, filename):

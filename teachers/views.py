@@ -1093,16 +1093,16 @@ def college_teacher_classroom_add_post(request, pk=None):
                             choice=option4,
                             is_correct=(True if correct_option == option4 else False),
                         )
-            return redirect(college_teacher_classroom, pk=college_class_pk)
+            return redirect(college_teacher_classroom)
         except Exception as err:
             messages.error(request, f"{err}")
-            return redirect(college_teacher_classroom, pk=college_class_pk)
+            return redirect(college_teacher_classroom)
 
 
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
-def college_teacher_classroom_view_test(request, pk=None):
-    classtestpost = ClassTestPost.objects.get(pk=pk)
+def college_teacher_classroom_view_test(request, slug_pk):
+    classtestpost = ClassTestPost.objects.get(post__slug=slug_pk)
     questions = [
         question
         for question in Question.objects.all()
@@ -1177,8 +1177,8 @@ def view_assignments_submissions(request, class_pk=None):
 
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
-def view_test_performance(request, pk=None):
-    classtestsolution = ClassTestSolution.objects.get(pk=pk)
+def view_test_performance(request, slug_pk):
+    classtestsolution = ClassTestSolution.objects.get(classtest__post__slug=slug_pk)
     student_choices = [
         choice
         for choice in StudentChoice.objects.all()
@@ -1212,12 +1212,12 @@ def view_test_performance(request, pk=None):
 
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
-def college_teacher_classroom_delete_test(request, pk=None):
+def college_teacher_classroom_delete_test(request, slug_pk):
     college = College.objects.first()
     post = None
     if request.method == "POST":
         try:
-            post = ClassWorkPost.objects.get(pk=pk)
+            post = ClassWorkPost.objects.get(slug=slug_pk)
         except Exception as err:
             return JsonResponse({"process": "failed", "msg": f"{err}"})
 

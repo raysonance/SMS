@@ -44,12 +44,12 @@
                         <td>{{ classtest_solution.score }}</td>
                         <td>{{ classtest_solution.total_marks }}</td>
                         <td>
-                            <a class="btn mail-reply" style="background-color: #00da5f; color: white" href="{% url 'view_test_performance' pk=classtest_solution.pk %}">
+                            <a class="btn mail-reply" style="background-color: #00da5f; color: white" href="{% url 'view_test_performance' classtest_solution.classtest.post.slug %}">
                                    VIEW
                             </a>
                         </td>
                         <td>
-                            <a class="btn mail-reply" style="background-color: #b621fe; color: white" href="mailto:{{ classtest_solution.student.email }}?subject=Regarding Classtest: [{{ classtest_solution.classtest.post.title }}&body=Dear {{ classtest_solution.student.name }}],"href="{% url 'view_test_performance' pk=classtest_solution.pk %}">
+                            <a class="btn mail-reply" style="background-color: #b621fe; color: white" href="mailto:{{ classtest_solution.student.email }}?subject=Regarding Classtest: [{{ classtest_solution.classtest.post.title }}&body=Dear {{ classtest_solution.student.name }}],"href="{% url 'view_test_performance' classtest_solution.classtest.post.slug %}">
                                    REPLY
                             </a>
                         </td>

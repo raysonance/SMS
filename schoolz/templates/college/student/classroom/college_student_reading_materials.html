@@ -55,7 +55,7 @@
                             {% if post.document_url %}
                                 <a class="btn btn-outline-warning" href="{{ post.get_media_url }}">Open document</a>
                             {% else %}
-                                <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_view_post' pk=post.pk %}">View post</a>
+                                <a class="btn btn-outline-warning" href="{% url 'college_student_classroom_view_post' post.post.slug %}">View post</a>
                             {% endif %}
                         {% elif post.article_link %}
                             <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read article</a>
