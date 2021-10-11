@@ -35,7 +35,7 @@
             </a>
           </li>
          <li class="nav-item " id="home-link">
-            <a href="{% url 'view_tests_submissions' class_pk=request.user.teachermodel.sub_class_id %}" data-toggle="tooltip" title="Submitted Tests" class="nav-link">
+            <a href="{% url 'view_tests_submissions' %}" data-toggle="tooltip" title="Submitted Tests" class="nav-link">
               <i class="nav-icon fas fa-user-graduate"></i>
               <p>
                 Submitted Tests
@@ -44,7 +44,7 @@
           </li>
 
           <li class="nav-item" id="student-assignments-link">
-            <a href="{% url 'view_assignments_submissions' class_pk=request.user.teachermodel.sub_class_id %}" data-toggle="tooltip" title="Submitted assignments" class="nav-link">
+            <a href="{% url 'view_assignments_submissions' %}" data-toggle="tooltip" title="Submitted assignments" class="nav-link">
               <i class="nav-icon fas fa-chalkboard-teacher"></i>
               <p>
                 Submitted Assignments

@@ -77,12 +77,12 @@ urlpatterns = [
         name="college_teacher_classroom_delete_test",
     ),
     path(
-        "college/teacher/classroom/view_tests_submissions/<int:class_pk>",
+        "college/teacher/classroom/view_tests_submissions/",
         view_tests_submissions,
         name="view_tests_submissions",
     ),
     path(
-        "college/teacher/classroom/view_assignments_submissions/<int:class_pk>",
+        "college/teacher/classroom/view_assignments_submissions/",
         view_assignments_submissions,
         name="view_assignments_submissions",
     ),

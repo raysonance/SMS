@@ -1126,8 +1126,8 @@ def college_teacher_classroom_view_test(request, slug_pk):
 
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
-def view_tests_submissions(request, class_pk=None):
-    college_subclass = SubClass.objects.get(pk=class_pk)
+def view_tests_submissions(request):
+    college_subclass = SubClass.objects.get(pk=request.user.teachermodel.sub_class_id)
     classworkposts = ClassWorkPost.objects.filter(
         class_name=college_subclass.class_name, subclass=college_subclass
     )
@@ -1153,8 +1153,8 @@ def view_tests_submissions(request, class_pk=None):
 
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
-def view_assignments_submissions(request, class_pk=None):
-    college_subclass = SubClass.objects.get(pk=class_pk)
+def view_assignments_submissions(request):
+    college_subclass = SubClass.objects.get(pk=request.user.teachermodel.sub_class_id)
     classworkposts = ClassWorkPost.objects.filter(
         class_name=college_subclass.class_name, subclass=college_subclass
     )
