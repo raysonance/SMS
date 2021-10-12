@@ -391,8 +391,6 @@ img {
     position: relative;
 }
 .testimonial .description:before {
-    content: "\f10d";
-    font-family: 'FontAwesome';
     position: absolute;
     top: -27px;
     font-size: 40px;
@@ -1066,8 +1064,8 @@ section {
     margin: 0 auto;
 }
 .section-heading .hr:after {
-    content: "\ea3d";
-    font-family: LineIcons;
+    content: "\f5b8";
+    font-family: 'Font Awesome 5 Free';
     display: inline-block;
     position: relative;
     top: -25px;
@@ -1451,10 +1449,10 @@ ul.custom {
     list-style: none;
 }
 ul.custom li:before {
-    content: "\f126";
+    content: "\f10d";
     font-size: 16px;
     font-weight: 400;
-    font-family: "LineIcon";
+    font-family: 'Font Awesome 5 Free';
     padding-right: 7px;
 }
 /* Buttons */
