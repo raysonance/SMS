@@ -1,5 +1,5 @@
 {# This is the base template for college pages. #}
-{% load static %}
+{% load static compress %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,12 +8,10 @@
     <title>{% block title %} {{ request.user.college.college_name }} {% endblock title %}</title>
     <link rel="stylesheet" href="{% static 'css/college_base.css' %}">
     <link href="{% static 'css/project.css' %}" rel="stylesheet" >
-    <link href="{% static 'css/adminlte.min.css' %}" rel="stylesheet" >
-    <link href="{% static 'fontawesome-free/css/all.min.css' %}" rel="stylesheet" >
     <link href="https://fonts.googleapis.com/css?family=Baloo|Lato:400,700,900" rel="stylesheet">
-    {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css" integrity="sha512-rVZC4rf0Piwtw/LsgwXxKXzWq3L0P6atiQKBNuXYRbg2FoRbSTIY0k2DxuJcs7dk4e/ShtMzglHKBOJxW8EQyQ==" crossorigin="anonymous" /> {% endcomment %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css" integrity="sha512-rVZC4rf0Piwtw/LsgwXxKXzWq3L0P6atiQKBNuXYRbg2FoRbSTIY0k2DxuJcs7dk4e/ShtMzglHKBOJxW8EQyQ==" crossorigin="anonymous" />
     <!-- Font Awesome -->
-    {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous"/> {% endcomment %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous"/>
     {% csrf_token %}
     <script type="text/javascript">
         let user = '{{ request.user }}'
@@ -113,10 +111,13 @@
   </div>
 
 {# Scripts #}
-<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/adminlte.min.js' %}"></script>
-{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/adminlte.min.js" integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA==" crossorigin="anonymous"></script> {% endcomment %}
+  <!-- jQuery -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script>
+  <!-- AdminLTE App -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/adminlte.min.js" integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA==" crossorigin="anonymous"></script>
+<!-- Bootstrap 4 -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha512-c4wThPPCMmu4xsVufJHokogA9X4ka58cy9cEYf5t147wSw0Zo43fwdTy/IC0k1oLxXcUlPvWZMnD8be61swW7g==" crossorigin="anonymous"></script>
+
 <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
 {% block user-chart-js %} {% endblock user-chart-js %}
 
@@ -148,8 +149,8 @@ $(document).ready(function($){
 
 <noscript>This application requires JavaScript to function. Please enable JavaScript in your browser.</noscript>
 
-
-
+ {% compress js %}
+    <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
 {% block college-admin-script %}
 
 {% endblock college-admin-script %}
@@ -161,6 +162,55 @@ $(document).ready(function($){
 {% block college-student-script %}
 
 {% endblock college-student-script %}
+{% endcompress %}
+<script>
+  $("#Notifs").on('click', function(){
+    var url = $("#Notifs").attr("href");
 
+    $.ajax({
+            url: url,
+
+          });
+
+        });
+</script>
+<script>
+$.navigation = $('nav > ul.nav');
+$(document).ready(function($){
+
+    $.navigation.find('a').each(function(){
+
+    var cUrl = String(window.location).split('?')[0];
+
+    if (cUrl.substr(cUrl.length - 1) == '#') {
+      cUrl = cUrl.slice(0,-1);
+    }
+
+    if ($($(this))[0].href==cUrl) {
+      $(this).addClass('active');
+
+      $(this).parents('ul').add(this).each(function(){
+        $(this).parent().addClass('menu-open');
+        $(this).parent().children('a').addClass('active');
+      });
+    }
+  });
+});
+</script>
+<script>
+$(window).on("load", function (){
+  $('#preloader').fadeOut();
+});
+
+$(document).ready(function () {
+  $("button").on("click", function () {
+    if ($(this).attr("type") == "submit"){
+      $(this).prop("disabled", true);
+      $(this).html(`<span class="spinner-border spinner-border-sm" aria-disabled="true"></span> Loading...`);
+      $(this).parent().closest('form').submit();
+    }
+});
+})
+</script>
 </body>
 </html>
