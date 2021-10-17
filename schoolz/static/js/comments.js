@@ -44,7 +44,7 @@ $(document).ready(function () {
                     let is_teacher = data['is_teacher'];
                     let date = data['date'];
 
-                    let teacherMark = '<span class="teacher-tick">&#x2713;</span>';
+                    let teacherMark = '<i class="fas fa-check-circle text-info teacher-tick"></i>';
 
                     if(is_teacher === 'False') {
                         teacherMark = '';

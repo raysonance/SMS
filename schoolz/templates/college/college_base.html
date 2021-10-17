@@ -202,15 +202,6 @@ $(window).on("load", function (){
   $('#preloader').fadeOut();
 });
 
-$(document).ready(function () {
-  $("button").on("click", function () {
-    if ($(this).attr("type") == "submit"){
-      $(this).prop("disabled", true);
-      $(this).html(`<span class="spinner-border spinner-border-sm" aria-disabled="true"></span> Loading...`);
-      $(this).parent().closest('form').submit();
-    }
-});
-})
 </script>
 </body>
 </html>

@@ -387,6 +387,7 @@ def add_result(request):
                     grade=grade,
                     remark=remark,
                 )
+
                 result.save()
                 messages.success(request, "Result added successfully!")
                 return redirect("teachers:add_result")
@@ -396,6 +397,7 @@ def add_result(request):
             return redirect("teachers:add_result")
 
     # using _id at the end of a request method can reduce the query by one
+
     students = StudentModel.objects.filter(
         class_name=request.user.teachermodel.class_name_id,
         sub_class=request.user.teachermodel.sub_class_id,
@@ -748,12 +750,12 @@ def college_teacher_classroom(request):
     try:
         subjects = [
             subject
-            for subject in Subject.objects.all()
+            for subject in Subject.objects.all().select_related("class_name")
             if subject.class_name == college_subclass.class_name
         ]
         students = [
             student
-            for student in StudentModel.objects.all()
+            for student in StudentModel.objects.all().select_related("class_name")
             if student.class_name == college_subclass.class_name
         ]
 
@@ -770,42 +772,56 @@ def college_teacher_classroom(request):
 
     posts = [
         post
-        for post in ClassWorkPost.objects.all()
+        for post in ClassWorkPost.objects.all().select_related("subclass")
         if post.subclass == college_subclass
     ]
     textposts = [
         textpost
-        for textpost in TextPost.objects.all()
+        for textpost in TextPost.objects.all().select_related(
+            "post__subclass", "post__subject"
+        )
         if textpost.post.subclass == college_subclass
     ]
     videoposts = [
         videopost
-        for videopost in VideoPost.objects.all()
+        for videopost in VideoPost.objects.all().select_related(
+            "post__subclass", "post__subject"
+        )
         if videopost.post.subclass == college_subclass
     ]
     documentposts = [
         documentpost
-        for documentpost in DocumentPost.objects.all()
+        for documentpost in DocumentPost.objects.all().select_related(
+            "post__subclass", "post__subject"
+        )
         if documentpost.post.subclass == college_subclass
     ]
     imageposts = [
         imagepost
-        for imagepost in ImagePost.objects.all()
+        for imagepost in ImagePost.objects.all().select_related(
+            "post__subclass", "post__subject"
+        )
         if imagepost.post.subclass == college_subclass
     ]
     youtubeposts = [
         youtubepost
-        for youtubepost in YouTubePost.objects.all()
+        for youtubepost in YouTubePost.objects.all().select_related(
+            "post__subclass", "post__subject"
+        )
         if youtubepost.post.subclass == college_subclass
     ]
     articleposts = [
         articlepost
-        for articlepost in ArticlePost.objects.all()
+        for articlepost in ArticlePost.objects.all().select_related(
+            "post__subclass", "post__subject"
+        )
         if articlepost.post.subclass == college_subclass
     ]
     classtestposts = [
         classtestpost
-        for classtestpost in ClassTestPost.objects.all()
+        for classtestpost in ClassTestPost.objects.all().select_related(
+            "post__subclass", "post__subject"
+        )
         if classtestpost.post.subclass == college_subclass
     ]
 
@@ -836,11 +852,13 @@ def college_teacher_classroom(request):
 
     comments_and_replies = []
 
-    for comment in PostComment.objects.all():
+    reply = CommentReply.objects.all().select_related("postcomment", "author")
+
+    for comment in PostComment.objects.all().select_related("post", "author"):
         for post in posts_display:
             if comment.post == post.post:
                 try:
-                    replies = CommentReply.objects.filter(postcomment=comment)
+                    replies = [reply for reply in reply if reply.postcomment == comment]
                     comments_and_replies.append(
                         {
                             "comments": {
@@ -850,6 +868,7 @@ def college_teacher_classroom(request):
                             }
                         }
                     )
+
                 except Exception:
                     pass
 
@@ -1128,16 +1147,18 @@ def college_teacher_classroom_view_test(request, slug_pk):
 @user_passes_test(user_is_teacher, login_url="home")
 def view_tests_submissions(request):
     college_subclass = SubClass.objects.get(pk=request.user.teachermodel.sub_class_id)
-    classworkposts = ClassWorkPost.objects.filter(
-        class_name=college_subclass.class_name, subclass=college_subclass
-    )
+    classworkposts = ClassWorkPost.objects.filter(subclass=college_subclass)
     classtestposts = [post for post in classworkposts if post.is_classtest]
     classtestposts = [
-        post for post in ClassTestPost.objects.all() if post.post in classtestposts
+        post
+        for post in ClassTestPost.objects.all().select_related("post")
+        if post.post in classtestposts
     ]
     classtest_solutions = [
         post
-        for post in ClassTestSolution.objects.all()
+        for post in ClassTestSolution.objects.all().select_related(
+            "classtest__post", "student"
+        )
         if post.classtest in classtestposts
     ]
 
@@ -1155,13 +1176,11 @@ def view_tests_submissions(request):
 @user_passes_test(user_is_teacher, login_url="home")
 def view_assignments_submissions(request):
     college_subclass = SubClass.objects.get(pk=request.user.teachermodel.sub_class_id)
-    classworkposts = ClassWorkPost.objects.filter(
-        class_name=college_subclass.class_name, subclass=college_subclass
-    )
+    classworkposts = ClassWorkPost.objects.filter(subclass=college_subclass)
     assignment_posts = [post for post in classworkposts if post.is_assignment]
     assignment_solutions = [
         post
-        for post in AssignmentSolution.objects.all()
+        for post in AssignmentSolution.objects.all().select_related("post", "student")
         if post.post in assignment_posts
     ]
 
