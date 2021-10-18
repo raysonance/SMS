@@ -3,14 +3,9 @@
 {% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
 {% block teacher-content %}
     <main role="main" class="container-md" id="classroom-main">
-    <div class="box">
-      <img id="book" src="{% static 'images/books.png' %}" class="img-fluid"
+    <div class="text-center">
+      <img src="{% static 'images/classroom/classroom.png' %}" style="height:200px" class="img-fluid"
         alt="Photo of stacked books">
-      <div>
-      <h1 class="text colorbluesapphire text-center">
-            {{ college_class.class_name }}
-      </h1>
-      </div>
     </div>
         <br>
 

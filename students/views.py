@@ -545,13 +545,27 @@ def college_student(request):
         )
 
     posts = ClassWorkPost.objects.filter(subclass_id=subclass_id)
-    textposts = TextPost.objects.filter(post__subclass_id=subclass_id)
-    videoposts = VideoPost.objects.filter(post__subclass_id=subclass_id)
-    documentposts = DocumentPost.objects.filter(post__subclass_id=subclass_id)
-    imageposts = ImagePost.objects.filter(post__subclass_id=subclass_id)
-    youtubeposts = YouTubePost.objects.filter(post__subclass_id=subclass_id)
-    articleposts = ArticlePost.objects.filter(post__subclass_id=subclass_id)
-    classtestposts = ClassTestPost.objects.filter(post__subclass_id=subclass_id)
+    textposts = TextPost.objects.filter(post__subclass_id=subclass_id).select_related(
+        "post__subject"
+    )
+    videoposts = VideoPost.objects.filter(post__subclass_id=subclass_id).select_related(
+        "post__subject"
+    )
+    documentposts = DocumentPost.objects.filter(
+        post__subclass_id=subclass_id
+    ).select_related("post__subject")
+    imageposts = ImagePost.objects.filter(post__subclass_id=subclass_id).select_related(
+        "post__subject"
+    )
+    youtubeposts = YouTubePost.objects.filter(
+        post__subclass_id=subclass_id
+    ).select_related("post__subject")
+    articleposts = ArticlePost.objects.filter(
+        post__subclass_id=subclass_id
+    ).select_related("post__subject")
+    classtestposts = ClassTestPost.objects.filter(
+        post__subclass_id=subclass_id
+    ).select_related("post__subject")
 
     posts_display = []
 
@@ -580,12 +594,15 @@ def college_student(request):
                 posts_display.insert(0, classtestpost)
 
     comments_and_replies = []
+    comment_reply = CommentReply.objects.all().select_related("postcomment", "author")
 
-    for comment in PostComment.objects.all():
+    for comment in PostComment.objects.all().select_related("post", "author"):
         for post in posts_display:
             if comment.post == post.post:
                 try:
-                    replies = CommentReply.objects.filter(postcomment=comment)
+                    replies = [
+                        reply for reply in comment_reply if reply.postcomment == comment
+                    ]
                     comments_and_replies.append(
                         {
                             "comments": {
@@ -617,11 +634,9 @@ def college_student(request):
 def college_student_assignments(request):
     college_subclass = request.user.studentmodel.sub_class
     try:
-        subjects = [
-            subject
-            for subject in Subject.objects.all()
-            if subject.class_name == college_subclass.class_name
-        ]
+        subjects = Subject.objects.filter(
+            class_name=college_subclass.class_name,
+        )
     except Exception as err:
         messages.error(request, f"{err}")
         context_dict = {
@@ -635,32 +650,45 @@ def college_student_assignments(request):
 
     posts = [
         post
-        for post in ClassWorkPost.objects.all()
-        if post.subclass == college_subclass and post.is_assignment
+        for post in ClassWorkPost.objects.filter(
+            subclass=college_subclass, is_assignment=True
+        )
     ]
     textposts = [
-        textpost for textpost in TextPost.objects.all() if textpost.post in posts
+        textpost
+        for textpost in TextPost.objects.filter(
+            post__subclass=college_subclass, post__is_assignment=True
+        ).select_related("post__subject")
     ]
     videoposts = [
-        videopost for videopost in VideoPost.objects.all() if videopost.post in posts
+        videopost
+        for videopost in VideoPost.objects.filter(
+            post__subclass=college_subclass, post__is_assignment=True
+        ).select_related("post__subject")
     ]
     documentposts = [
         documentpost
-        for documentpost in DocumentPost.objects.all()
-        if documentpost.post in posts
+        for documentpost in DocumentPost.objects.filter(
+            post__subclass=college_subclass, post__is_assignment=True
+        ).select_related("post__subject")
     ]
     imageposts = [
-        imagepost for imagepost in ImagePost.objects.all() if imagepost.post in posts
+        imagepost
+        for imagepost in ImagePost.objects.filter(
+            post__subclass=college_subclass, post__is_assignment=True
+        ).select_related("post__subject")
     ]
     youtubeposts = [
         youtubepost
-        for youtubepost in YouTubePost.objects.all()
-        if youtubepost.post in posts
+        for youtubepost in YouTubePost.objects.filter(
+            post__subclass=college_subclass, post__is_assignment=True
+        ).select_related("post__subject")
     ]
     articleposts = [
         articlepost
-        for articlepost in ArticlePost.objects.all()
-        if articlepost.post in posts
+        for articlepost in ArticlePost.objects.filter(
+            post__subclass=college_subclass, post__is_assignment=True
+        ).select_related("post__subject")
     ]
 
     posts_display = []
@@ -838,11 +866,9 @@ def college_student_reading_materials(request):
     college_subclass = request.user.studentmodel.sub_class
 
     try:
-        subjects = [
-            subject
-            for subject in Subject.objects.all()
-            if subject.class_name == college_subclass.class_name
-        ]
+        subjects = Subject.objects.filter(
+            class_name=college_subclass.class_name,
+        )
     except Exception as err:
         messages.error(request, f"{err}")
         context_dict = {
@@ -854,18 +880,19 @@ def college_student_reading_materials(request):
             context=context_dict,
         )
 
-    posts = [
-        post
-        for post in ClassWorkPost.objects.all()
-        if post.subclass == college_subclass
-    ]
+    posts = [post for post in ClassWorkPost.objects.filter(subclass=college_subclass)]
+
     textposts = [
-        textpost for textpost in TextPost.objects.all() if textpost.post in posts
+        textpost
+        for textpost in TextPost.objects.filter(
+            post__subclass_id=college_subclass
+        ).select_related("post__subject")
     ]
     documentposts = [
         documentpost
-        for documentpost in DocumentPost.objects.all()
-        if documentpost.post in posts
+        for documentpost in DocumentPost.objects.filter(
+            post__subclass_id=college_subclass
+        ).select_related("post__subject")
     ]
 
     posts_display = []
@@ -897,11 +924,9 @@ def college_student_videos(request):
     college_subclass = request.user.studentmodel.sub_class
 
     try:
-        subjects = [
-            subject
-            for subject in Subject.objects.all()
-            if subject.class_name == college_subclass.class_name
-        ]
+        subjects = Subject.objects.filter(
+            class_name=college_subclass.class_name,
+        )
     except Exception as err:
         messages.error(request, f"{err}")
         context_dict = {
@@ -913,18 +938,18 @@ def college_student_videos(request):
             context=context_dict,
         )
 
-    posts = [
-        post
-        for post in ClassWorkPost.objects.all()
-        if post.subclass == college_subclass
-    ]
+    posts = [post for post in ClassWorkPost.objects.filter(subclass=college_subclass)]
     videoposts = [
-        videopost for videopost in VideoPost.objects.all() if videopost.post in posts
+        videopost
+        for videopost in VideoPost.objects.filter(
+            post__subclass_id=college_subclass
+        ).select_related("post__subject")
     ]
     youtubeposts = [
         youtubepost
-        for youtubepost in YouTubePost.objects.all()
-        if youtubepost.post in posts
+        for youtubepost in YouTubePost.objects.filter(
+            post__subclass_id=college_subclass
+        ).select_related("post__subject")
     ]
 
     posts_display = []
@@ -956,11 +981,9 @@ def college_student_articles(request):
     college_subclass = request.user.studentmodel.sub_class
 
     try:
-        subjects = [
-            subject
-            for subject in Subject.objects.all()
-            if subject.class_name == college_subclass.class_name
-        ]
+        subjects = Subject.objects.filter(
+            class_name=college_subclass.class_name,
+        )
     except Exception as err:
         messages.error(request, f"{err}")
         context_dict = {
@@ -972,15 +995,12 @@ def college_student_articles(request):
             context=context_dict,
         )
 
-    posts = [
-        post
-        for post in ClassWorkPost.objects.all()
-        if post.subclass == college_subclass
-    ]
+    posts = [post for post in ClassWorkPost.objects.filter(subclass=college_subclass)]
     articleposts = [
         articlepost
-        for articlepost in ArticlePost.objects.all()
-        if articlepost.post in posts
+        for articlepost in ArticlePost.objects.filter(
+            post__subclass_id=college_subclass
+        ).select_related("post__subject")
     ]
 
     posts_display = []
@@ -1048,9 +1068,7 @@ def college_student_classroom_give_test(request, slug_pk):
     classtestpost = ClassTestPost.objects.get(post__slug=slug_pk)
 
     questions = [
-        question
-        for question in Question.objects.all()
-        if question.class_test_post == classtestpost
+        question for question in Question.objects.filter(class_test_post=classtestpost)
     ]
     choices = [
         choice for choice in Choice.objects.all() if choice.question in questions

@@ -3,14 +3,9 @@
 {% block title %}Student: {{ request.user.studentmodel.name|slice:':20' }} {% endblock title %}
 {% block student-content %}
     <main role="main" class="container-md">
-        <div class="box">
-          <img id="book" src="{% static 'images/books.png' %}" class="img-fluid"
+        <div class="text-center">
+          <img src="{% static 'images/classroom/assignments.png' %}" class="img-fluid"
             alt="Photo of stacked books">
-          <div>
-          <h1 class="text colorbluesapphire text-center">
-                {{ college_class.class_name }}
-          </h1>
-          </div>
         </div>
         <br>
 
@@ -33,7 +28,6 @@
 
             {# Posts #}
             {% for post in posts_display %}
-                {% if request.user.studentmodel in post.post.students.all %}
                     <div class="card posts {{ post.post.subject }}">
                       <div class="card-header"{% if post.video_url or post.document_url or post.image_url %}style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white"{% elif post.post.is_classtest or post.post.is_assignment %}style="background-color: red;"{% else %}style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
                         <h3 class="card-title text-white"> {{ post.post.title | capfirst }} <span class="text-muted"> </span></h3>
@@ -86,7 +80,6 @@
                     </div>
                       <!-- /.card-body -->
                 </div>
-                {% endif %}
             {% endfor %}
         </div>
     </main>

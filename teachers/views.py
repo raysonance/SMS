@@ -750,13 +750,15 @@ def college_teacher_classroom(request):
     try:
         subjects = [
             subject
-            for subject in Subject.objects.all().select_related("class_name")
-            if subject.class_name == college_subclass.class_name
+            for subject in Subject.objects.filter(
+                class_name=college_subclass.class_name
+            ).select_related("class_name")
         ]
         students = [
             student
-            for student in StudentModel.objects.all().select_related("class_name")
-            if student.class_name == college_subclass.class_name
+            for student in StudentModel.objects.filter(
+                class_name=college_subclass.class_name
+            ).select_related("class_name")
         ]
 
     except Exception as err:
@@ -770,59 +772,48 @@ def college_teacher_classroom(request):
             context=context_dict,
         )
 
-    posts = [
-        post
-        for post in ClassWorkPost.objects.all().select_related("subclass")
-        if post.subclass == college_subclass
-    ]
+    posts = [post for post in ClassWorkPost.objects.filter(subclass=college_subclass)]
     textposts = [
         textpost
-        for textpost in TextPost.objects.all().select_related(
-            "post__subclass", "post__subject"
-        )
-        if textpost.post.subclass == college_subclass
+        for textpost in TextPost.objects.filter(
+            post__subclass=college_subclass
+        ).select_related("post__subject")
     ]
     videoposts = [
         videopost
-        for videopost in VideoPost.objects.all().select_related(
-            "post__subclass", "post__subject"
-        )
-        if videopost.post.subclass == college_subclass
+        for videopost in VideoPost.objects.filter(
+            post__subclass=college_subclass
+        ).select_related("post__subject")
     ]
     documentposts = [
         documentpost
-        for documentpost in DocumentPost.objects.all().select_related(
-            "post__subclass", "post__subject"
-        )
-        if documentpost.post.subclass == college_subclass
+        for documentpost in DocumentPost.objects.filter(
+            post__subclass=college_subclass
+        ).select_related("post__subject")
     ]
     imageposts = [
         imagepost
-        for imagepost in ImagePost.objects.all().select_related(
-            "post__subclass", "post__subject"
-        )
-        if imagepost.post.subclass == college_subclass
+        for imagepost in ImagePost.objects.filter(
+            post__subclass=college_subclass
+        ).select_related("post__subject")
     ]
     youtubeposts = [
         youtubepost
-        for youtubepost in YouTubePost.objects.all().select_related(
-            "post__subclass", "post__subject"
-        )
-        if youtubepost.post.subclass == college_subclass
+        for youtubepost in YouTubePost.objects.filter(
+            post__subclass=college_subclass
+        ).select_related("post__subject")
     ]
     articleposts = [
         articlepost
-        for articlepost in ArticlePost.objects.all().select_related(
-            "post__subclass", "post__subject"
-        )
-        if articlepost.post.subclass == college_subclass
+        for articlepost in ArticlePost.objects.filter(
+            post__subclass=college_subclass
+        ).select_related("post__subject")
     ]
     classtestposts = [
         classtestpost
-        for classtestpost in ClassTestPost.objects.all().select_related(
-            "post__subclass", "post__subject"
-        )
-        if classtestpost.post.subclass == college_subclass
+        for classtestpost in ClassTestPost.objects.filter(
+            post__subclass=college_subclass
+        ).select_related("post__subject")
     ]
 
     posts_display = []
@@ -852,13 +843,15 @@ def college_teacher_classroom(request):
 
     comments_and_replies = []
 
-    reply = CommentReply.objects.all().select_related("postcomment", "author")
+    comment_reply = CommentReply.objects.all().select_related("postcomment", "author")
 
     for comment in PostComment.objects.all().select_related("post", "author"):
         for post in posts_display:
             if comment.post == post.post:
                 try:
-                    replies = [reply for reply in reply if reply.postcomment == comment]
+                    replies = [
+                        reply for reply in comment_reply if reply.postcomment == comment
+                    ]
                     comments_and_replies.append(
                         {
                             "comments": {
@@ -871,7 +864,6 @@ def college_teacher_classroom(request):
 
                 except Exception:
                     pass
-
     context_dict = {
         "college_class": college_subclass,
         "subjects": subjects,
@@ -892,15 +884,16 @@ def college_teacher_classroom(request):
 def college_teacher_classroom_add_post(request, pk=None):
     if request.method == "POST":
         college = College.objects.first()
-        college_class_pk = pk
+        class_pk = pk
         try:
             # Get the data from the form
             title = request.POST.get("title")
             subject_pk = request.POST.get("subject")
             student_pks = request.POST.get("students").split(" ")
             postype = request.POST.get("postype")
+            subject = Subject.objects.get(pk=subject_pk)
 
-            subclass_post = SubClass.objects.get(pk=college_class_pk)
+            subclass_post = SubClass.objects.get(pk=class_pk)
 
             if postype == "regular" or postype == "assignment":
                 is_assignment = False
@@ -912,7 +905,7 @@ def college_teacher_classroom_add_post(request, pk=None):
                     college=college,
                     class_name=subclass_post.class_name,
                     subclass=subclass_post,
-                    subject=Subject.objects.get(pk=subject_pk),
+                    subject=subject,
                     teacher=request.user.teachermodel,
                     title=title,
                     is_assignment=is_assignment,
@@ -922,9 +915,7 @@ def college_teacher_classroom_add_post(request, pk=None):
                 # link students to this post
                 this_class_students = [
                     student
-                    for student in StudentModel.objects.all()
-                    if student.sub_class == subclass_post
-                    and student.class_name == subclass_post.class_name
+                    for student in StudentModel.objects.filter(sub_class=subclass_post)
                 ]
 
                 if student_pks[0] == "all":
@@ -956,7 +947,7 @@ def college_teacher_classroom_add_post(request, pk=None):
                             "Please contact your college administrator regarding this"
                         )
                         messages.error(request, f"{err}")
-                        return redirect(college_teacher_classroom, pk=college_class_pk)
+                        return redirect(college_teacher_classroom, pk=class_pk)
                     video_post.video_url = videopostfile
                     video_post.save()
                     college.used_storage_space = college.used_storage_space + (
@@ -979,10 +970,10 @@ def college_teacher_classroom_add_post(request, pk=None):
                         err = (
                             "Your college has passed its total upload space limit. "
                             "You can no longer upload any files. "
-                            "Please contact your college administrator regarding this"
+                            "Please contact your college admin regarding this"
                         )
                         messages.error(request, f"{err}")
-                        return redirect(college_teacher_classroom, pk=college_class_pk)
+                        return redirect(college_teacher_classroom, pk=class_pk)
                     document_post.document_url = documentpostfile
                     document_post.save()
                     college.used_storage_space = college.used_storage_space + (
@@ -1006,7 +997,7 @@ def college_teacher_classroom_add_post(request, pk=None):
                             "Please contact your college administrator regarding this"
                         )
                         messages.error(request, f"{err}")
-                        return redirect(college_teacher_classroom, pk=college_class_pk)
+                        return redirect(college_teacher_classroom, pk=class_pk)
                     image_post.image_url = imagepostfile
                     image_post.save()
                     college.used_storage_space = college.used_storage_space + (
@@ -1035,7 +1026,7 @@ def college_teacher_classroom_add_post(request, pk=None):
                     college=college,
                     class_name=subclass_post.class_name,
                     subclass=subclass_post,
-                    subject=Subject.objects.get(pk=subject_pk),
+                    subject=subject,
                     teacher=request.user.teachermodel,
                     title=title,
                     is_assignment=is_assignment,
@@ -1121,14 +1112,17 @@ def college_teacher_classroom_add_post(request, pk=None):
 @login_required
 @user_passes_test(user_is_teacher, login_url="home")
 def college_teacher_classroom_view_test(request, slug_pk):
+    college_subclass = SubClass.objects.get(pk=request.user.teachermodel.sub_class_id)
     classtestpost = ClassTestPost.objects.get(post__slug=slug_pk)
     questions = [
-        question
-        for question in Question.objects.all()
-        if question.class_test_post == classtestpost
+        question for question in Question.objects.filter(class_test_post=classtestpost)
     ]
     choices = [
-        choice for choice in Choice.objects.all() if choice.question in questions
+        choice
+        for choice in Choice.objects.filter(
+            question__class_test_post__post__subclass=college_subclass
+        ).select_related("question")
+        if choice.question in questions
     ]
 
     context_dict = {
@@ -1147,18 +1141,17 @@ def college_teacher_classroom_view_test(request, slug_pk):
 @user_passes_test(user_is_teacher, login_url="home")
 def view_tests_submissions(request):
     college_subclass = SubClass.objects.get(pk=request.user.teachermodel.sub_class_id)
-    classworkposts = ClassWorkPost.objects.filter(subclass=college_subclass)
-    classtestposts = [post for post in classworkposts if post.is_classtest]
     classtestposts = [
         post
-        for post in ClassTestPost.objects.all().select_related("post")
-        if post.post in classtestposts
+        for post in ClassTestPost.objects.filter(
+            post__subclass=college_subclass
+        ).select_related("post")
     ]
     classtest_solutions = [
         post
-        for post in ClassTestSolution.objects.all().select_related(
-            "classtest__post", "student"
-        )
+        for post in ClassTestSolution.objects.filter(
+            classtest__post__subclass=college_subclass
+        ).select_related("classtest__post", "student")
         if post.classtest in classtestposts
     ]
 
@@ -1176,12 +1169,11 @@ def view_tests_submissions(request):
 @user_passes_test(user_is_teacher, login_url="home")
 def view_assignments_submissions(request):
     college_subclass = SubClass.objects.get(pk=request.user.teachermodel.sub_class_id)
-    classworkposts = ClassWorkPost.objects.filter(subclass=college_subclass)
-    assignment_posts = [post for post in classworkposts if post.is_assignment]
     assignment_solutions = [
         post
-        for post in AssignmentSolution.objects.all().select_related("post", "student")
-        if post.post in assignment_posts
+        for post in AssignmentSolution.objects.filter(
+            post__subclass=college_subclass
+        ).select_related("post", "student")
     ]
 
     context_dict = {
@@ -1200,8 +1192,9 @@ def view_test_performance(request, slug_pk):
     classtestsolution = ClassTestSolution.objects.get(classtest__post__slug=slug_pk)
     student_choices = [
         choice
-        for choice in StudentChoice.objects.all()
-        if choice.classtestsolution == classtestsolution
+        for choice in StudentChoice.objects.filter(
+            classtestsolution=classtestsolution
+        ).select_related("question", "choice")
     ]
 
     test_items = []
