@@ -1,6 +1,6 @@
 {% extends 'college/college_base.html' %}
 {% load static %}
-{% block title %}Teacher: {{ request.user.teacher.college.college_name|slice:':20' }} {% endblock title %}
+{% block title %}Classroom{% endblock title %}
 {% block teacher-content %}
     <main role="main" class="container-md" id="classroom-main">
     <div class="text-center">
@@ -254,7 +254,7 @@
             {# Posts #}
             {% for post in posts_display %}
                 {% with work=post.post %}
-                <div class="card posts">
+                <div class="card posts {{ work.subject }}">
                     <div class="card-header"{% if post.video_url or post.document_url or post.image_url %}style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white"{% elif work.is_classtest or work.is_assignment %}style="background-color: red;"{% else %}style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
                       <h3 class="card-title text-white"> {{ work.title | capfirst }} <span class="text-muted"> </span></h3>
                       <div class="card-tools">

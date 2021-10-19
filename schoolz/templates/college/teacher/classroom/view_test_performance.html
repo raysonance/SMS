@@ -1,11 +1,7 @@
 {% extends 'college/college_base.html' %}
 {% load static %}
 {% block title %}
-{% if request.user.student %}
-    Student: {{ request.user.student.college.college_name|slice:':20' }}
-{% elif request.user.teacher %}
-    Student: {{ request.user.teacher.college.college_name|slice:':20' }}
-{% endif %}
+Performance
 {% endblock title %}
 {% block teacher-content %}
     <main role="main" class="container-md">
