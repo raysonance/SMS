@@ -278,7 +278,16 @@
                     <div class="card-body">
                       {% if post.body %}
                           <p class="text-gray" style="font-family:Georgia"><strong>Subject:</strong> {{ work.subject | capfirst }}</p>
-                          <p class="card-text">{{ post.body | capfirst }}</p>
+                          <p class="text-gray" style="font-family:Georgia"><strong>Model:</strong>
+                          {% if work.is_classtest %}
+                            Test
+                          {% elif work.is_assignment %}
+                            Assignment
+                          {% else %}
+                            Regular
+                          {% endif %}
+                          </p>
+                          <p class="card-text">{{ post.body | capfirst | truncatechars:500}}</p>
                           {% if post.video_url %}
                               <video class="post-media seperate" width="320" height="240" controls>
                                   <source src="{{ post.get_media_url }}" type="video/mp4">

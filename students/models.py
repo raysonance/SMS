@@ -189,16 +189,10 @@ class ClassWorkPost(models.Model):
 
 class TextPost(models.Model):
     post = models.ForeignKey(ClassWorkPost, on_delete=models.CASCADE)
-    # slug = models.SlugField(blank=True, max_length=255, unique=True)
-    body = models.CharField(max_length=500, null=True, blank=True)
+    body = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.post.title
-
-    # def save(self, *args, **kwargs):
-    #     if not self.slug:
-    #         self.slug = text.slugify(rand_slug() + "-" + self.post.title)
-    #     super().save(*args, **kwargs)
 
 
 def video_directory_path(instance, filename):

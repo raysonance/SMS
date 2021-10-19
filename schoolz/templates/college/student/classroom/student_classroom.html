@@ -55,15 +55,16 @@
 
             {# Posts #}
             {% for post in posts_display %}
-                    <div class="card posts {{ post.post.subject }}">
-                      <div class="card-header"{% if post.video_url or post.document_url or post.image_url %}style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white"{% elif post.post.is_classtest or post.post.is_assignment %}style="background-color: red;"{% else %}style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
-                        <h3 class="card-title text-white"> {{ post.post.title | capfirst }} <span class="text-muted"> </span></h3>
+                {% with work=post.post %}
+                    <div class="card posts {{ work.subject }}">
+                      <div class="card-header"{% if post.video_url or post.document_url or post.image_url %}style="background-color: #ffac81; background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%); color: white"{% elif work.is_classtest or work.is_assignment %}style="background-color: red;"{% else %}style="background-color: #5de6de; background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%); color: white" {% endif %}>
+                        <h3 class="card-title text-white"> {{ work.title | capfirst }} <span class="text-muted"> </span></h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool text-white">
-                            {% if post.post.is_classtest %}
+                            {% if work.is_classtest %}
                                 <i class="fas fa-star text-white"></i>
-                            {% elif post.post.is_assignment %}
+                            {% elif work.is_assignment %}
                                 <i class="fas fa-moon text-white"></i>
                             {% endif %}
                             </button>
@@ -73,8 +74,17 @@
                       <!-- /.card-header -->
                       <div class="card-body">
                         {% if post.body %}
-                            <p class="text-gray" style="font-family:Georgia"><strong>Subject:</strong> {{ post.post.subject | capfirst }}</p>
-                            <p class="card-text">{{ post.body | capfirst }}</p>
+                            <p class="text-gray" style="font-family:Georgia"><strong>Subject:</strong> {{ work.subject | capfirst }}</p>
+                            <p class="text-gray" style="font-family:Georgia"><strong>Model:</strong>
+                                {% if work.is_classtest %}
+                                    Test
+                                {% elif work.is_assignment %}
+                                    Assignment
+                                {% else %}
+                                    Regular
+                                {% endif %}
+                             </p>
+                            <p class="card-text">{{ post.body | capfirst | truncatechars:500 }}</p>
                             {% if post.video_url %}
                                 <video class="post-media seperate" width="320" height="240" controls>
                                     <source src="{{ post.get_media_url }}" type="video/mp4">
@@ -85,16 +95,16 @@
                             {% elif post.image_url %}
                                 <a href="{{ post.get_media_url }}" class="seperate" target="_blank">
                                     <img class="post-media" src="{{ post.get_media_url }}"
-                                         alt="{{ post.post.title }}"/>
+                                         alt="{{ work.title }}"/>
                                 </a>
-                            {% elif post.post.is_classtest %}
+                            {% elif work.is_classtest %}
                                 <a class="btn btn-outline-warning"
-                                   href="{% url 'college_student_classroom_give_test' post.post.slug %}">
+                                   href="{% url 'college_student_classroom_give_test' work.slug %}">
                                     View test
                                 </a>
                             {% else %}
                                 <a class="btn btn-outline-warning"
-                                   href="{% url 'college_student_classroom_view_post' post.post.slug %}">View post</a>
+                                   href="{% url 'college_student_classroom_view_post' work.slug %}">View post</a>
                             {% endif %}
                         {% elif post.youtube_link %}
                             <iframe class="post-media seperate" src="{{ post.youtube_link }}" allowfullscreen></iframe>
@@ -102,13 +112,13 @@
                             <a class="btn btn-outline-warning" href="{{ post.article_link }}" target="_blank">Read
                                 article</a>
                         {% endif %}
-                        {% if post.post.is_assignment %}
+                        {% if work.is_assignment %}
                             <a class="btn btn-outline-warning" id="submit-work"
-                               href="{% url 'college_student_submit_assignment' post.post.slug %}">Submit Your
+                               href="{% url 'college_student_submit_assignment' work.slug %}">Submit Your
                                 Work</a>
                         {% endif %}
                         <small class="text-gray" style="display: block; margin-top: 12px; margin-bottom: 15px;">
-                            Posted on: {{ post.post.date }}
+                            Posted on: {{ work.date }}
                         </small>
                       </div>
                       <!-- /.card-body -->
@@ -122,7 +132,7 @@
                                 <div class="comments">
                                     {% for comment in comments_and_replies %}
 
-                                        {% if comment.comments.post_pk == post.post.pk %}
+                                        {% if comment.comments.post_pk == work.pk %}
                                             <div class="comment">
                                                 <div class="comment-header">
                                                     <b>
@@ -208,12 +218,13 @@
                                               rows="3"></textarea>
                                     <br>
                                     <button type="submit" class="btn btn-outline-warning add-comment-btn"
-                                            id="{{ post.post.pk }}">COMMENT
+                                            id="{{ work.pk }}">COMMENT
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                {% endwith %}
             {% endfor %}
 
         </div>
