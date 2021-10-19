@@ -98,33 +98,30 @@ user_redirect_view = UserRedirectView.as_view()
 @user_passes_test(user_is_admin, login_url="home")
 def admin_dashboard(request):
     # get current admin section
-    request.session["section_id"] = request.user.adminmodel.section_id
+    section_id = request.user.adminmodel.section_id
     # assign other section
-    if request.session["section_id"] == 1:
-        section, not_section = 1, 2
+    if section_id == 1:
+        sections, not_sections = 1, 2
     else:
-        section, not_section = 2, 1
+        sections, not_sections = 2, 1
 
     # get other section
-    spectre = Section.objects.get(id=not_section)
+    not_section = Section.objects.get(id=not_sections)
+    section = Section.objects.get(id=sections)
 
-    section_students = StudentModel.objects.filter(section=section).values("pk", "paid")
-    section_teachers = TeacherModel.objects.filter(section=section).count()
-    other_students = StudentModel.objects.filter(section=not_section).values(
-        "pk", "paid"
-    )
-    students_count, other_students_count = len(section_students), len(other_students)
-    other_teachers = TeacherModel.objects.filter(section=not_section).count()
-
+    students_count = StudentModel.objects.filter(section=sections).count()
+    section_teachers = TeacherModel.objects.filter(section=sections).count()
+    other_students_count = StudentModel.objects.filter(section=not_sections).count()
+    other_teachers = TeacherModel.objects.filter(section=not_sections).count()
     # get number of paid students
-    paid_section_students = len(
-        [student for student in section_students if student["paid"]]
-    )
+    paid_section_students = StudentModel.objects.filter(
+        section=sections, paid=True
+    ).count()
     unpaid = students_count - paid_section_students
 
-    paid_other_students = len(
-        [student for student in other_students if student["paid"]]
-    )
+    paid_other_students = StudentModel.objects.filter(
+        section=not_sections, paid=True
+    ).count()
     unpaid_other = other_students_count - paid_other_students
 
     context = {
@@ -136,7 +133,8 @@ def admin_dashboard(request):
         "unpaid": unpaid,
         "paid_other": paid_other_students,
         "unpaid_other": unpaid_other,
-        "spectre": spectre.sections,
+        "spectre": not_section.sections,
+        "section": section.sections,
     }
     return render(request, "users/admin_dashboard.html", context)
 

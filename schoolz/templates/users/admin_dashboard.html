@@ -33,8 +33,8 @@
         <!-- small box -->
         <div class="small-box bg-gradient-purple">
           <div class="inner">
-            <h3>{{ student }}</h3>
-            <p>Student in {{ request.user.adminmodel.section }}</p>
+            <h3 class="count">{{ student }}</h3>
+            <p>Student in {{ section }}</p>
           </div>
           <div class="icon" style="display:block;">
             <i class="fas fa-user-graduate"></i>
@@ -46,21 +46,21 @@
         <!-- small box -->
         <div class="small-box bg-gradient-success">
           <div class="inner">
-            <h3>{{ teacher }}</h3>
-            <p>Class Teacher in {{ request.user.adminmodel.section }} </p>
+            <h3 class="count">{{ teacher }}</h3>
+            <p>Class Teacher in {{ section }} </p>
 
           </div>
           <div class="icon" style="display:block;">
             <i class="fas fa-chalkboard-teacher"></i>
           </div>
-          <a href="{% url 'teachers:list' request.user.adminmodel.section.sections %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          <a href="{% url 'teachers:list' section %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
       </div>
       <div class="col-lg-3 col-12">
         <!-- small box -->
         <div class="small-box bg-gradient-warning">
           <div class="inner">
-            <h3>{{ other_students }}</h3>
+            <h3 class="count" >{{ other_students }}</h3>
             <p>Student in {{ spectre }}</p>
           </div>
           <div class="icon" style="display:block;">
@@ -73,7 +73,7 @@
         <!-- small box -->
         <div class="small-box" style="background-color: #7fc9fb; color: #005ebf">
           <div class="inner">
-            <h3>{{ other_teachers }}</h3>
+            <h3 class="count">{{ other_teachers }}</h3>
             <p>Class Teacher in {{ spectre }}</p>
           </div>
           <div class="icon" style="display:block;">
@@ -88,7 +88,7 @@
         <!-- DONUT CHART -->
         <div class="card">
           <div class="card-header text-white" style="background-color: #f6b0d0;">
-            <h3 class="card-title text-purple"> Paid {{ request.user.adminmodel.section }} Student Chart</h3>
+            <h3 class="card-title text-purple"> Paid {{ section.sections }} Student Chart</h3>
             <div class="card-tools">
               <button type="button" class="btn btn-tool text-purple" data-card-widget="collapse"><i class="fas fa-minus"></i>
               </button>
