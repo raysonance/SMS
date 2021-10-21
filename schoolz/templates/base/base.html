@@ -172,7 +172,14 @@ $(document).ready(function($){
     }
   });
   // Animated number counter
-$('.count').each(function () {
+
+});
+
+</script>
+<script>
+$(window).on("load", function (){
+  $('#preloader').fadeOut();
+  $('.count').each(function () {
     let $this = $(this);
     jQuery({Counter: 0}).animate({Counter: $this.text()}, {
         duration: 1000,
@@ -183,12 +190,6 @@ $('.count').each(function () {
     });
 });
 
-});
-
-</script>
-<script>
-$(window).on("load", function (){
-  $('#preloader').fadeOut();
 });
 
 $(document).ready(function () {
