@@ -1,7 +1,7 @@
 Schoolz
 =======
 
-Behold My Awesome Project!
+Behold My Project!
 
 .. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
      :target: https://github.com/pydanny/cookiecutter-django/
@@ -14,8 +14,37 @@ Behold My Awesome Project!
 Description
 --------
 
-This is a school website project. It can be used by admin to add teachers, send messages to teachers,  add students, view the number of students that have paid in school. It can be used by teachers to add students, edit student profile, add results and comments, send messages to students, look up students profile, view paid students in class. It can be used by students to view messages,  download and print results. All three users can search for other users.
+This is a school website project. Kintergon Features:
 
+✅2. Clean Interactive Dashboard
+✅3. Graphical Charts
+✅4. Students Portal
+✅5. Teachers Portal
+✅6. Admin Portal
+✅7. Video Links Upload
+✅8. Excel Uploads Of Bulk Data
+✅9. Online Results/PDF Downloads
+✅10. Student And Teacher Profiles
+✅11. Dynamic Grading System
+✅12. Time-Table & Attendance Modules
+✅13. Exams Management
+✅14. Online Assignment
+✅15. Document Post
+✅16. Article Post
+✅17 YouTube Post
+✅18. Emails
+✅19. Electronic Notes & Documents Upload
+✅20. Online Test (Automatic Marking) 
+✅21. Complete Control Over your account
+✅22. E-Library, E-books Uploads & Sharing
+✅23. Media Sharing
+✅24. Inventory Management
+✅25. Assets Management
+✅26. Online Report card management 
+✅27. Offline downloadable report card
+✅28. Internal Messaging Module
+✅29.Dynamic website design - suitable for phones,  tablets, laptops and pc's
+✅30. Online Exams – CBT (Computer Based Testing)
 
 Settings
 --------
@@ -38,59 +67,3 @@ Setting Up Your Users
 
 For convenience, you can keep your admin user logged in on Chrome and your teacher user logged in on Firefox (or similar) interchangeably, so that you can see how the site behaves for both kinds of users.
 
-Type checks
-^^^^^^^^^^^
-Running type checks with mypy:
-
-::
-
-  $ mypy schoolz
-
-Test coverage
-^^^^^^^^^^^^^
-
-To run the tests, check your test coverage, and generate an HTML coverage report::
-
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
-
-Running tests with py.test
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-::
-
-  $ pytest
-
-Live reloading and Sass CSS compilation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Moved to `Live reloading and SASS compilation`_.
-
-.. _`Live reloading and SASS compilation`: http://cookiecutter-django.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html
-
-
-
-
-
-Sentry
-^^^^^^
-
-Sentry is an error logging aggregator service. You can sign up for a free account at  https://sentry.io/signup/?code=cookiecutter  or download and host it yourself.
-The system is setup with reasonable defaults, including 404 logging and integration with the WSGI application.
-
-You must set the DSN url in production.
-
-
-Deployment
-----------
-
-The following details how to deploy this application.
-
-
-Heroku
-^^^^^^
-
-See detailed `cookiecutter-django Heroku documentation`_.
-
-.. _`cookiecutter-django Heroku documentation`: http://cookiecutter-django.readthedocs.io/en/latest/deployment-on-heroku.html
