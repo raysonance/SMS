@@ -4,12 +4,10 @@
 Behold My Project!
 
 
-.. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
-     :target: https://github.com/pydanny/cookiecutter-django/
-     :alt: Built with Cookiecutter Django
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-     :target: https://github.com/ambv/black
-     :alt: Black code style
+![begin](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg)
+
+![begin](https://img.shields.io/badge/code%20style-black-000000.svg)
+
      
 ![begin](https://user-images.githubusercontent.com/76729273/184503410-7015bba1-d1fc-4a80-a266-1494f50f1d36.png)
 
