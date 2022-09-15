@@ -1,167 +1,197 @@
 
 "use strict";
 $(document).ready(function() {
-
-    //Smooth Scroll
-    $('.page-scroll a').on('click', function(event) {
-        var $anchor = $(this);
-        $('html, body').stop().animate({
-            scrollTop: $($anchor.attr('href')).offset().top
-        }, 2500, 'easeInOutExpo');
-        event.preventDefault();
-    });
-
-
-    //	Back Top Link
-
-    var offset = 200;
-    var duration = 500;
-	var backtotop = $('.back-to-top');
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > offset) {
-            backtotop.fadeIn(400);
-        } else {
-            backtotop.fadeOut(400);
+  //Smooth Scroll
+  // Select all links with hashes
+  $('a[href*="#"]')
+    // Remove links that don't actually link to anything
+    .not('[href="#"]')
+    .not('[href="#0"]')
+    .not('[href="#Section1"]')
+    .not('[href="#Section2"]')
+    .click(function (event) {
+      // On-page links
+      if (
+        location.pathname.replace(/^\//, "") ==
+          this.pathname.replace(/^\//, "") &&
+        location.hostname == this.hostname
+      ) {
+        // Figure out element to scroll to
+        var target = $(this.hash);
+        target = target.length
+          ? target
+          : $("[name=" + this.hash.slice(1) + "]");
+        // Does a scroll target exist?
+        if (target.length) {
+          // Only prevent default if animation is actually gonna happen
+          event.preventDefault();
+          $("html, body").animate(
+            {
+              scrollTop: target.offset().top,
+            },
+            250,
+            function () {
+              // Callback after animation
+              // Must change focus!
+              var $target = $(target);
+              $target.focus();
+              if ($target.is(":focus")) {
+                // Checking if the target was focused
+                return false;
+              } else {
+                $target.attr("tabindex", "-1"); // Adding tabindex for elements not focusable
+                $target.focus(); // Set focus again
+              }
+            }
+          );
         }
+      }
     });
 
-    //Owl-carousels
+  //	Back Top Link
 
-	$("#blog-slider").owlCarousel({
-        dots: true,
-        loop:true,
-		margin: 10,
-        autoplay: false,
-        nav: true,
-		  navText: [
-            "<i class='fa fa-arrow-left'></i>",
-            "<i class='fa fa-arrow-right'></i>"
+  var offset = 200;
+  var duration = 500;
+  var backtotop = $(".back-to-top");
+  $(window).scroll(function () {
+    if ($(this).scrollTop() > offset) {
+      backtotop.fadeIn(400);
+    } else {
+      backtotop.fadeOut(400);
+    }
+  });
 
-        ],
-        responsive: {
-            1: {
-                items: 1,
-            },
-			1200: {
-                items: 3,
-            },
-        }
-    });
-	$("#team-slider").owlCarousel({
-        dots: true,
-		loop:true,
-		margin: 50,
-        nav: true,
-		  navText: [
-            "<i class='fa fa-arrow-left'></i>",
-            "<i class='fa fa-arrow-right'></i>"
-        ],
-        responsive: {
-            1: {
-                items: 1,
-            },
-			 600: {
-                items: 2,
-            },
-			900: {
-                items: 3,
-            },
-        }
-    });
-	 $("#services-slider").owlCarousel({
-        dots: true,
-        loop:true,
-		margin: 30,
-        autoplay: false,
-        nav: true,
-		  navText: [
-            "<i class='fa fa-arrow-left'></i>",
-            "<i class='fa fa-arrow-right'></i>"
+  //Owl-carousels
 
-        ],
-        responsive: {
-            1: {
-                items: 1,
-            },
-			767: {
-                items: 2,
-            },
-            1000: {
-                items: 3,
-            },
-        }
-    });
-	$("#featured-icons").owlCarousel({
-        dots: true,
-        loop:true,
-		margin: 50,
-        autoplay: true,
-        nav: true,
-        navText: [
-          "<i class='fa fa-arrow-left'></i>",
-          "<i class='fa fa-arrow-right'></i>"
+  $("#blog-slider").owlCarousel({
+    dots: true,
+    loop: true,
+    margin: 10,
+    autoplay: false,
+    nav: true,
+    navText: [
+      "<i class='fa fa-arrow-left'></i>",
+      "<i class='fa fa-arrow-right'></i>",
+    ],
+    responsive: {
+      1: {
+        items: 1,
+      },
+      1200: {
+        items: 3,
+      },
+    },
+  });
+  $("#team-slider").owlCarousel({
+    dots: true,
+    loop: true,
+    margin: 50,
+    nav: true,
+    navText: [
+      "<i class='fa fa-arrow-left'></i>",
+      "<i class='fa fa-arrow-right'></i>",
+    ],
+    responsive: {
+      1: {
+        items: 1,
+      },
+      600: {
+        items: 2,
+      },
+      900: {
+        items: 3,
+      },
+    },
+  });
+  $("#services-slider").owlCarousel({
+    dots: true,
+    loop: true,
+    margin: 30,
+    autoplay: false,
+    nav: true,
+    navText: [
+      "<i class='fa fa-arrow-left'></i>",
+      "<i class='fa fa-arrow-right'></i>",
+    ],
+    responsive: {
+      1: {
+        items: 1,
+      },
+      767: {
+        items: 2,
+      },
+      1000: {
+        items: 3,
+      },
+    },
+  });
+  $("#featured-icons").owlCarousel({
+    dots: true,
+    loop: true,
+    margin: 50,
+    autoplay: true,
+    nav: true,
+    navText: [
+      "<i class='fa fa-arrow-left'></i>",
+      "<i class='fa fa-arrow-right'></i>",
+    ],
+    responsive: {
+      1: {
+        items: 1,
+      },
+      600: {
+        items: 2,
+      },
+      1000: {
+        items: 3,
+      },
+    },
+  });
+  $("#testimonial-slider").owlCarousel({
+    loop: true,
+    dots: true,
+    autoplay: false,
+    nav: true,
+    navText: [
+      "<i class='fa fa-arrow-left'></i>",
+      "<i class='fa fa-arrow-right'></i>",
+    ],
+    responsive: {
+      1: {
+        items: 1,
+      },
+      767: {
+        items: 2,
+      },
+    },
+  });
 
-        ],
-        responsive: {
-            1: {
-                items: 1,
-            },
-			600: {
-                items: 2,
-            },
-            1000: {
-                items: 3,
-            },
-        }
-    });
-	$("#testimonial-slider").owlCarousel({
-        loop:true,
-		dots: true,
-        autoplay: false,
-        nav: true,
-        navText: [
-          "<i class='fa fa-arrow-left'></i>",
-          "<i class='fa fa-arrow-right'></i>"
+  //Load Skrollr
 
-        ],
-        responsive: {
-            1: {
-                items: 1,
-            },
-			767: {
-                items: 2,
-            },
-        }
-    });
+  //Load Skrollr
 
-	   //Load Skrollr
+  $(function () {
+    // initialize skrollr if the window width is large enough
+    if ($(window).width() > 991) {
+      var skr0llr = skrollr.init({
+        forceHeight: false,
+      });
+    }
+  });
 
-	   //Load Skrollr
+  //Dropdown nav on Hover
 
-		$(function () {
-	  // initialize skrollr if the window width is large enough
-	  if ($(window).width() > 991) {
-		var skr0llr = skrollr.init({
-			forceHeight: false,
-
-		});
-	  }
-	});
-
-
-
-	//Dropdown nav on Hover
-
-    if ( $(window).width() > 991) {
-	 var dropmenu = $('.dropdown-menu');
-		$('.dropdown').hover(function() {
-		  $(this).find( dropmenu ).stop(true, true).delay(100).fadeIn(500);
-		}, function() {
-		  $(this).find( dropmenu ).stop(true, true).delay(100).fadeOut(500);
-		});
-	}
-
-
+  if ($(window).width() > 991) {
+    var dropmenu = $(".dropdown-menu");
+    $(".dropdown").hover(
+      function () {
+        $(this).find(dropmenu).stop(true, true).delay(100).fadeIn(500);
+      },
+      function () {
+        $(this).find(dropmenu).stop(true, true).delay(100).fadeOut(500);
+      }
+    );
+  }
 }); // end document ready
 
 
