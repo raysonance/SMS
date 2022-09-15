@@ -9,6 +9,9 @@ $(document).ready(function() {
     .not('[href="#0"]')
     .not('[href="#Section1"]')
     .not('[href="#Section2"]')
+    .not('[href="#collapse1"]')
+    .not('[href="#collapse2"]')
+    .not('[href="#collapse3"]')
     .click(function (event) {
       // On-page links
       if (
@@ -25,25 +28,28 @@ $(document).ready(function() {
         if (target.length) {
           // Only prevent default if animation is actually gonna happen
           event.preventDefault();
-          $("html, body").animate(
-            {
-              scrollTop: target.offset().top,
-            },
-            250,
-            function () {
-              // Callback after animation
-              // Must change focus!
-              var $target = $(target);
-              $target.focus();
-              if ($target.is(":focus")) {
-                // Checking if the target was focused
-                return false;
-              } else {
-                $target.attr("tabindex", "-1"); // Adding tabindex for elements not focusable
-                $target.focus(); // Set focus again
+          $("html, body")
+            .stop()
+            .animate(
+              {
+                scrollTop: target.offset().top,
+              },
+              2500,
+              "easeInOutExpo",
+              function () {
+                // Callback after animation
+                // Must change focus!
+                var $target = $(target);
+                $target.focus();
+                if ($target.is(":focus")) {
+                  // Checking if the target was focused
+                  return false;
+                } else {
+                  $target.attr("tabindex", "-1"); // Adding tabindex for elements not focusable
+                  $target.focus(); // Set focus again
+                }
               }
-            }
-          );
+            );
         }
       }
     });
